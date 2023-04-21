@@ -15,7 +15,15 @@ $('document').ready(function () {
           estado_comprobante()
         }else if (direccion == '#reporte_seguros') {
           reporte_seguros()
-        }  
+        }else if (direccion == '#estado_atencion') {
+          estado_atencion()
+        }else if (direccion == '#produccion') {
+          produccion()
+        }else if (direccion == '#afiliados') {
+          affiliate()
+        }else if (direccion == '#control_altas') {
+          discharge_control()
+        }    
          else {
           routeErrE();
         }
@@ -35,6 +43,22 @@ $('document').ready(function () {
   function reporte_seguros() {
     window.location.hash = "#reporte_seguros"
     contentModulo.innerHTML = urlModule("/content/reporte-seguros.html");
+  }
+  function estado_atencion() {
+    window.location.hash = "#estado_atencion"
+    contentModulo.innerHTML = urlModule("/content/estado-atencion.html");
+  }
+  function produccion() {
+    window.location.hash = "#produccion"
+    contentModulo.innerHTML = urlModule("/content/produccion.html");
+  }
+  function affiliate() {
+    window.location.hash = "#afiliados"
+    contentModulo.innerHTML = urlModule("/content/afiliados.html");
+  }
+  function discharge_control() {
+    window.location.hash = "#control_altas"
+    contentModulo.innerHTML = urlModule("/content/control-de-altas.html");
   }
   function routeErrE() {
     console.log("ruta error")

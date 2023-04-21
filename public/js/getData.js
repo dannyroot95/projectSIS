@@ -29,7 +29,7 @@ getStatus()
 
     function start(){
         loader.style = "display:block;"
-        fetch('http://localhost:3000/getdata_invoice_charge/100')
+        fetch(`${url}/getdata_invoice_charge/100`)
             .then(response => response.json())
             .then(data => {
                 insertData(data)
@@ -40,7 +40,7 @@ getStatus()
             } );
     }
     function getStatus(){
-        fetch('http://localhost:3000/getdata_status_invoice')
+        fetch(`${url}/getdata_status_invoice`)
             .then(response => response.json())
             .then(data => {
                 statusValue = data

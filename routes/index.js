@@ -88,6 +88,79 @@ router.get("/insurance_report/:type/:init/:final", function (req, res,next) {
   });
 });
 
+router.get("/status_atention/:i/:f", function (req, res,next) {
+  let f_i = req.params.i;
+  let f_f = req.params.f;
+
+  sql.status_atention(f_i,f_f).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
+router.get("/status_atention_pro/:n", function (req, res,next) {
+  let num_account = req.params.n;
+
+  sql.status_atention_pro(num_account).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
+router.get("/production/:x/:y", function (req, res,next) {
+  let f_init = req.params.x;
+  let f_fin = req.params.y;
+
+  sql.production(f_init,f_fin).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
+router.get("/discharge_control/:x/:y", function (req, res,next) {
+  let f_init = req.params.x;
+  let f_fin = req.params.y;
+
+  sql.discharge_control(f_init,f_fin).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
+router.get("/affiliate/:nro", function (req, res,next) {
+  let nroFormato = req.params.nro;
+
+  sql.searchAffiliate(nroFormato).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
 
 module.exports = router;
 

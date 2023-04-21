@@ -1,3 +1,4 @@
+
 var loader = document.getElementById("loader")
 var body = document.getElementById("body")
 var controller 
@@ -49,7 +50,7 @@ function createScriptDatatable(){
         fetchSearch(value_selected,d_init,d_final)
     }else{
       Swal.fire(
-        'Oops',
+        'Oops!',
         'Complete los campos!',
         'warning'
       )
@@ -68,7 +69,7 @@ function createScriptDatatable(){
     document.getElementById("btn-query").disabled = true
     document.getElementById("btn-cancel").style = "display:block;font-weight:bold;"
 
-    fetch(`http://localhost:3000/insurance_report/${parseInt(v)}/${init}/${final}`,{
+    fetch(`${url}/insurance_report/${parseInt(v)}/${init}/${final}`,{
       method: 'get',
       signal: signal,
       headers: {

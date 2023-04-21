@@ -8,7 +8,11 @@ for (var i = 0; i < arrow.length; i++) {
 
 let sidebar = document.querySelector(".sidebar");
 let sidebarBtn = document.querySelector(".bx-menu");
-console.log(sidebarBtn);
 sidebarBtn.addEventListener("click", ()=>{
+  sidebar.classList.toggle("close");
+});
+
+let largeCol = document.querySelector(".l-col");
+largeCol.addEventListener("click", ()=>{
   sidebar.classList.toggle("close");
 });

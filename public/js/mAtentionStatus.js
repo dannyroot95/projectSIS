@@ -14,25 +14,33 @@ function search(){
     let d_init = document.getElementById("d-init").value
     let d_final = document.getElementById("d-final").value
 
-    document.getElementById("btn-search").disabled = true
-    document.getElementById("btn-cancel").style = "display:block;"
-
-    loader.style = "display:block;"
-    fetch(`${url}/status_atention/${d_init}/${d_final}`,{
-      method: 'get',
-      signal: signal,
-      headers: {
-        'Accept': 'application/json'
-      }
-  })
-    .then(response => response.json())
-    .then(data => {
-
-        insertData(data)
-
-    }).catch(err => {
-        console.log(err)
-    });  
+    if(d_init != "" && d_final != ""){
+        document.getElementById("btn-search").disabled = true
+        document.getElementById("btn-cancel").style = "display:block;"
+    
+        loader.style = "display:block;"
+        fetch(`${url}/status_atention/${d_init}/${d_final}`,{
+          method: 'get',
+          signal: signal,
+          headers: {
+            'Accept': 'application/json'
+          }
+      })
+        .then(response => response.json())
+        .then(data => {
+    
+            insertData(data)
+    
+        }).catch(err => {
+            console.log(err)
+        });  
+    }else{
+        Swal.fire(
+            'Oops!',
+            'Complete los campos!',
+            'warning'
+          )
+    }
 
 }
 
@@ -198,7 +206,7 @@ function createDatatable(){
                   "next": "Siguiente",
                   "previous": "Anterior"
               }
-       },scrollY: '50vh',
+       },scrollY: '50vh',scrollX: true, sScrollXInner: "100%",
        scrollCollapse: true,
       });
   

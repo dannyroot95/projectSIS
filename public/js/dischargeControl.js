@@ -1,6 +1,6 @@
 var controller 
 var signal 
-var allData
+var allData = []
 
 var arrayInc = []
 createDatatable()
@@ -27,7 +27,7 @@ function createDatatable(){
                   "next": "Siguiente",
                   "previous": "Anterior"
               }
-       },scrollY: '50vh',
+       },scrollY: '50vh',scrollX: true, sScrollXInner: "100%",
        scrollCollapse: true,
       });
   
@@ -62,7 +62,6 @@ function getData(f1,f2){
     signal = controller.signal;
 
     document.getElementById("btn-search").disabled = true
-    document.getElementById("btn-xls").style = "display:none;"
     document.getElementById("btn-cancel").style = "display:block;"
     loader.style = "display:block;"
 
@@ -75,7 +74,6 @@ function getData(f1,f2){
     })
       .then(response => response.json())
       .then(data => {
-        allData = data
           insertData(data)
           console.log(data)
       }).catch(err => {
@@ -91,11 +89,36 @@ function insertData(data){
 
     document.getElementById("tbody").innerHTML = ""
     $('#tb-data').DataTable().destroy()
+    let vTotal = 0
+    allData = []
 
     $("#tbody").html(data.map((d) => {
 
         arrayInc.push([d.Ncuenta,d.Asegurado,d.HC,d.FF,d.F_ingreso,d.F_egreso,d.F_E_Administrativo,d.Origen,d.Servicio_egreso,d.E_cuenta,d.Usuario,d.Nombre_usuario,d.F_ultima_receta,d.TotalValorizado])
 
+        vTotal += parseFloat(d.TotalValorizado)
+
+        allData.push({
+
+            'Cuenta':d.Ncuenta,
+            'Asegurado':d.Asegurado,
+            'HC':d.HC,
+            'FF':d.FF,
+            'Fecha de ingreso':d.F_ingreso,
+            'Fecha de egreso':d.F_egreso,
+            'Fecha de egreso administrativo':d.F_E_Administrativo,
+            'FUA':d.FUA,
+            'Origen':d.Origen,
+            'Servicio de egreso':typeService(d.Servicio_egreso),
+            'Estado':d.E_cuenta,
+            'Usuario':d.Usuario,
+            'Nombre de usuario':d.Nombre_usuario,
+            'Fecha de ultima receta':d.F_ultima_receta,
+            'Valorizado':d.TotalValorizado
+
+        })
+
+        
               return `
 
               <tr style="cursor: pointer;">
@@ -107,9 +130,9 @@ function insertData(data){
               <td class="minText2">${isNulledDate(d.F_egreso)}</td>
               <td class="minText2">${isNulledDate(d.F_E_Administrativo)}</td>
               <td class="minText2">${isNulledString(d.FUA)}</td>
-              <td class="minText2">${d.Origen}</td>
-              <td class="minText2">${d.Servicio_egreso}</td>
-              <td class="minText2">${d.E_cuenta}</td>
+              <td class="minText2">${isNulledString(d.Origen)}</td>
+              <td class="minText2">${typeService(d.Servicio_egreso)}</td>
+              <td class="minText2">${statusAccount(d.E_cuenta)}</td>
               <td class="minText2">${isNulledString(d.Usuario)}</td>
               <td class="minText2">${isNulledString(d.Nombre_usuario)}</td>
               <td class="minText2">${isNulledDate(d.F_ultima_receta)}</td>
@@ -123,6 +146,7 @@ function insertData(data){
       document.getElementById("btn-search").disabled = false
       document.getElementById("btn-cancel").style = "display:none;"
       document.getElementById("btn-xls").style = "display:block;"
+      document.getElementById("v-total").innerHTML = 'S/'+(vTotal.toFixed(2)).toString()
       createDatatable()
 
 }
@@ -167,6 +191,70 @@ function cancel(){
   }
 
   function exportToExcel(){
+
+    Swal.fire({
+        title: 'En breves se descargará el archivo!',
+        timer: 5000,
+        timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading()
+        },
+      })
+  
+
     let xls = new XlsExport(allData, 'reporte');
     xls.exportToXLS('control_de_altas.xls')
+  }
+
+  function typeService(service){
+
+    let type = ""
+
+    if(service == "TOPICO CIRUGIA" || service == "TOPICO OBSTÉTRICA" || service == "TOPICO MEDICINA" || service == "TOPICO TRAUMATOLOGIA" || 
+        service == "OBSERVACION EMERGENCIA MASCULINO" || service == "OBSERVACION EMERGENCIA FEMENINO" || service == "TOPICO DE MEDICINA 1" || 
+        service == "TRAUMA SHOCK" || service == "OBSERVACIÓN EMERGENCIA MASCULINO"){
+        type = "EMERGENCIA"
+    }else if(service == "TOPICO PEDIATRIA" || service == "OBSERVACION NIÑOS"){
+        type = "EMERGENCIA PEDIATRICA"
+    }else if(service.includes("TRAUMATOLOGIA") || service.includes("TRAUMATOLOGÍA")){
+        type = "TRAUMATOLOGIA"
+    }else if(service.includes("CIRUGIA")){
+        type = "CIRUGIA"
+    }else if(service.includes("OBSTETRICIA") || service.includes("GINECOLOGÍA")){
+        type = "GiNECOLOGIA"
+    }else if(service == "MEDICINA I" || service == "MEDICINA II" || service == "MEDICINA III" || service == "MEDICINA GENERAL" || 
+             service == "MEDICINA INFECTOLOGIA" || service == "MEDICINA SALUD MENTAL" || service == "MEDICINA CUIDADOS INTERMEDIOS"){
+        type = "MEDICINA"
+    }else if(service.includes("ECOGRAFIA")){
+        type = "ECOGRAFIA"
+    }else if(service.includes("NEONATOLOGIA") || service.includes("NEONATOLOGÍA")){
+        type = "NEONATOLOGIA"
+    }else if(service.includes("PEDIATRÍA") || service.includes("PEDIATRIA")){
+        type = "PEDIATRIA"
+    }else{
+        type = service
+    }
+
+    return type
+
+  }
+
+  function statusAccount(status){
+
+    let x = ""
+
+    if(status == "REGISTRADO"){
+
+        x = '<b style="color:green;">REGISTRADO</b>'
+
+    }else if(status == "CERRADO"){
+        x = '<b style="color:#00163F;">CERRADO</b>'
+    }else if(status == "ANULADO"){
+        x = '<b style="color:red;">ANULADO</b>'
+    }else{
+        x = '<b>'+status+'</b>'
+    }
+
+    return x
+
   }

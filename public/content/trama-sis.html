@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="/libraries/sweetalert2/dist/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="/libraries/sweetalert2/dist/sweetalert2.min.css">
+    <link href='/bootstrap/css/bootstrap.min.css' rel='stylesheet'>
+    <link href='/bootstrap/datatables.min.css' rel='stylesheet'>
+    <link href='/css/styles.css' rel='stylesheet'>
+    <link rel="stylesheet" href="/bootstrap/icons/font/bootstrap-icons.css">
+    
+</head>
+<body id="g-body">
+    
+    <h2>Trama SIS</h2>
+    <br>
+  
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <label class="input-group-text" for="inputGroupSelect01">Tipo de filtro</label>
+          </div>
+          <select class="custom-select" id="selectFilters">
+            <option selected disabled value="0">Seleccione...</option>
+            <option value="1">Fecha de ingreso</option>
+            <option value="2">Fecha de egreso</option>
+            <option value="3">Fecha de alta</option>
+          </select>
+        <div class="input-group-prepend">
+          <span class="input-group-text">Fecha de inicio</span>
+        </div>
+        <input type="date" class="form-control" id="d-init">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Fecha final</span>
+          </div>
+          <input type="date" class="form-control" id="d-final">
+          <button class="btn btn-success" id="btn-query" onclick="search()" style="font-weight: bold;" type="button"><i class="bi bi-search"></i>Consultar</button>
+      </div>
+      <br>
+      
+      <div id="body">
+      </div>
+    
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/bootstrap/datatables.min.js"></script>
+    <script src="/libraries/zingchart/zingchart.min.js"></script>
+    <script src="/js/utils/constants.js"></script>
+
+</body>
+</html>

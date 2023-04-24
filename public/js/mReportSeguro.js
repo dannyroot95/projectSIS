@@ -31,7 +31,7 @@ function createScriptDatatable(){
                 "next": "Siguiente",
                 "previous": "Anterior"
             }
-     },scrollY: '50vh',
+     },scrollY: '50vh',scrollX: true,
      scrollCollapse: true,
     });
   }

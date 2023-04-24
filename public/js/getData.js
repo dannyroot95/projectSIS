@@ -159,10 +159,15 @@ function createScriptDatatable(){
                     "next": "Siguiente",
                     "previous": "Anterior"
                 }
-         },scrollY: '50vh',
+         },scrollY: '50vh', scrollX: true, sScrollXInner: "100%",
          scrollCollapse: true,
          searching: false,
         });
+  
+      var table = $('#tb-data').DataTable();
+      $('#container').css( 'display', 'block' );
+      table.columns.adjust().draw();
+}
 
         /*
         let values = (document.getElementById("tb-data_info").innerHTML).split(" ")
@@ -175,7 +180,7 @@ function createScriptDatatable(){
         &nbsp;
         <button onclick="customSizeQuery()" style="font-weight: bold;" class="btn btn-outline-success">Consultar</button>`)*/
         
-      }
+      
 
 
       function advancedSearch(){
@@ -225,7 +230,7 @@ function createScriptDatatable(){
       function fetchAdvancedSearch(type,value){
         body.style = 'Background-color: rgba(231, 231, 231, 0.062);filter:alpha(opacity=30);-moz-opacity:.30;opacity:.30;'
         loader.style = "display:block;"
-        fetch('http://localhost:3000/'+type+'/'+value)
+        fetch(url+'/'+type+'/'+value)
         .then(response => response.json())
         .then(data => {
             insertData(data)
@@ -260,7 +265,7 @@ function createScriptDatatable(){
             if(status_input != selectedText){
 
                 //update and hide
-                fetch('http://localhost:3000/update_status_invoice/'+value_selected+'/'+d.IdComprobantePago,{method: "POST"})
+                fetch(url+'/update_status_invoice/'+value_selected+'/'+d.IdComprobantePago,{method: "POST"})
                 .then(response => response.json()) 
                 .then(json => {
                     //start()

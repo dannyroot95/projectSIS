@@ -12,7 +12,3 @@ sidebarBtn.addEventListener("click", ()=>{
   sidebar.classList.toggle("close");
 });
 
-let largeCol = document.querySelector(".l-col");
-largeCol.addEventListener("click", ()=>{
-  sidebar.classList.toggle("close");
-});

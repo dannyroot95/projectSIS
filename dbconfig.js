@@ -1,8 +1,8 @@
-const server = '172.16.2.16'
-const port = 1433
+const server = 'localhost'
+const port = 49926
 const database = 'BD_APP'
-const user = 'poa3'
-const password = 'poa15121001'
+const user = 'root'
+const password = 'root'
 
 const config = {
     user: user,
@@ -12,7 +12,7 @@ const config = {
     port:port,
     options: {
       encrypt: false, // for azure
-      trustServerCertificate: false, // change to true for local dev / self-signed certs
+      trustServerCertificate: true, // change to true for local dev / self-signed certs
       cryptoCredentialsDetails: {
         minVersion: 'TLSv1'
     }

@@ -44,7 +44,7 @@ function search(){
 
     if(f1 != "" && f2 != ""){
 
-        getData(date(f1),date(f2))
+        getData(f1,f2)
 
     }else{
         Swal.fire(
@@ -104,9 +104,9 @@ function insertData(data){
             'Asegurado':d.Asegurado,
             'HC':d.HC,
             'FF':d.FF,
-            'Fecha de ingreso':d.F_ingreso,
-            'Fecha de egreso':d.F_egreso,
-            'Fecha de egreso administrativo':d.F_E_Administrativo,
+            'Fecha de ingreso':isNulledDate(d.F_ingreso),
+            'Fecha de egreso':isNulledDate(d.F_egreso),
+            'Fecha de egreso administrativo':isNulledDate(d.F_E_Administrativo),
             'FUA':d.FUA,
             'Origen':d.Origen,
             'Servicio de egreso':typeService(d.Servicio_egreso),
@@ -206,39 +206,7 @@ function cancel(){
     xls.exportToXLS('control_de_altas.xls')
   }
 
-  function typeService(service){
-
-    let type = ""
-
-    if(service == "TOPICO CIRUGIA" || service == "TOPICO OBSTÉTRICA" || service == "TOPICO MEDICINA" || service == "TOPICO TRAUMATOLOGIA" || 
-        service == "OBSERVACION EMERGENCIA MASCULINO" || service == "OBSERVACION EMERGENCIA FEMENINO" || service == "TOPICO DE MEDICINA 1" || 
-        service == "TRAUMA SHOCK" || service == "OBSERVACIÓN EMERGENCIA MASCULINO"){
-        type = "EMERGENCIA"
-    }else if(service == "TOPICO PEDIATRIA" || service == "OBSERVACION NIÑOS"){
-        type = "EMERGENCIA PEDIATRICA"
-    }else if(service.includes("TRAUMATOLOGIA") || service.includes("TRAUMATOLOGÍA")){
-        type = "TRAUMATOLOGIA"
-    }else if(service.includes("CIRUGIA")){
-        type = "CIRUGIA"
-    }else if(service.includes("OBSTETRICIA") || service.includes("GINECOLOGÍA")){
-        type = "GiNECOLOGIA"
-    }else if(service == "MEDICINA I" || service == "MEDICINA II" || service == "MEDICINA III" || service == "MEDICINA GENERAL" || 
-             service == "MEDICINA INFECTOLOGIA" || service == "MEDICINA SALUD MENTAL" || service == "MEDICINA CUIDADOS INTERMEDIOS"){
-        type = "MEDICINA"
-    }else if(service.includes("ECOGRAFIA")){
-        type = "ECOGRAFIA"
-    }else if(service.includes("NEONATOLOGIA") || service.includes("NEONATOLOGÍA")){
-        type = "NEONATOLOGIA"
-    }else if(service.includes("PEDIATRÍA") || service.includes("PEDIATRIA")){
-        type = "PEDIATRIA"
-    }else{
-        type = service
-    }
-
-    return type
-
-  }
-
+ 
   function statusAccount(status){
 
     let x = ""
@@ -258,3 +226,4 @@ function cancel(){
     return x
 
   }
+

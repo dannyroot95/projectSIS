@@ -23,6 +23,8 @@ $('document').ready(function () {
           affiliate()
         }else if (direccion == '#control_altas') {
           discharge_control()
+        }else if (direccion == '#control_altas_cpt') {
+          discharge_control_cpt()
         }else if (direccion == '#trama_sis') {
           plot_sis()
         }    
@@ -61,6 +63,10 @@ $('document').ready(function () {
   function discharge_control() {
     window.location.hash = "#control_altas"
     contentModulo.innerHTML = urlModule("/content/control-de-altas.html");
+  }
+  function discharge_control_cpt() {
+    window.location.hash = "#control_altas_cpt"
+    contentModulo.innerHTML = urlModule("/content/control-de-altas-cpt.html");
   }
   function plot_sis() {
     window.location.hash = "#trama_sis"

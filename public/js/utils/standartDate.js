@@ -1,18 +1,53 @@
 
 function date(st){
 
-    let date = new Date(st);
     /* Date format you have */
-    let day = date.getDate()
-    let month = date.getMonth() + 1
+    const fechaOriginal = st; // fecha en formato aaaa-mm-dd hh:mm:ss
+    const fecha = new Date(fechaOriginal); // creamos un objeto Date a partir de la fecha original
 
-    if(day.toString().length == 1){
-        day = '0'+day.toString()
-    }if(month.toString().length == 1){
-        month = '0'+month.toString()
-    }
+    const dia = fecha.getUTCDate(); // obtenemos el día del mes (1-31)
+    const mes = fecha.getUTCMonth() + 1; // obtenemos el mes (0-11) y sumamos 1 para obtener el número de mes correcto (1-12)
+    const anio = fecha.getUTCFullYear(); // obtenemos el año (4 dígitos)
 
-    let dateMDY = `${day}-${month}-${date.getFullYear()}`;
-    return dateMDY
+    const fechaFormateada = `${dia.toString().padStart(2, '0')}/${mes.toString().padStart(2, '0')}/${anio.toString()}`; // concatenamos las partes de la fecha en una cadena con el formato dd/mm/aaaa
+
+    return fechaFormateada
 
 }
+
+
+
+function typeService(service){
+
+    let type = ""
+
+    if(service == null){
+        type = service
+    }else if(service == "TOPICO CIRUGIA" || service == "TOPICO OBSTÉTRICA" || service == "TOPICO MEDICINA" || service == "TOPICO TRAUMATOLOGIA" || 
+        service == "OBSERVACION EMERGENCIA MASCULINO" || service == "OBSERVACION EMERGENCIA FEMENINO" || service == "TOPICO DE MEDICINA 1" || 
+        service == "TRAUMA SHOCK" || service == "OBSERVACIÓN EMERGENCIA MASCULINO"){
+        type = "EMERGENCIA"
+    }else if(service == "TOPICO PEDIATRIA" || service == "OBSERVACION NIÑOS"){
+        type = "EMERGENCIA PEDIATRICA"
+    }else if(service.includes("TRAUMATOLOGIA") || service.includes("TRAUMATOLOGÍA")){
+        type = "TRAUMATOLOGIA"
+    }else if(service.includes("CIRUGIA")){
+        type = "CIRUGIA"
+    }else if(service.includes("OBSTETRICIA") || service.includes("GINECOLOGÍA")){
+        type = "GiNECOLOGIA"
+    }else if(service == "MEDICINA I" || service == "MEDICINA II" || service == "MEDICINA III" || service == "MEDICINA GENERAL" || 
+             service == "MEDICINA INFECTOLOGIA" || service == "MEDICINA SALUD MENTAL" || service == "MEDICINA CUIDADOS INTERMEDIOS"){
+        type = "MEDICINA"
+    }else if(service.includes("ECOGRAFIA")){
+        type = "ECOGRAFIA"
+    }else if(service.includes("NEONATOLOGIA") || service.includes("NEONATOLOGÍA")){
+        type = "NEONATOLOGIA"
+    }else if(service.includes("PEDIATRÍA") || service.includes("PEDIATRIA")){
+        type = "PEDIATRIA"
+    }else{
+        type = service
+    }
+
+    return type
+
+  }

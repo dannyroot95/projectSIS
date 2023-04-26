@@ -298,5 +298,5 @@ function cancelFetch(){
 
     function exportToExcel(){
       let xls = new XlsExport(allData, 'reporte');
-      xls.exportToXLS('export.xls')
+      xls.exportToXLS('reporte_de_seguros.xls')
     }

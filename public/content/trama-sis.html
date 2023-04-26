@@ -16,30 +16,65 @@
 </head>
 <body id="g-body">
     
-    <h2>Trama SIS</h2>
-    <br>
-  
+  <h2>Trama SIS</h2>
+  <p></p>
+
+    
     <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <label class="input-group-text" for="inputGroupSelect01">Tipo de filtro</label>
-          </div>
-          <select class="custom-select" id="selectFilters">
-            <option selected disabled value="0">Seleccione...</option>
-            <option value="1">Fecha de ingreso</option>
-            <option value="2">Fecha de egreso</option>
-            <option value="3">Fecha de alta</option>
-          </select>
-        <div class="input-group-prepend">
-          <span class="input-group-text">Fecha de inicio</span>
-        </div>
-        <input type="date" class="form-control" id="d-init">
-        <div class="input-group-prepend">
-            <span class="input-group-text">Fecha final</span>
-          </div>
-          <input type="date" class="form-control" id="d-final">
-          <button class="btn btn-success" id="btn-query" onclick="search()" style="font-weight: bold;" type="button"><i class="bi bi-search"></i>Consultar</button>
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="inputGroupSelectMonthOfSend">Mes de envío</label>
       </div>
-      <br>
+      <select class="custom-select" id="inputGroupSelectMonthOfSend">
+        <option selected>Seleccione...</option>
+        <option value="1">Enero</option>
+        <option value="2">Febrero</option>
+        <option value="3">Marzo</option>
+        <option value="3">Abril</option>
+        <option value="3">Mayo</option>
+        <option value="3">Junio</option>
+        <option value="3">Julio</option>
+        <option value="3">Agosto</option>
+        <option value="3">Septiembre</option>
+        <option value="3">Octubre</option>
+        <option value="3">Noviembre</option>
+        <option value="3">Diciembre</option>
+      </select>
+
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="inputGroupSelectYearSend">Año de envío</label>
+      </div>
+      <select class="custom-select" id="inputGroupSelectYearSend">
+        <option selected>Seleccione...</option>
+        <option value="2021">2021</option>
+        <option value="2022">2022</option>
+        <option value="2023">2023</option>
+        <option value="2024">2024</option>
+        <option value="2025">2025</option>
+      </select>
+
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="inputGroupSelectProductionMonth">Mes de producción</label>
+      </div>
+      <select class="custom-select" id="inputGroupSelectProductionMonth">
+        <option selected>Seleccione...</option>
+        <option value="1">Enero</option>
+        <option value="2">Febrero</option>
+        <option value="3">Marzo</option>
+        <option value="3">Abril</option>
+        <option value="3">Mayo</option>
+        <option value="3">Junio</option>
+        <option value="3">Julio</option>
+        <option value="3">Agosto</option>
+        <option value="3">Septiembre</option>
+        <option value="3">Octubre</option>
+        <option value="3">Noviembre</option>
+        <option value="3">Diciembre</option>
+      </select>
+
+    </div>
+
+
+  <p></p>
       
       <div id="body">
       </div>

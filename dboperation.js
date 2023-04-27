@@ -177,6 +177,20 @@ async function getdata_withQuery() {
       console.log("error : " + error);
     }
   }
+
+  async function tramaAtencion(ANIO,MES,MESPRODUCCION) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('ANIO',ANIO)
+      .input('MES',MES)
+      .input('MESPRODUCCION',MESPRODUCCION)
+      .execute(`CONSULTA_TRAMA_ATENCIONES`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
   
 
 module.exports = {
@@ -191,5 +205,6 @@ module.exports = {
   status_atention_pro:status_atention_pro,
   production:production,
   searchAffiliate:searchAffiliate,
-  discharge_control:discharge_control
+  discharge_control:discharge_control,
+  tramaAtencion:tramaAtencion
 };

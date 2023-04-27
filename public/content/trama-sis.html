@@ -21,30 +21,13 @@
 
     
     <div class="input-group mb-3">
-      <div class="input-group-prepend">
-        <label class="input-group-text" for="inputGroupSelectMonthOfSend">Mes de envío</label>
-      </div>
-      <select class="custom-select" id="inputGroupSelectMonthOfSend">
-        <option selected>Seleccione...</option>
-        <option value="1">Enero</option>
-        <option value="2">Febrero</option>
-        <option value="3">Marzo</option>
-        <option value="3">Abril</option>
-        <option value="3">Mayo</option>
-        <option value="3">Junio</option>
-        <option value="3">Julio</option>
-        <option value="3">Agosto</option>
-        <option value="3">Septiembre</option>
-        <option value="3">Octubre</option>
-        <option value="3">Noviembre</option>
-        <option value="3">Diciembre</option>
-      </select>
 
       <div class="input-group-prepend">
         <label class="input-group-text" for="inputGroupSelectYearSend">Año de envío</label>
       </div>
       <select class="custom-select" id="inputGroupSelectYearSend">
-        <option selected>Seleccione...</option>
+        
+        <option value="2021">2020</option>
         <option value="2021">2021</option>
         <option value="2022">2022</option>
         <option value="2023">2023</option>
@@ -52,37 +35,91 @@
         <option value="2025">2025</option>
       </select>
 
+      &nbsp;&nbsp;
+
       <div class="input-group-prepend">
         <label class="input-group-text" for="inputGroupSelectProductionMonth">Mes de producción</label>
       </div>
       <select class="custom-select" id="inputGroupSelectProductionMonth">
-        <option selected>Seleccione...</option>
+       
         <option value="1">Enero</option>
         <option value="2">Febrero</option>
         <option value="3">Marzo</option>
-        <option value="3">Abril</option>
-        <option value="3">Mayo</option>
-        <option value="3">Junio</option>
-        <option value="3">Julio</option>
-        <option value="3">Agosto</option>
-        <option value="3">Septiembre</option>
-        <option value="3">Octubre</option>
-        <option value="3">Noviembre</option>
-        <option value="3">Diciembre</option>
+        <option value="4">Abril</option>
+        <option value="5">Mayo</option>
+        <option value="6">Junio</option>
+        <option value="7">Julio</option>
+        <option value="8">Agosto</option>
+        <option value="9">Septiembre</option>
+        <option value="10">Octubre</option>
+        <option value="11">Noviembre</option>
+        <option value="12">Diciembre</option>
       </select>
 
+      <button class="btn btn-primary" id="btn-query" onclick="query()" ><i class="bi bi-search"></i>&nbsp;Consultar</button>
+      <button class="btn btn-dark" id="btn-logs" style="display: none;" ><i class="bi bi-file-medical"></i>&nbsp;Logs</button>
+      <button class="btn btn-success" id="btn-send" ><i class="bi bi-send-fill"></i>&nbsp;Enviar trama</button>
+      <a><div class="loaderSmall" id="loader"></div></a>
     </div>
 
 
   <p></p>
       
-      <div id="body">
-      </div>
+  <div id="body">
+    <br>
+    <label style="font-weight: bolder;font-size: 22px;">Atenciones</label>
+    <div class="table-responsive">
+     <table class="table table-hover table-bordered display" id="tb-data">
+         <thead>
+           <tr id="tr-table">
+           </tr>
+         </thead>
+         <tbody id="tbody">
+         </tbody>
+       </table>
+     </div>
+
+     <br><br> 
+    <label style="font-weight: bolder;font-size: 22px;">Diagnosticos</label>
+    <div class="table-responsive">
+     <table class="table table-hover table-bordered display" id="tb-data-2">
+         <thead>
+           <tr id="tr-table-2">
+           </tr>
+         </thead>
+         <tbody id="tbody2">
+         </tbody>
+       </table>
+     </div>
+
+     </div>
     
+     <script>
+     for(let i = 1 ; i<= 86 ; i++ ){
+      let item = `<th class="minText" scope="col"><center>${i}</center></th>`
+      if(i == 1){
+        let x = `<th class="minText" scope="col"><center>Log</center></th>`
+        $(x).appendTo('#tr-table')
+      }
+      $(item).appendTo('#tr-table')
+     }
+
+     for(let i = 1 ; i<= 5 ; i++ ){
+      let item = `<th class="minText" scope="col"><center>${i}</center></th>`
+      if(i == 1){
+        let x = `<th class="minText" scope="col"><center>Log</center></th>`
+        $(x).appendTo('#tr-table-2')
+      }
+      $(item).appendTo('#tr-table-2')
+     }
+
+     </script>
+
     <script src="/bootstrap/js/bootstrap.min.js"></script>
     <script src="/bootstrap/datatables.min.js"></script>
     <script src="/libraries/zingchart/zingchart.min.js"></script>
     <script src="/js/utils/constants.js"></script>
+    <script src="/js/trama-sis.js"></script>
 
 </body>
 </html>

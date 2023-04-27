@@ -161,6 +161,22 @@ router.get("/affiliate/:nro", function (req, res,next) {
   });
 });
 
+router.get("/trama-atencion/:a/:b/:c", function (req, res,next) {
+  let anio = req.params.a;
+  let mes = req.params.b;
+  let mesP = req.params.c;
+
+  sql.tramaAtencion(anio,mes,mesP).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
 
 module.exports = router;
 

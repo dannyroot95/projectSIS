@@ -483,3 +483,9 @@ body{
   .minText2{
     font-size: small;
   }
+
+
+  #body {
+    overflow-y: scroll;
+    height: 800px; /*o cualquier otra altura que desees*/
+ }

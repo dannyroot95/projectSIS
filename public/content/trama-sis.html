@@ -57,13 +57,15 @@
       </select>
 
       <button class="btn btn-primary" id="btn-query" onclick="query()" ><i class="bi bi-search"></i>&nbsp;Consultar</button>
-      <button class="btn btn-dark" id="btn-logs" style="display: none;" ><i class="bi bi-file-medical"></i>&nbsp;Logs</button>
+      <button class="btn btn-dark" onclick="donwloadLog()" id="btn-logs" style="display: none;" ><i class="bi bi-file-medical"></i>&nbsp;Logs</button>
       <button class="btn btn-success" id="btn-send" ><i class="bi bi-send-fill"></i>&nbsp;Enviar trama</button>
       <a><div class="loaderSmall" id="loader"></div></a>
     </div>
 
 
   <p></p>
+
+  <label style="display:none;" id="errors"></label>
       
   <div id="body">
     <br>
@@ -79,7 +81,7 @@
        </table>
      </div>
 
-     <br><br> 
+    <br><br> 
     <label style="font-weight: bolder;font-size: 22px;">Diagnosticos</label>
     <div class="table-responsive">
      <table class="table table-hover table-bordered display" id="tb-data-2">
@@ -92,13 +94,43 @@
        </table>
      </div>
 
+     <br><br> 
+    <label style="font-weight: bolder;font-size: 22px;">Medicamentos</label>
+    <div class="table-responsive">
+     <table class="table table-hover table-bordered display" id="tb-data-3">
+         <thead>
+           <tr id="tr-table-3">
+           </tr>
+         </thead>
+         <tbody id="tbody3">
+         </tbody>
+       </table>
+     </div>
+
+     <br><br> 
+    <label style="font-weight: bolder;font-size: 22px;">SMI</label>
+    <div class="table-responsive">
+     <table class="table table-hover table-bordered display" id="tb-data-4">
+         <thead>
+           <tr id="tr-table-4">
+           </tr>
+         </thead>
+         <tbody id="tbody4">
+         </tbody>
+       </table>
+     </div>
+
      </div>
     
      <script>
+
+      document.getElementById("inputGroupSelectYearSend").value = new Date().getFullYear()
+      document.getElementById("inputGroupSelectProductionMonth").value = new Date().getMonth()+1
+
      for(let i = 1 ; i<= 86 ; i++ ){
       let item = `<th class="minText" scope="col"><center>${i}</center></th>`
       if(i == 1){
-        let x = `<th class="minText" scope="col"><center>Log</center></th>`
+        let x = `<th id="logATE" class="minText" scope="col"><center>Log</center></th>`
         $(x).appendTo('#tr-table')
       }
       $(item).appendTo('#tr-table')
@@ -107,17 +139,34 @@
      for(let i = 1 ; i<= 5 ; i++ ){
       let item = `<th class="minText" scope="col"><center>${i}</center></th>`
       if(i == 1){
-        let x = `<th class="minText" scope="col"><center>Log</center></th>`
+        let x = `<th id="logDIA" class="minText" scope="col"><center>Log</center></th>`
         $(x).appendTo('#tr-table-2')
       }
       $(item).appendTo('#tr-table-2')
+     }
+
+     for(let i = 1 ; i<= 5 ; i++ ){
+      let item = `<th class="minText" scope="col"><center>${i}</center></th>`
+      if(i == 1){
+        let x = `<th id="logMED" class="minText" scope="col"><center>Log</center></th>`
+        $(x).appendTo('#tr-table-3')
+      }
+      $(item).appendTo('#tr-table-3')
+     }
+
+     for(let i = 1 ; i<= 3 ; i++ ){
+      let item = `<th class="minText" scope="col"><center>${i}</center></th>`
+      if(i == 1){
+        let x = `<th id="logSMI" class="minText" scope="col"><center>Log</center></th>`
+        $(x).appendTo('#tr-table-4')
+      }
+      $(item).appendTo('#tr-table-4')
      }
 
      </script>
 
     <script src="/bootstrap/js/bootstrap.min.js"></script>
     <script src="/bootstrap/datatables.min.js"></script>
-    <script src="/libraries/zingchart/zingchart.min.js"></script>
     <script src="/js/utils/constants.js"></script>
     <script src="/js/trama-sis.js"></script>
 

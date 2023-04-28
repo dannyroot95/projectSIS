@@ -191,7 +191,45 @@ async function getdata_withQuery() {
       console.log("error : " + error);
     }
   }
+
+  async function tramaDiagnostico(ANIO,MES) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('ANIO',ANIO)
+      .input('MES',MES)
+      .execute(`CONSULTA_TRAMA_DIAGNOSTICO`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
   
+  async function tramaMedicamentos(ANIO,MES) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('ANIO',ANIO)
+      .input('MES',MES)
+      .execute(`CONSULTA_TRAMA_MEDICAMENTOS`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
+  async function tramaSMI(ANIO,MES) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('ANIO',ANIO)
+      .input('MES',MES)
+      .execute(`CONSULTA_TRAMA_SMI`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
 
 module.exports = {
   getdata: getdata,
@@ -206,5 +244,8 @@ module.exports = {
   production:production,
   searchAffiliate:searchAffiliate,
   discharge_control:discharge_control,
-  tramaAtencion:tramaAtencion
+  tramaAtencion:tramaAtencion,
+  tramaDiagnostico:tramaDiagnostico,
+  tramaMedicamentos:tramaMedicamentos,
+  tramaSMI:tramaSMI
 };

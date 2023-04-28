@@ -177,6 +177,52 @@ router.get("/trama-atencion/:a/:b/:c", function (req, res,next) {
   });
 });
 
+router.get("/trama-diagnostico/:a/:b", function (req, res,next) {
+  let anio = req.params.a;
+  let mes = req.params.b;
+
+  sql.tramaDiagnostico(anio,mes).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
+router.get("/trama-medicamentos/:a/:b", function (req, res,next) {
+  let anio = req.params.a;
+  let mes = req.params.b;
+
+  sql.tramaDiagnostico(anio,mes).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
+router.get("/trama-smi/:a/:b", function (req, res,next) {
+  let anio = req.params.a;
+  let mes = req.params.b;
+
+  sql.tramaSMI(anio,mes).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
+
 
 module.exports = router;
 

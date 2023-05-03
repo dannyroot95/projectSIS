@@ -30,7 +30,7 @@ async function getdata_withQuery() {
     const q = quantity
     try {
       let pool = await sql.connect(config);
-      let res = await pool.request().query(`SELECT TOP ${q} * from SIGH..CajaComprobantesPago X`);
+      let res = await pool.request().query(`SELECT TOP ${q} * from SIGH..CajaComprobantesPago X ORDER BY X.FechaCobranza DESC`);
       return res.recordsets;
     } catch (error) {
       console.log("error :" + error);
@@ -138,6 +138,20 @@ async function getdata_withQuery() {
     }
   }
 
+  async function diag_and_proc(anio,mes) {
+
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('year1',anio)
+      .input('month1',mes)
+      .execute(`CONSULTA_DIAGNOSTICOS_Y_PROCEDIMIENTOS`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
   async function production(f_init,f_fin) {
 
     try {
@@ -218,6 +232,32 @@ async function getdata_withQuery() {
     }
   }
 
+  async function tramaInsumos(ANIO,MES) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('ANIO',ANIO)
+      .input('MES',MES)
+      .execute(`CONSULTA_TRAMA_INSUMOS`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
+  async function tramaProcedimientos(ANIO,MES) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('ANIO',ANIO)
+      .input('MES',MES)
+      .execute(`CONSULTA_TRAMA_PROCEDIMIENTOS`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
   async function tramaSMI(ANIO,MES) {
     try {
       let pool = await sql.connect(config);
@@ -241,11 +281,14 @@ module.exports = {
   insurance_report:insurance_report,
   status_atention:status_atention,
   status_atention_pro:status_atention_pro,
+  diag_and_proc:diag_and_proc,
   production:production,
   searchAffiliate:searchAffiliate,
   discharge_control:discharge_control,
   tramaAtencion:tramaAtencion,
   tramaDiagnostico:tramaDiagnostico,
   tramaMedicamentos:tramaMedicamentos,
+  tramaInsumos:tramaInsumos,
+  tramaProcedimientos:tramaProcedimientos,
   tramaSMI:tramaSMI
 };

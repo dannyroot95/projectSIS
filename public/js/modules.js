@@ -17,6 +17,8 @@ $('document').ready(function () {
           reporte_seguros()
         }else if (direccion == '#estado_atencion') {
           estado_atencion()
+        }else if (direccion == '#diag_proc') {
+          diag_and_procedure()
         }else if (direccion == '#produccion') {
           produccion()
         }else if (direccion == '#afiliados') {
@@ -67,6 +69,10 @@ $('document').ready(function () {
   function discharge_control_cpt() {
     window.location.hash = "#control_altas_cpt"
     contentModulo.innerHTML = urlModule("/content/control-de-altas-cpt.html");
+  }
+  function diag_and_procedure() {
+    window.location.hash = "#diag_proc"
+    contentModulo.innerHTML = urlModule("/content/diagnosticos-y-procedimientos.html");
   }
   function plot_sis() {
     window.location.hash = "#trama_sis"

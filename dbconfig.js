@@ -23,9 +23,12 @@ const config = {
 module.exports = config;
 
 
-//PRODUCTION
+
+
 /*
-const server = '172.16.2.16'
+
+//PROD
+const server = 'shsr1'
 const port = 1433
 const database = 'BD_APP'
 const user = 'poa3'
@@ -39,16 +42,16 @@ const config = {
     port:port,
     options: {
       encrypt: false, // for azure
-      trustServerCertificate: false, // change to true for local dev / self-signed certs
+      trustServerCertificate: true, // change to true for local dev / self-signed certs
       cryptoCredentialsDetails: {
         minVersion: 'TLSv1'
     }
     }
   }
+  */
 
-*/
 
-/*
+  /*
 
 //DEV
 const server = 'localhost'

@@ -7,6 +7,8 @@ var c = 0
 createDatatable()
 createDatatable2()
 createDatatable3()
+createDatatable5()
+createDatatable6()
 createDatatable4()
 arrayParams()
 
@@ -151,9 +153,70 @@ function createDatatable4(){
       table.columns.adjust().draw();
 }
 
+function createDatatable5(){
+    $('#tb-data-5').DataTable({
+        language: {
+              "decimal": "",
+              "emptyTable": "No hay información",
+              "info": "Mostrando _START_ a _END_ de _TOTAL_ datos",
+              "infoEmpty": "Mostrando 0 to 0 of 0 datos",
+              "infoFiltered": "(Filtrado de _MAX_ total datos)",
+              "infoPostFix": "",
+              "thousands": ",",
+              "lengthMenu": "Mostrar _MENU_ datos",
+              "loadingRecords": "Cargando...",
+              "processing": "Procesando...",
+              "search": "Buscar en la lista:",
+              "zeroRecords": "Sin resultados encontrados",
+              "paginate": {
+                  "first": "Primero",
+                  "last": "Ultimo",
+                  "next": "Siguiente",
+                  "previous": "Anterior"
+              }
+       },scrollY: '35vh',scrollX: true, sScrollXInner: "100%",
+       scrollCollapse: true,
+      });
+  
+      var table = $('#tb-data-5').DataTable();
+      $('#container').css( 'display', 'block' );
+      table.columns.adjust().draw();
+}
+
+function createDatatable6(){
+    $('#tb-data-6').DataTable({
+        language: {
+              "decimal": "",
+              "emptyTable": "No hay información",
+              "info": "Mostrando _START_ a _END_ de _TOTAL_ datos",
+              "infoEmpty": "Mostrando 0 to 0 of 0 datos",
+              "infoFiltered": "(Filtrado de _MAX_ total datos)",
+              "infoPostFix": "",
+              "thousands": ",",
+              "lengthMenu": "Mostrar _MENU_ datos",
+              "loadingRecords": "Cargando...",
+              "processing": "Procesando...",
+              "search": "Buscar en la lista:",
+              "zeroRecords": "Sin resultados encontrados",
+              "paginate": {
+                  "first": "Primero",
+                  "last": "Ultimo",
+                  "next": "Siguiente",
+                  "previous": "Anterior"
+              }
+       },scrollY: '35vh',scrollX: true, sScrollXInner: "100%",
+       scrollCollapse: true,
+      });
+  
+      var table = $('#tb-data-6').DataTable();
+      $('#container').css( 'display', 'block' );
+      table.columns.adjust().draw();
+}
+
 function query(){
 
     c = 0
+    log = ""
     document.getElementById("errors").style = "display:none;"
     let mes = document.getElementById("inputGroupSelectProductionMonth")
     let anio = document.getElementById("inputGroupSelectYearSend")
@@ -162,7 +225,9 @@ function query(){
 
     fetchTramaAtencion(mes_selected,anio_selected)
     fetchTramaDiagnostico(mes_selected,anio_selected)
+    fetchTramaInsumos(mes_selected,anio_selected)
     fetchTramaMedicamentos(mes_selected,anio_selected)
+    fetchTramaProcedimientos(mes_selected,anio_selected)
     fetchTramaSMI(mes_selected,anio_selected)
     
 
@@ -237,6 +302,50 @@ function fetchTramaMedicamentos(mes,anio){
 
 }
 
+function fetchTramaInsumos(mes,anio){
+
+
+    fetch(`${url}/trama-insumos/${anio}/${mes}`,{
+        method: 'get',
+        headers: {
+          'Accept': 'application/json'
+        }
+    })
+      .then(response => response.json())
+      .then(data => {
+
+        insertDataInsumos(data)
+
+      }).catch(err => {
+        
+        console.log(err)
+        enableButtons()
+      }); 
+
+}
+
+function fetchTramaProcedimientos(mes,anio){
+
+
+    fetch(`${url}/trama-procedimientos/${anio}/${mes}`,{
+        method: 'get',
+        headers: {
+          'Accept': 'application/json'
+        }
+    })
+      .then(response => response.json())
+      .then(data => {
+
+        insertDataProcedimientos(data)
+
+      }).catch(err => {
+        
+        console.log(err)
+        enableButtons()
+      }); 
+
+}
+
 function fetchTramaSMI(mes,anio){
 
 
@@ -267,14 +376,13 @@ function insertDataAtencion(data){
 
     $("#tbody").html(data.map((d) => {
         const cells = params.map(param => {
-
-            let log = ""
             if (param == 'x') {
 
                 return validateDataATE(d)
 
                 
             } else {
+               
                 return `<td class="minText2">${d[param]}</td>`;
             }
         }).join("");
@@ -285,13 +393,13 @@ function insertDataAtencion(data){
         document.getElementById("logATE").click();
         document.getElementById("logDIA").click();
         document.getElementById("logMED").click();
+        document.getElementById("logINS").click();
         document.getElementById("logSMI").click();
       }, 500);
 
       createDatatable()
-
       document.getElementById("body").style = "display:block;"
-      enableButtons()
+      
       if(c>0){
         document.getElementById("errors").style = "display:block;font-weight:bold;color:red;"
         document.getElementById("errors").innerHTML = c.toString()+" errores encontrados!"
@@ -299,7 +407,8 @@ function insertDataAtencion(data){
         document.getElementById("errors").style = "display:block;font-weight:bold;color:green;"
         document.getElementById("errors").innerHTML = "Ningún error encontrado!"
       }
-      
+
+      enableButtons()
 
 }
 
@@ -312,7 +421,6 @@ function insertDataDiagnostico(data){
     $("#tbody2").html(data.map((d) => {
         const cells = params2.map(param => {
 
-            let log = ""
             if (param == 'x') {
 
                 return validateData(d)
@@ -332,13 +440,37 @@ function insertDataDiagnostico(data){
 function insertDataMedicamentos(data){
   
     
+    document.getElementById("tbody5").innerHTML = ""
+    $('#tb-data-5').DataTable().destroy()
+
+    $("#tbody5").html(data.map((d) => {
+        const cells = params2.map(param => {
+
+            if (param == 'x') {
+
+                return validateData(d)
+
+                
+            } else {
+                return `<td class="minText2">${d[param]}</td>`;
+            }
+        }).join("");
+    return `<tr style="cursor: pointer;">${cells}</tr>`;
+    }).join(""));
+
+      createDatatable5()
+
+}
+
+function insertDataInsumos(data){
+  
+    
     document.getElementById("tbody3").innerHTML = ""
     $('#tb-data-3').DataTable().destroy()
 
     $("#tbody3").html(data.map((d) => {
         const cells = params2.map(param => {
 
-            let log = ""
             if (param == 'x') {
 
                 return validateData(d)
@@ -354,6 +486,35 @@ function insertDataMedicamentos(data){
       createDatatable3()
 
 }
+
+function insertDataProcedimientos(data){
+  
+
+    document.getElementById("tbody6").innerHTML = ""
+    $('#tb-data-6').DataTable().destroy()
+
+    $("#tbody6").html(data.map((d) => {
+        
+        let it = (d.Items).split("|")
+  
+              return `
+              <tr style="cursor: pointer;">
+              ${validateDataOnlyValue(it[0])}
+              <td class="minText2">${it[0]}</td>
+              <td class="minText2">${it[1]}</td>
+              <td class="minText2">${it[2]}</td>
+              <td class="minText2">${it[3]}</td>
+              <td class="minText2">${it[4]}</td>
+              <td class="minText2">${it[5]}</td>
+              </tr>`;
+          })
+          .join("")
+      );
+
+      createDatatable6()
+
+}
+
 
 function insertDataSMI(data){
   
@@ -416,7 +577,7 @@ function validateDataATE(d){
     if(d["A33"].length > 6){
         ctx++
         c++
-        let warning = `${c}.- HISTORIA CLINICA INCORRECTA -> N° DE CUENTA : ${d["A1"]}`
+        let warning = `${c}.- HISTORIA CLINICA INCORRECTA [33] -> N° DE CUENTA : ${d["A1"]}`
         log = log+warning+"\n"
     }
 
@@ -441,9 +602,9 @@ function counter(ctx){
     let value = ""
 
     if(ctx > 0){
-        value = `<td class="minText2"><button class="btn btn-danger" onclick="alert('Botón presionado')"><i class="bi bi-eye-fill"></i></button></td>`
+        value = `<td class="minText2"><button class="btn btn-danger" onclick="alert('Errores encontrados!')"><i class="bi bi-eye-fill"></i></button></td>`
     }else{
-        value = `<td class="minText2"><button class="btn btn-success" onclick="alert('Botón presionado')"><i class="bi bi-file-check"></i></button></td>`
+        value = `<td class="minText2"><button class="btn btn-success" onclick="alert('0 Errores')"><i class="bi bi-file-check"></i></button></td>`
     }
 
     return value

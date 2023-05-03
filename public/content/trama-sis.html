@@ -95,17 +95,44 @@
      </div>
 
      <br><br> 
-    <label style="font-weight: bolder;font-size: 22px;">Medicamentos</label>
-    <div class="table-responsive">
-     <table class="table table-hover table-bordered display" id="tb-data-3">
-         <thead>
-           <tr id="tr-table-3">
-           </tr>
-         </thead>
-         <tbody id="tbody3">
-         </tbody>
-       </table>
-     </div>
+     <label style="font-weight: bolder;font-size: 22px;">Insumos</label>
+     <div class="table-responsive">
+      <table class="table table-hover table-bordered display" id="tb-data-3">
+          <thead>
+            <tr id="tr-table-3">
+            </tr>
+          </thead>
+          <tbody id="tbody3">
+          </tbody>
+        </table>
+      </div>
+
+     <br><br> 
+     <label style="font-weight: bolder;font-size: 22px;">Medicamentos</label>
+     <div class="table-responsive">
+      <table class="table table-hover table-bordered display" id="tb-data-5">
+          <thead>
+            <tr id="tr-table-5">
+            </tr>
+          </thead>
+          <tbody id="tbody5">
+          </tbody>
+        </table>
+      </div>
+
+      <br><br> 
+     <label style="font-weight: bolder;font-size: 22px;">Procedimientos</label>
+     <div class="table-responsive">
+      <table class="table table-hover table-bordered display" id="tb-data-6">
+          <thead>
+            <tr id="tr-table-6">
+            </tr>
+          </thead>
+          <tbody id="tbody6">
+          </tbody>
+        </table>
+      </div>
+ 
 
      <br><br> 
     <label style="font-weight: bolder;font-size: 22px;">SMI</label>
@@ -148,10 +175,28 @@
      for(let i = 1 ; i<= 5 ; i++ ){
       let item = `<th class="minText" scope="col"><center>${i}</center></th>`
       if(i == 1){
-        let x = `<th id="logMED" class="minText" scope="col"><center>Log</center></th>`
+        let x = `<th id="logINS" class="minText" scope="col"><center>Log</center></th>`
         $(x).appendTo('#tr-table-3')
       }
       $(item).appendTo('#tr-table-3')
+     }
+
+     for(let i = 1 ; i<= 5 ; i++ ){
+      let item = `<th class="minText" scope="col"><center>${i}</center></th>`
+      if(i == 1){
+        let x = `<th id="logMED" class="minText" scope="col"><center>Log</center></th>`
+        $(x).appendTo('#tr-table-5')
+      }
+      $(item).appendTo('#tr-table-5')
+     }
+
+     for(let i = 1 ; i<= 6 ; i++ ){
+      let item = `<th class="minText" scope="col"><center>${i}</center></th>`
+      if(i == 1){
+        let x = `<th id="logPRO" class="minText" scope="col"><center>Log</center></th>`
+        $(x).appendTo('#tr-table-6')
+      }
+      $(item).appendTo('#tr-table-6')
      }
 
      for(let i = 1 ; i<= 3 ; i++ ){

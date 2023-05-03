@@ -52,6 +52,22 @@ router.get("/getdata_status_invoice", function (req, res, next) {
   });
 });
 
+router.get("/diagnosticos_procedimientos/:st/:id", function (req, res, next) {
+  let anio = req.params.st;
+	let mes = req.params.id;
+  
+  sql.diag_and_proc(anio,mes).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+
+   
+  });
+});
+
 router.post("/update_status_invoice/:st/:id", function (req, res, next) {
   let query = req.params.st
   let query2 = req.params.id
@@ -196,7 +212,37 @@ router.get("/trama-medicamentos/:a/:b", function (req, res,next) {
   let anio = req.params.a;
   let mes = req.params.b;
 
-  sql.tramaDiagnostico(anio,mes).then((result) => {
+  sql.tramaMedicamentos(anio,mes).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
+router.get("/trama-insumos/:a/:b", function (req, res,next) {
+  let anio = req.params.a;
+  let mes = req.params.b;
+
+  sql.tramaInsumos(anio,mes).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
+router.get("/trama-procedimientos/:a/:b", function (req, res,next) {
+  let anio = req.params.a;
+  let mes = req.params.b;
+
+  sql.tramaProcedimientos(anio,mes).then((result) => {
 
     if(result[0].length>0){
       res.json(result[0]);

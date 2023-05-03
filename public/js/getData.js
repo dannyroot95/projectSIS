@@ -98,8 +98,8 @@ getStatus()
                   <td>${d.NroDocumento}</td>
                   <td>${d.RazonSocial}</td>
                   <td id="s-${d.IdComprobantePago}">${s}</td>
-                  <td>S/${d.SubTotal}</td>
-                  <td>S/${d.Total}</td>
+                  <td>${(d.SubTotal).toFixed(2)}</td>
+                  <td>${(d.Total).toFixed(2)}</td>
                   <td>${fecha_atencion.split("T")[0]}</td>
                   <td>${fecha_atencion.split("T")[1].split(".000Z")[0]}</td>
                   </tr>`;

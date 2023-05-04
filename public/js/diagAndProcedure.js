@@ -83,19 +83,32 @@ function insertData(data){
 
     $("#tbody").html(data.map((d) => {
 
-        let d1 = d.diagnostico1
-        let d2 = d.diagnostico2
-        let d3 = d.diagnostico3
-        let d4 = d.diagnostico4
-        let d5 = d.diagnostico5
-        let d6 = d.diagnostico6
+        var d1 = ""
+        var d2 = ""
+        var d3 = ""
+        var d4 = ""
+        var d5 = ""
+        var d6 = ""
 
-        if(d1 == null || d1 == "null" ){d1="-"}
-        else if(d2 == null || d2 == "null" ){d2="-"}
-        else if(d3 == null || d3 == "null" ){d3="-"}
-        else if(d4 == null || d4 == "null" ){d4="-"}
-        else if(d5 == null || d5 == "null" ){d5="-"}
-        else if(d6 == null || d6 == "null" ){d6="-"}
+        if(d.diagnostico1 == null ){
+          d1="-"
+        }else {d1 = d.diagnostico1}
+        if(d.diagnostico2 == null ){
+          d2="-"
+        }else {d2 = d.diagnostico2}
+        if(d.diagnostico3 == null ){
+          d3="-"
+        }else {d3 = d.diagnostico3}
+        if(d.diagnostico4 == null ){
+          d4="-"
+        }else {d4 = d.diagnostico4}
+        if(d.diagnostico5 == null ){
+          d5="-"
+        }else {d5 = d.diagnostico5}
+        if(d.diagnostico6 == null ){
+          d6="-"
+        }else {d6 = d.diagnostico6}
+ 
 
               return `
               <tr style="cursor: pointer;">

@@ -1,6 +1,10 @@
-var config = require("./dbconfig");
-const sql = require("mssql");
-const md5 = require('md5')
+var config = require("./dbconfig")
+const sql = require("mssql")
+const fs = require('fs');
+const archiver = require('archiver');
+archiver.registerFormat('zip-encrypted', require("archiver-zip-encrypted"));
+const password = '7017FuaE47121'; 
+
  
 async function getdata() {
   try {
@@ -271,8 +275,69 @@ async function getdata_withQuery() {
     }
   }
 
+  async function tramaSER(ANIO,MES) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('ANIO',ANIO)
+      .input('MES',MES)
+      .execute(`CONSULTA_TRAMA_SERVICIOS_ADICIONALES`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
+  async function tramaRN(ANIO,MES) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('ANIO',ANIO)
+      .input('MES',MES)
+      .execute(`CONSULTA_TRAMA_RECIEN_NACIDO`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
+  async function sendTrama(data) {
+
+    try{
+   
+      // create archive and specify method of encryption and password
+      let archive = archiver.create('zip-encrypted', {zlib: {level: 8}, encryptionMethod: 'aes256', password: password});
+      
+      // Crea un archivo de texto y escribe algunos datos
+      const file1 = fs.createWriteStream('ATENCION.txt');
+      file1.write(data.ATENCION);
+      file1.end();
+      
+      // Crea otro archivo de texto y escribe algunos datos
+      const file2 = fs.createWriteStream('ATENCIONDIA.txt');
+      file2.write('Contenido del archivo 2');
+      file2.end();
+      
+      // Agrega los archivos al objeto Archiver
+      archive.file('ATENCION.txt', { name: 'ATENCION.txt' });
+      archive.file('ATENCIONDIA.txt', { name: 'ATENCIONDIA.txt' });
+      
+      
+      // Crea el archivo ZIP
+      const output = fs.createWriteStream('C:/users/USUARIO/desktop/archivo.zip');
+      archive.pipe(output);
+      archive.finalize();
+      return [[{success:"Enviado!"}]]
+    }catch (error) {
+      console.log("error : " + error);
+    }
+
+  }
+
+
 module.exports = {
   getdata: getdata,
+  sendTrama:sendTrama,
   getdata_invoice_charge:getdata_invoice_charge,
   getdata_by_num_doc:getdata_by_num_doc,
   getdata_by_razon_social:getdata_by_razon_social,
@@ -290,5 +355,7 @@ module.exports = {
   tramaMedicamentos:tramaMedicamentos,
   tramaInsumos:tramaInsumos,
   tramaProcedimientos:tramaProcedimientos,
-  tramaSMI:tramaSMI
+  tramaSMI:tramaSMI,
+  tramaSER:tramaSER,
+  tramaRN:tramaRN
 };

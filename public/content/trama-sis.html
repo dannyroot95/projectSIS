@@ -12,6 +12,9 @@
     <link href='/bootstrap/datatables.min.css' rel='stylesheet'>
     <link href='/css/styles.css' rel='stylesheet'>
     <link rel="stylesheet" href="/bootstrap/icons/font/bootstrap-icons.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
     
 </head>
 <body id="g-body">
@@ -58,7 +61,7 @@
 
       <button class="btn btn-primary" id="btn-query" onclick="query()" ><i class="bi bi-search"></i>&nbsp;Consultar</button>
       <button class="btn btn-dark" onclick="donwloadLog()" id="btn-logs" style="display: none;" ><i class="bi bi-file-medical"></i>&nbsp;Logs</button>
-      <button class="btn btn-success" id="btn-send" ><i class="bi bi-send-fill"></i>&nbsp;Enviar trama</button>
+      <button class="btn btn-success" onclick="sendTrama()" id="btn-send" ><i class="bi bi-send-fill"></i>&nbsp;Enviar trama</button>
       <a><div class="loaderSmall" id="loader"></div></a>
     </div>
 
@@ -147,6 +150,32 @@
        </table>
      </div>
 
+     <br><br> 
+    <label style="font-weight: bolder;font-size: 22px;">Servicios adicionales</label>
+    <div class="table-responsive">
+     <table class="table table-hover table-bordered display" id="tb-data-7">
+         <thead>
+           <tr id="tr-table-7">
+           </tr>
+         </thead>
+         <tbody id="tbody7">
+         </tbody>
+       </table>
+     </div>
+
+     <br><br> 
+     <label style="font-weight: bolder;font-size: 22px;">Recien nacido</label>
+     <div class="table-responsive">
+      <table class="table table-hover table-bordered display" id="tb-data-8">
+          <thead>
+            <tr id="tr-table-8">
+            </tr>
+          </thead>
+          <tbody id="tbody8">
+          </tbody>
+        </table>
+      </div>
+
      </div>
     
      <script>
@@ -208,12 +237,30 @@
       $(item).appendTo('#tr-table-4')
      }
 
+     for(let i = 1 ; i<= 2 ; i++ ){
+      let item = `<th class="minText" scope="col"><center>${i}</center></th>`
+      if(i == 1){
+        let x = `<th id="logSER" class="minText" scope="col"><center>Log</center></th>`
+        $(x).appendTo('#tr-table-7')
+      }
+      $(item).appendTo('#tr-table-7')
+     }
+
+     for(let i = 1 ; i<= 14 ; i++ ){
+      let item = `<th class="minText" scope="col"><center>${i}</center></th>`
+      if(i == 1){
+        let x = `<th id="logRN" class="minText" scope="col"><center>Log</center></th>`
+        $(x).appendTo('#tr-table-8')
+      }
+      $(item).appendTo('#tr-table-8')
+     }
+
      </script>
 
     <script src="/bootstrap/js/bootstrap.min.js"></script>
     <script src="/bootstrap/datatables.min.js"></script>
     <script src="/js/utils/constants.js"></script>
     <script src="/js/trama-sis.js"></script>
-
+  
 </body>
 </html>

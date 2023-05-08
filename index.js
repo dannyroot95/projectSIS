@@ -9,3 +9,4 @@ const server = http.createServer(app)
 app.use(router)
 
 server.listen(port,()=>console.log('SERVIDOR INICIADO'))
+

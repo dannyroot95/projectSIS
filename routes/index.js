@@ -2,8 +2,8 @@ const { json } = require('express');
 var express = require('express');
 var router = express.Router();
 const sql = require("../dboperation");
-const app = express()
-
+const bodyParser = require('body-parser');
+router.use(bodyParser.json());
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -268,7 +268,50 @@ router.get("/trama-smi/:a/:b", function (req, res,next) {
   });
 });
 
+router.get("/trama-ser/:a/:b", function (req, res,next) {
+  let anio = req.params.a;
+  let mes = req.params.b;
 
+  sql.tramaSER(anio,mes).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
+router.get("/trama-rn/:a/:b", function (req, res,next) {
+  let anio = req.params.a;
+  let mes = req.params.b;
+
+  sql.tramaRN(anio,mes).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
+router.post("/send-trama", function (req, res,next) {
+
+  const data = req.body;
+
+  sql.sendTrama(data).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
 
 module.exports = router;
 

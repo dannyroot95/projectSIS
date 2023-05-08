@@ -3,6 +3,7 @@ var params = []
 var params2 = [] 
 var log = ""
 var c = 0
+var ate = ""
 
 createDatatable()
 createDatatable2()
@@ -10,6 +11,8 @@ createDatatable3()
 createDatatable5()
 createDatatable6()
 createDatatable4()
+createDatatable7()
+createDatatable8()
 arrayParams()
 
 function arrayParams(){
@@ -212,6 +215,64 @@ function createDatatable6(){
       $('#container').css( 'display', 'block' );
       table.columns.adjust().draw();
 }
+function createDatatable7(){
+    $('#tb-data-7').DataTable({
+        language: {
+              "decimal": "",
+              "emptyTable": "No hay información",
+              "info": "Mostrando _START_ a _END_ de _TOTAL_ datos",
+              "infoEmpty": "Mostrando 0 to 0 of 0 datos",
+              "infoFiltered": "(Filtrado de _MAX_ total datos)",
+              "infoPostFix": "",
+              "thousands": ",",
+              "lengthMenu": "Mostrar _MENU_ datos",
+              "loadingRecords": "Cargando...",
+              "processing": "Procesando...",
+              "search": "Buscar en la lista:",
+              "zeroRecords": "Sin resultados encontrados",
+              "paginate": {
+                  "first": "Primero",
+                  "last": "Ultimo",
+                  "next": "Siguiente",
+                  "previous": "Anterior"
+              }
+       },scrollY: '35vh',scrollX: true, sScrollXInner: "100%",
+       scrollCollapse: true,
+      });
+  
+      var table = $('#tb-data-7').DataTable();
+      $('#container').css( 'display', 'block' );
+      table.columns.adjust().draw();
+}
+function createDatatable8(){
+    $('#tb-data-8').DataTable({
+        language: {
+              "decimal": "",
+              "emptyTable": "No hay información",
+              "info": "Mostrando _START_ a _END_ de _TOTAL_ datos",
+              "infoEmpty": "Mostrando 0 to 0 of 0 datos",
+              "infoFiltered": "(Filtrado de _MAX_ total datos)",
+              "infoPostFix": "",
+              "thousands": ",",
+              "lengthMenu": "Mostrar _MENU_ datos",
+              "loadingRecords": "Cargando...",
+              "processing": "Procesando...",
+              "search": "Buscar en la lista:",
+              "zeroRecords": "Sin resultados encontrados",
+              "paginate": {
+                  "first": "Primero",
+                  "last": "Ultimo",
+                  "next": "Siguiente",
+                  "previous": "Anterior"
+              }
+       },scrollY: '35vh',scrollX: true, sScrollXInner: "100%",
+       scrollCollapse: true,
+      });
+  
+      var table = $('#tb-data-8').DataTable();
+      $('#container').css( 'display', 'block' );
+      table.columns.adjust().draw();
+}
 
 function query(){
 
@@ -229,6 +290,8 @@ function query(){
     fetchTramaMedicamentos(mes_selected,anio_selected)
     fetchTramaProcedimientos(mes_selected,anio_selected)
     fetchTramaSMI(mes_selected,anio_selected)
+    fetchTramaSER(mes_selected,anio_selected)
+    fetchTramaRN(mes_selected,anio_selected)
     
 
 }
@@ -368,6 +431,50 @@ function fetchTramaSMI(mes,anio){
 
 }
 
+function fetchTramaSER(mes,anio){
+
+
+    fetch(`${url}/trama-ser/${anio}/${mes}`,{
+        method: 'get',
+        headers: {
+          'Accept': 'application/json'
+        }
+    })
+      .then(response => response.json())
+      .then(data => {
+
+        insertDataSER(data)
+
+      }).catch(err => {
+        
+        console.log(err)
+        enableButtons()
+      }); 
+
+}
+
+function fetchTramaRN(mes,anio){
+
+
+    fetch(`${url}/trama-rn/${anio}/${mes}`,{
+        method: 'get',
+        headers: {
+          'Accept': 'application/json'
+        }
+    })
+      .then(response => response.json())
+      .then(data => {
+
+        insertDataRN(data)
+
+      }).catch(err => {
+        
+        console.log(err)
+        enableButtons()
+      }); 
+
+}
+
 function insertDataAtencion(data){
   
     
@@ -392,9 +499,11 @@ function insertDataAtencion(data){
     setTimeout(function() {
         document.getElementById("logATE").click();
         document.getElementById("logDIA").click();
-        document.getElementById("logMED").click();
         document.getElementById("logINS").click();
+        document.getElementById("logMED").click();
+        document.getElementById("logPRO").click();
         document.getElementById("logSMI").click();
+        document.getElementById("logRN").click();
       }, 500);
 
       createDatatable()
@@ -518,7 +627,7 @@ function insertDataProcedimientos(data){
 
 function insertDataSMI(data){
   
-
+   
     document.getElementById("tbody4").innerHTML = ""
     $('#tb-data-4').DataTable().destroy()
 
@@ -540,6 +649,73 @@ function insertDataSMI(data){
       createDatatable4()
 
 }
+
+function insertDataSER(data){
+  
+
+    document.getElementById("tbody7").innerHTML = ""
+    $('#tb-data-7').DataTable().destroy()
+
+    if(data.length >0){
+        $("#tbody7").html(data.map((d) => {
+
+            let it = (d.items).split("|")
+
+              return `
+              <tr style="cursor: pointer;">
+              ${validateDataOnlyValue(it[0])}
+              <td class="minText2">${it[0]}</td>
+              <td class="minText2">${it[1]}</td>
+              </tr>`;
+        
+          })
+          .join("")
+      ); 
+      createDatatable7()
+
+    }else{
+        createDatatable7()
+    }
+     
+}
+
+
+function insertDataRN(data){
+  
+   
+    document.getElementById("tbody8").innerHTML = ""
+    $('#tb-data-8').DataTable().destroy()
+
+    $("#tbody8").html(data.map((d) => {
+        
+        let it = (d.values).split("|")
+
+              return `
+              <tr style="cursor: pointer;">
+              ${validateDataOnlyValue(it[0])}
+              <td class="minText2">${it[0]}</td>
+              <td class="minText2">${it[1]}</td>
+              <td class="minText2">${it[2]}</td>
+              <td class="minText2">${it[3]}</td>
+              <td class="minText2">${it[4]}</td>
+              <td class="minText2">${it[5]}</td>
+              <td class="minText2">${it[6]}</td>
+              <td class="minText2">${it[7]}</td>
+              <td class="minText2">${it[8]}</td>
+              <td class="minText2">${it[9]}</td>
+              <td class="minText2">${it[10]}</td>
+              <td class="minText2">${it[11]}</td>
+              <td class="minText2">${it[12]}</td>
+              <td class="minText2">${it[13]}</td>
+              </tr>`;
+          })
+          .join("")
+      );
+
+      createDatatable8()
+
+}
+
 
 
 function disabledButtons(){
@@ -619,4 +795,21 @@ link.href = URL.createObjectURL(new Blob([log], { type: 'text/plain' }));
 link.download = 'logs.txt';
 link.click();
 
+}
+
+function sendTrama(){
+    let data = {
+        ATENCION:'KSJDNCADSCFASFASFASFASFASFASFFKSJDKJCSDCKJ'
+    }
+
+    fetch(`${url}/send-trama/`, {
+        method: 'POST', // o 'PUT', 'DELETE', etc.
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data) // data es un objeto con los datos a enviar
+      })
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .catch(error => console.error(error));
 }

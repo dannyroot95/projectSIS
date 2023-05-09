@@ -798,8 +798,12 @@ link.click();
 }
 
 function sendTrama(){
+
+    let nameTrama = "0000269820221000032.zip"
+
     let data = {
-        ATENCION:'KSJDNCADSCFASFASFASFASFASFASFFKSJDKJCSDCKJ'
+        ATENCION:'KSJDNCADSCFASFASFASFASFASFASFFKSJDKJCSDCKJ',
+        nameTrama : nameTrama
     }
 
     fetch(`${url}/send-trama/`, {
@@ -810,6 +814,21 @@ function sendTrama(){
         body: JSON.stringify(data) // data es un objeto con los datos a enviar
       })
       .then(response => response.json())
-      .then(data => console.log(data))
-      .catch(error => console.error(error));
+      .then(data => {
+         if(data.length > 0){
+            Swal.fire(
+                'Muy bien',
+                'Trama enviada!',
+                'success'
+              )
+         }
+      })
+      .catch(error => {
+        Swal.fire(
+            'Oops!',
+            'Se produjo un error',
+            'warning'
+          )
+        console.error(error)
+    });
 }

@@ -324,7 +324,7 @@ async function getdata_withQuery() {
       
       
       // Crea el archivo ZIP
-      const output = fs.createWriteStream('C:/users/USUARIO/desktop/archivo.zip');
+      const output = fs.createWriteStream('C:/users/USUARIO/desktop/'+data.nameTrama);
       archive.pipe(output);
       archive.finalize();
       return [[{success:"Enviado!"}]]

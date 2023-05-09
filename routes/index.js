@@ -2,9 +2,6 @@ const { json } = require('express');
 var express = require('express');
 var router = express.Router();
 const sql = require("../dboperation");
-const bodyParser = require('body-parser');
-router.use(bodyParser.json());
-
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
@@ -193,6 +190,22 @@ router.get("/trama-atencion/:a/:b/:c", function (req, res,next) {
   });
 });
 
+router.get("/get-trama-atencion/:a/:b/:c", function (req, res,next) {
+  let anio = req.params.a;
+  let mes = req.params.b;
+  let mesP = req.params.c;
+
+  sql.getTramaAtencion(anio,mes,mesP).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
 router.get("/trama-diagnostico/:a/:b", function (req, res,next) {
   let anio = req.params.a;
   let mes = req.params.b;
@@ -207,6 +220,22 @@ router.get("/trama-diagnostico/:a/:b", function (req, res,next) {
    
   });
 });
+
+router.get("/get-trama-diagnostico/:a/:b", function (req, res,next) {
+  let anio = req.params.a;
+  let mes = req.params.b;
+
+  sql.getTramaDiagnostico(anio,mes).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
 
 router.get("/trama-medicamentos/:a/:b", function (req, res,next) {
   let anio = req.params.a;
@@ -238,11 +267,41 @@ router.get("/trama-insumos/:a/:b", function (req, res,next) {
   });
 });
 
+router.get("/get-trama-insumos/:a/:b", function (req, res,next) {
+  let anio = req.params.a;
+  let mes = req.params.b;
+
+  sql.getTramaInsumos(anio,mes).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
 router.get("/trama-procedimientos/:a/:b", function (req, res,next) {
   let anio = req.params.a;
   let mes = req.params.b;
 
   sql.tramaProcedimientos(anio,mes).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
+router.get("/get-trama-procedimientos/:a/:b", function (req, res,next) {
+  let anio = req.params.a;
+  let mes = req.params.b;
+
+  sql.getTramaProcedimientos(anio,mes).then((result) => {
 
     if(result[0].length>0){
       res.json(result[0]);
@@ -303,7 +362,6 @@ router.post("/send-trama", function (req, res,next) {
   const data = req.body;
 
   sql.sendTrama(data).then((result) => {
-
     if(result[0].length>0){
       res.json(result[0]);
     }else{

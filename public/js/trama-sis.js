@@ -3,7 +3,10 @@ var params = []
 var params2 = [] 
 var log = ""
 var c = 0
-var ate = ""
+var atencion = ``
+var diagnostico = ``
+var insumos = ``
+var procedimientos = ``
 
 createDatatable()
 createDatatable2()
@@ -797,12 +800,15 @@ link.click();
 
 }
 
-function sendTrama(){
+function sendTrama(ATENCION,ATENCIONDIA,ATENCIONINS,ATENCIONPRO){
 
     let nameTrama = "0000269820221000032.zip"
 
     let data = {
-        ATENCION:'KSJDNCADSCFASFASFASFASFASFASFFKSJDKJCSDCKJ',
+        ATENCION:ATENCION,
+        ATENCIONDIA:ATENCIONDIA,
+        ATENCIONINS:ATENCIONINS,
+        ATENCIONPRO:ATENCIONPRO,
         nameTrama : nameTrama
     }
 
@@ -831,4 +837,148 @@ function sendTrama(){
           )
         console.error(error)
     });
+}
+
+
+function postTrama(){
+
+    let mes = document.getElementById("inputGroupSelectProductionMonth")
+    let anio = document.getElementById("inputGroupSelectYearSend")
+    var mes_selected = mes.value
+    var anio_selected = anio.value
+
+    sendAllTramas(anio_selected,mes_selected)
+
+}
+
+function sendAllTramas(anio,mes){
+
+    
+    fetch(`${url}/get-trama-atencion/${anio}/${mes}/${mes}`,{
+        method: 'get',
+        headers: {
+          'Accept': 'application/json'
+        }
+    })
+      .then(response => response.json())
+      .then(data => {
+        let ctx = 0
+   
+        data.forEach(e => {
+            let value = e.items
+            ctx++
+            if(data.length != ctx){
+                atencion += value+"\n"
+            }else{
+                atencion += value
+            }
+        });
+
+        getTramaDiagnostico(anio,mes)
+
+      }).catch(err => {
+        
+        console.log(err)
+        enableButtons()
+      }); 
+
+}
+
+function getTramaDiagnostico(anio,mes){
+
+    
+    fetch(`${url}/get-trama-diagnostico/${anio}/${mes}`,{
+        method: 'get',
+        headers: {
+          'Accept': 'application/json'
+        }
+    })
+      .then(response => response.json())
+      .then(data => {
+
+        let ctx = 0
+   
+        data.forEach(e => {
+            let value = e.items
+            ctx++
+            if(data.length != ctx){
+                diagnostico += value+"\n"
+            }else{
+                diagnostico += value
+            }
+        });
+        getTramaInsumos(anio,mes)
+
+      }).catch(err => {
+        
+        console.log(err)
+        enableButtons()
+      }); 
+
+}
+
+function getTramaInsumos(anio,mes){
+
+    
+  fetch(`${url}/get-trama-insumos/${anio}/${mes}`,{
+      method: 'get',
+      headers: {
+        'Accept': 'application/json'
+      }
+  })
+    .then(response => response.json())
+    .then(data => {
+
+      let ctx = 0
+ 
+      data.forEach(e => {
+          let value = e.Items
+          ctx++
+          if(data.length != ctx){
+              insumos += value+"\n"
+          }else{
+              insumos += value
+          }
+      });
+      getTramaProcedimientos(anio,mes)
+
+    }).catch(err => {
+      
+      console.log(err)
+      enableButtons()
+    }); 
+
+}
+
+function getTramaProcedimientos(anio,mes){
+
+    
+  fetch(`${url}/get-trama-procedimientos/${anio}/${mes}`,{
+      method: 'get',
+      headers: {
+        'Accept': 'application/json'
+      }
+  })
+    .then(response => response.json())
+    .then(data => {
+
+      let ctx = 0
+ 
+      data.forEach(e => {
+          let value = e.Items
+          ctx++
+          if(data.length != ctx){
+              procedimientos += value+"\n"
+          }else{
+            procedimientos += value
+          }
+      });
+      sendTrama(atencion,diagnostico,insumos,procedimientos)
+
+    }).catch(err => {
+      
+      console.log(err)
+      enableButtons()
+    }); 
+
 }

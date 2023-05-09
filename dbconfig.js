@@ -1,9 +1,8 @@
-const server = 'shsr1'
-const port = 1433
+const server = 'localhost'
+const port = 49926
 const database = 'BD_APP'
-const user = 'poa3'
-const password = 'poa15121001'
-
+const user = 'root'
+const password = 'root'
 
 const config = {
     user: user,
@@ -22,8 +21,6 @@ const config = {
 
    
 module.exports = config;
-
-
 
 
 /*

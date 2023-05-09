@@ -18,18 +18,6 @@ console.log("error :" + error);
 }
  
 
-/*
-async function getdata_withQuery() {
-    try {
-      let pool = await sql.connect(config);
-      let res = await pool.request().query("SELECT *  FROM I_AtencionCierre");
-      return res.recordsets;
-    } catch (error) {
-      console.log("error :" + error);
-    }
-  }*/
-
- 
   async function getdata_invoice_charge(quantity) {
     const q = quantity
     try {
@@ -210,6 +198,20 @@ async function getdata_withQuery() {
     }
   }
 
+  async function getTramaAtencion(ANIO,MES,MESPRODUCCION) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('ANIO',ANIO)
+      .input('MES',MES)
+      .input('MESPRODUCCION',MESPRODUCCION)
+      .execute(`SIGH.dbo.ATENCION`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
   async function tramaDiagnostico(ANIO,MES) {
     try {
       let pool = await sql.connect(config);
@@ -217,6 +219,19 @@ async function getdata_withQuery() {
       .input('ANIO',ANIO)
       .input('MES',MES)
       .execute(`CONSULTA_TRAMA_DIAGNOSTICO`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
+  async function getTramaDiagnostico(ANIO,MES) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('ANIO',ANIO)
+      .input('MES',MES)
+      .execute(`SIGH.dbo.ATENCIONDIA`) 
       return res.recordsets
     } catch (error) {
       console.log("error : " + error);
@@ -249,6 +264,19 @@ async function getdata_withQuery() {
     }
   }
 
+  async function getTramaInsumos(ANIO,MES) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('ANIO',ANIO)
+      .input('MES',MES)
+      .execute(`SIGH.dbo.ATENCIONINS`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
   async function tramaProcedimientos(ANIO,MES) {
     try {
       let pool = await sql.connect(config);
@@ -256,6 +284,19 @@ async function getdata_withQuery() {
       .input('ANIO',ANIO)
       .input('MES',MES)
       .execute(`CONSULTA_TRAMA_PROCEDIMIENTOS`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
+  async function getTramaProcedimientos(ANIO,MES) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('ANIO',ANIO)
+      .input('MES',MES)
+      .execute(`SIGH.dbo.ATENCIONPRO`) 
       return res.recordsets
     } catch (error) {
       console.log("error : " + error);
@@ -315,12 +356,22 @@ async function getdata_withQuery() {
       
       // Crea otro archivo de texto y escribe algunos datos
       const file2 = fs.createWriteStream('ATENCIONDIA.txt');
-      file2.write('Contenido del archivo 2');
+      file2.write(data.ATENCIONDIA);
       file2.end();
+
+      const file3 = fs.createWriteStream('ATENCIONINS.txt');
+      file3.write(data.ATENCIONINS);
+      file3.end();
+
+      const file4 = fs.createWriteStream('ATENCIONPRO.txt');
+      file4.write(data.ATENCIONPRO);
+      file4.end();
       
       // Agrega los archivos al objeto Archiver
       archive.file('ATENCION.txt', { name: 'ATENCION.txt' });
       archive.file('ATENCIONDIA.txt', { name: 'ATENCIONDIA.txt' });
+      archive.file('ATENCIONINS.txt', { name: 'ATENCIONINS.txt' });
+      archive.file('ATENCIONPRO.txt', { name: 'ATENCIONPRO.txt' });
       
       
       // Crea el archivo ZIP
@@ -351,10 +402,14 @@ module.exports = {
   searchAffiliate:searchAffiliate,
   discharge_control:discharge_control,
   tramaAtencion:tramaAtencion,
+  getTramaAtencion:getTramaAtencion,
   tramaDiagnostico:tramaDiagnostico,
+  getTramaDiagnostico:getTramaDiagnostico,
   tramaMedicamentos:tramaMedicamentos,
   tramaInsumos:tramaInsumos,
+  getTramaInsumos:getTramaInsumos,
   tramaProcedimientos:tramaProcedimientos,
+  getTramaProcedimientos:getTramaProcedimientos,
   tramaSMI:tramaSMI,
   tramaSER:tramaSER,
   tramaRN:tramaRN

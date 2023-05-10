@@ -1,12 +1,18 @@
 
 var params = [] 
 var params2 = [] 
+var dniResp = 71853201
 var log = ""
 var c = 0
 var atencion = ``
 var diagnostico = ``
+var medicamentos = ``
 var insumos = ``
 var procedimientos = ``
+var smi = ``
+var ser = ``
+var rn = ``
+var res = ``
 
 createDatatable()
 createDatatable2()
@@ -800,16 +806,19 @@ link.click();
 
 }
 
-function sendTrama(ATENCION,ATENCIONDIA,ATENCIONINS,ATENCIONPRO){
-
-    let nameTrama = "0000269820221000032.zip"
+function sendTrama(ATENCION,ATENCIONDIA,ATENCIONMED,ATENCIONINS,ATENCIONPRO,ATENCIONSMI,ATENCIONSER,ATENCIONRN,RESUMEN,NAMEZIP){
 
     let data = {
         ATENCION:ATENCION,
         ATENCIONDIA:ATENCIONDIA,
+        ATENCIONMED:ATENCIONMED,
         ATENCIONINS:ATENCIONINS,
         ATENCIONPRO:ATENCIONPRO,
-        nameTrama : nameTrama
+        ATENCIONSMI:ATENCIONSMI,
+        ATENCIONSER:ATENCIONSER,
+        ATENCIONRN:ATENCIONRN,
+        RESUMEN : RESUMEN,
+        nameTrama : NAMEZIP
     }
 
     fetch(`${url}/send-trama/`, {
@@ -852,7 +861,6 @@ function postTrama(){
 }
 
 function sendAllTramas(anio,mes){
-
     
     fetch(`${url}/get-trama-atencion/${anio}/${mes}/${mes}`,{
         method: 'get',
@@ -907,13 +915,47 @@ function getTramaDiagnostico(anio,mes){
                 diagnostico += value
             }
         });
-        getTramaInsumos(anio,mes)
+        getTramaMedicamentos(anio,mes)
 
       }).catch(err => {
         
         console.log(err)
         enableButtons()
       }); 
+
+}
+
+function getTramaMedicamentos(anio,mes){
+
+    
+  fetch(`${url}/get-trama-medicamentos/${anio}/${mes}`,{
+      method: 'get',
+      headers: {
+        'Accept': 'application/json'
+      }
+  })
+    .then(response => response.json())
+    .then(data => {
+
+      let ctx = 0
+ 
+      data.forEach(e => {
+          let value = e.Items
+          ctx++
+          if(data.length != ctx){
+              medicamentos += value+"\n"
+          }else{
+              medicamentos += value
+          }
+      });
+      
+      getTramaInsumos(anio,mes)
+
+    }).catch(err => {
+      
+      console.log(err)
+      enableButtons()
+    }); 
 
 }
 
@@ -973,12 +1015,258 @@ function getTramaProcedimientos(anio,mes){
             procedimientos += value
           }
       });
-      sendTrama(atencion,diagnostico,insumos,procedimientos)
+      getTramaSmi(anio,mes)
 
     }).catch(err => {
       
       console.log(err)
       enableButtons()
     }); 
+
+}
+
+function getTramaSmi(anio,mes){
+
+    
+  fetch(`${url}/get-trama-smi/${anio}/${mes}`,{
+      method: 'get',
+      headers: {
+        'Accept': 'application/json'
+      }
+  })
+    .then(response => response.json())
+    .then(data => {
+
+      let ctx = 0
+ 
+      data.forEach(e => {
+          let value = e.items
+          ctx++
+          if(data.length != ctx){
+              smi += value+"\n"
+          }else{
+            smi += value
+          }
+      });
+      getTramaSer(anio,mes)
+
+    }).catch(err => {
+      
+      console.log(err)
+      enableButtons()
+    }); 
+
+}
+
+function getTramaSer(anio,mes){
+
+    
+  fetch(`${url}/get-trama-ser/${anio}/${mes}`,{
+      method: 'get',
+      headers: {
+        'Accept': 'application/json'
+      }
+  })
+    .then(response => response.json())
+    .then(data => {
+
+      let ctx = 0
+ 
+      if(data.length>0){
+        data.forEach(e => {
+          let value = e.items
+          ctx++
+          if(data.length != ctx){
+              ser += value+"\n"
+          }else{
+            ser += value
+          }
+      });
+      getTramaRn(anio,mes)
+      }else{
+        getTramaRn(anio,mes)
+      }
+      
+    }).catch(err => {
+      
+      console.log(err)
+      enableButtons()
+    }); 
+
+}
+
+function getTramaRn(anio,mes){
+
+    
+  fetch(`${url}/get-trama-rn/${anio}/${mes}`,{
+      method: 'get',
+      headers: {
+        'Accept': 'application/json'
+      }
+  })
+    .then(response => response.json())
+    .then(data => {
+
+      let ctx = 0
+ 
+      data.forEach(e => {
+        let value = e.items
+        ctx++
+        if(data.length != ctx){
+            rn += value+"\n"
+        }else{
+          rn += value
+        }
+    });
+    
+    getLastCorrelative(anio,mes)
+      
+    }).catch(err => {
+      
+      console.log(err)
+      enableButtons()
+    }); 
+
+}
+
+function getLastCorrelative(anio,mes){
+
+  var correlative = '00000'
+    
+  fetch(`${url}/get-last-correlative/${anio}/${mes}`,{
+      method: 'get',
+      headers: {
+        'Accept': 'application/json'
+      }
+  })
+    .then(response => response.json())
+    .then(data => {
+  
+      let x = data[0].correlativo
+  
+      if(x != null){
+        correlative = x
+        setResum(correlative,anio,mes)
+      }else{
+        setResum(correlative,anio,mes)
+      }
+      
+      
+    }).catch(err => {
+      
+      console.log(err)
+      enableButtons()
+    }); 
+
+}
+
+function setResum(correlative,anio,mes){
+
+  let codReanes = '00002698'
+  let nZip = codReanes+anio+mes+nSend(correlative)+'.zip'
+
+  let data = {
+    anio: anio,
+    mes : mes,
+    nroEnvio:nSend(correlative),
+    nZip : nZip,
+    dni:dniResp,
+    mesP:mes
+  }
+
+ 
+  fetch(`${url}/send-resum/`, {
+    method: 'POST', // o 'PUT', 'DELETE', etc.
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data) // data es un objeto con los datos a enviar
+  })
+  .then(response => response.json())
+  .then(data => {
+     if(data.length > 0){
+      
+      //GET RESUMEN
+      getAtencionResumen(anio,mes,nSend(correlative))
+
+     }
+  })
+  .catch(error => {
+    Swal.fire(
+        'Oops!',
+        'Se produjo un error',
+        'warning'
+      )
+    console.error(error)
+});
+}
+
+function getAtencionResumen(anio,mes,nEnvio){
+
+  fetch(`${url}/get-trama-res/${anio}/${mes}/${nEnvio}`,{
+    method: 'get',
+    headers: {
+      'Accept': 'application/json'
+    }
+})
+  .then(response => response.json())
+  .then(data => {
+
+    res += data[0].Anio.toString()+"\n"
+    res += padNumber(data[0].Mes)+"\n"
+    res += data[0].NomPaquete+"\n"
+    res += data[0].VersionGTI+"\n"
+    res += data[0].CantFilATE.toString()+"\n"
+    res += data[0].CantFilSMI.toString()+"\n"
+    res += data[0].CantFilDIA.toString()+"\n"
+    res += data[0].CantFilMED.toString()+"\n"
+    res += data[0].CantFilINS.toString()+"\n"
+    res += data[0].CantFilPRO.toString()+"\n"
+    res += data[0].CantFilSER.toString()+"\n"
+    res += data[0].CantFilRN.toString()+"\n"
+    res += data[0].NomApp+"\n"
+    res += data[0].VersApp+"\n"
+    res += data[0].VersEnvio+"\n"
+    res += data[0].IdResp+"\n"
+    res += data[0].NroDoc+"\n"
+    
+    sendTrama(atencion,diagnostico,medicamentos,insumos,procedimientos,smi,ser,rn,res,data[0].NomPaquete)
+
+    
+  }).catch(err => {
+    
+    console.log(err)
+    enableButtons()
+  }); 
+
+
+}
+
+function nSend(n){
+
+  let c = parseInt(n,10)
+  c += 1
+  let x = ""
+
+  if(c.toString().length == 1){
+    x = "0000"+c.toString()
+  }else if(c.toString().length == 2){
+    x = "000"+c.toString()
+  }else if(c.toString().length == 3){
+    x = "00"+c.toString()
+  }
+
+  return x
+
+}
+
+function padNumber(n){
+  let x = n.toString();
+
+  if (x.length === 1) {
+    x = x.padStart(2, '0');
+  }
+
+  return x
 
 }

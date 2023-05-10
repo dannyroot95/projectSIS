@@ -252,6 +252,21 @@ router.get("/trama-medicamentos/:a/:b", function (req, res,next) {
   });
 });
 
+router.get("/get-trama-medicamentos/:a/:b", function (req, res,next) {
+  let anio = req.params.a;
+  let mes = req.params.b;
+
+  sql.getTramaMedicamentos(anio,mes).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
 router.get("/trama-insumos/:a/:b", function (req, res,next) {
   let anio = req.params.a;
   let mes = req.params.b;
@@ -325,6 +340,20 @@ router.get("/trama-smi/:a/:b", function (req, res,next) {
     }
    
   });
+}); 
+
+router.get("/get-trama-smi/:a/:b", function (req, res,next) {
+  let anio = req.params.a;
+  let mes = req.params.b;
+
+  sql.getTramaSMI(anio,mes).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+  });
 });
 
 router.get("/trama-ser/:a/:b", function (req, res,next) {
@@ -342,11 +371,92 @@ router.get("/trama-ser/:a/:b", function (req, res,next) {
   });
 });
 
+router.get("/get-trama-ser/:a/:b", function (req, res,next) {
+  let anio = req.params.a;
+  let mes = req.params.b;
+
+  sql.getTramaSER(anio,mes).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
 router.get("/trama-rn/:a/:b", function (req, res,next) {
   let anio = req.params.a;
   let mes = req.params.b;
 
   sql.tramaRN(anio,mes).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
+router.get("/get-trama-rn/:a/:b", function (req, res,next) {
+  let anio = req.params.a;
+  let mes = req.params.b;
+
+  sql.getTramaRN(anio,mes).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
+router.get("/get-last-correlative/:a/:b", function (req, res,next) {
+  let anio = req.params.a;
+  let mes = req.params.b;
+
+  sql.getLastCorrelative(anio,mes).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
+router.post("/send-resum", function (req, res,next) {
+
+  const data = req.body
+  const anio = data.anio
+  const mes = data.mes
+  const nroEnvio = data.nroEnvio
+  const nZip = data.nZip
+  const dni = data.dni
+  const mesP = data.mesP
+
+  sql.setTramaRESUMEN(anio,mes,nroEnvio,nZip,dni,mesP).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
+router.get("/get-trama-res/:a/:b/:c", function (req, res,next) {
+  let anio = req.params.a;
+  let mes = req.params.b;
+  let nenvio = req.params.c
+
+  sql.getTramaRes(anio,mes,nenvio).then((result) => {
 
     if(result[0].length>0){
       res.json(result[0]);

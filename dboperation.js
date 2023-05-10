@@ -251,6 +251,20 @@ console.log("error :" + error);
     }
   }
 
+  async function getTramaMedicamentos(ANIO,MES) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('ANIO',ANIO)
+      .input('MES',MES)
+      .execute(`SIGH.dbo.ATENCIONMED`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
+
   async function tramaInsumos(ANIO,MES) {
     try {
       let pool = await sql.connect(config);
@@ -316,6 +330,19 @@ console.log("error :" + error);
     }
   }
 
+  async function getTramaSMI(ANIO,MES) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('ANIO',ANIO)
+      .input('MES',MES)
+      .execute(`SIGH.dbo.ATENCIONSMI`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
   async function tramaSER(ANIO,MES) {
     try {
       let pool = await sql.connect(config);
@@ -323,6 +350,19 @@ console.log("error :" + error);
       .input('ANIO',ANIO)
       .input('MES',MES)
       .execute(`CONSULTA_TRAMA_SERVICIOS_ADICIONALES`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
+  async function getTramaSER(ANIO,MES) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('ANIO',ANIO)
+      .input('MES',MES)
+      .execute(`SIGH.dbo.ATENCIONSER`) 
       return res.recordsets
     } catch (error) {
       console.log("error : " + error);
@@ -342,6 +382,63 @@ console.log("error :" + error);
     }
   }
 
+  async function getTramaRN(ANIO,MES) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('ANIO',ANIO)
+      .input('MES',MES)
+      .execute(`SIGH.dbo.ATENCIONRN`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
+  async function setTramaRESUMEN(ANIO,MES,NENVIO,NOMBREZIP,DNI,MESPRODUCCION) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('ANIO',ANIO)
+      .input('MES',MES)
+      .input('NENVIO',NENVIO)
+      .input('NOMBREZIP',NOMBREZIP)
+      .input('DNI',DNI)
+      .input('MESPRODUCCION',MESPRODUCCION)
+      .execute(`SIGH.dbo.ATENCIONRESUMEN`) 
+      return [[{success:"Enviado!"}]]
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
+  
+  async function getTramaRes(ANIO,MES,NENVIO) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request().query(`select * from SIGH_EXTERNA..SisFuaResumen where anio = ${ANIO} and mes = ${MES} and NroEnvio = ${NENVIO}`);
+      return res.recordsets;
+    } catch (error) {
+      console.log("error :" + error);
+    }finally {
+      sql.close();
+    }
+  }
+
+  async function getLastCorrelative(ANIO,MES) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('anio',ANIO)
+      .input('mes',MES)
+      .execute(`OBTENER_ULTIMO_CORRELATIVO_TRAMA`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
+
   async function sendTrama(data) {
 
     try{
@@ -359,21 +456,45 @@ console.log("error :" + error);
       file2.write(data.ATENCIONDIA);
       file2.end();
 
-      const file3 = fs.createWriteStream('ATENCIONINS.txt');
-      file3.write(data.ATENCIONINS);
+      const file3 = fs.createWriteStream('ATENCIONMED.txt');
+      file3.write(data.ATENCIONMED);
       file3.end();
 
-      const file4 = fs.createWriteStream('ATENCIONPRO.txt');
-      file4.write(data.ATENCIONPRO);
+      const file4 = fs.createWriteStream('ATENCIONINS.txt');
+      file4.write(data.ATENCIONINS);
       file4.end();
+
+      const file5 = fs.createWriteStream('ATENCIONPRO.txt');
+      file5.write(data.ATENCIONPRO);
+      file5.end();
+
+      const file6 = fs.createWriteStream('ATENCIONSMI.txt');
+      file6.write(data.ATENCIONSMI);
+      file6.end();
       
+      const file7 = fs.createWriteStream('ATENCIONSER.txt');
+      file7.write(data.ATENCIONSER);
+      file7.end()
+
+      const file8 = fs.createWriteStream('ATENCIONRN.txt');
+      file8.write(data.ATENCIONRN);
+      file8.end()
+
+      const file9 = fs.createWriteStream('RESUMEN.txt');
+      file9.write(data.RESUMEN);
+      file9.end()
+
       // Agrega los archivos al objeto Archiver
       archive.file('ATENCION.txt', { name: 'ATENCION.txt' });
       archive.file('ATENCIONDIA.txt', { name: 'ATENCIONDIA.txt' });
+      archive.file('ATENCIONMED.txt', { name: 'ATENCIONMED.txt' });
       archive.file('ATENCIONINS.txt', { name: 'ATENCIONINS.txt' });
       archive.file('ATENCIONPRO.txt', { name: 'ATENCIONPRO.txt' });
-      
-      
+      archive.file('ATENCIONSMI.txt', { name: 'ATENCIONSMI.txt' });
+      archive.file('ATENCIONSER.txt', { name: 'ATENCIONSER.txt' });
+      archive.file('ATENCIONRN.txt', { name: 'ATENCIONRN.txt' });
+      archive.file('RESUMEN.txt', { name: 'RESUMEN.txt' });
+
       // Crea el archivo ZIP
       const output = fs.createWriteStream('C:/users/USUARIO/desktop/'+data.nameTrama);
       archive.pipe(output);
@@ -406,11 +527,18 @@ module.exports = {
   tramaDiagnostico:tramaDiagnostico,
   getTramaDiagnostico:getTramaDiagnostico,
   tramaMedicamentos:tramaMedicamentos,
+  getTramaMedicamentos:getTramaMedicamentos,
   tramaInsumos:tramaInsumos,
   getTramaInsumos:getTramaInsumos,
   tramaProcedimientos:tramaProcedimientos,
   getTramaProcedimientos:getTramaProcedimientos,
   tramaSMI:tramaSMI,
+  getTramaSMI:getTramaSMI,
   tramaSER:tramaSER,
-  tramaRN:tramaRN
+  getTramaSER:getTramaSER,
+  tramaRN:tramaRN,
+  getTramaRN:getTramaRN,
+  getLastCorrelative:getLastCorrelative,
+  setTramaRESUMEN:setTramaRESUMEN,
+  getTramaRes:getTramaRes
 };

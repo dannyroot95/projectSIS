@@ -481,6 +481,21 @@ router.post("/send-trama", function (req, res,next) {
   });
 });
 
+router.get("/get-fua-by-num-and-lote/:a/:b", function (req, res,next) {
+  let fua = req.params.a;
+  let lote = req.params.b;
+
+  sql.getFuaByNumAndLote(fua,lote).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
 module.exports = router;
 
 

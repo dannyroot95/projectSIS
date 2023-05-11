@@ -4,7 +4,7 @@ const fs = require('fs');
 const archiver = require('archiver');
 archiver.registerFormat('zip-encrypted', require("archiver-zip-encrypted"));
 const password = '7017FuaE47121'; 
-
+const passwordTest = 'PilotoFUAE123'
  
 async function getdata() {
   try {
@@ -444,7 +444,7 @@ console.log("error :" + error);
     try{
    
       // create archive and specify method of encryption and password
-      let archive = archiver.create('zip-encrypted', {zlib: {level: 8}, encryptionMethod: 'aes256', password: password});
+      let archive = archiver.create('zip-encrypted', {zlib: {level: 8}, encryptionMethod: 'aes256', password: passwordTest});
       
       // Crea un archivo de texto y escribe algunos datos
       const file1 = fs.createWriteStream('ATENCION.txt');
@@ -506,6 +506,19 @@ console.log("error :" + error);
 
   }
 
+  async function getFuaByNumAndLote(FUA,LOTE) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('fua',FUA)
+      .input('lote',LOTE)
+      .execute(`BUSCAR_FUA_POR_NUMERO_LOTE`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
 
 module.exports = {
   getdata: getdata,
@@ -540,5 +553,6 @@ module.exports = {
   getTramaRN:getTramaRN,
   getLastCorrelative:getLastCorrelative,
   setTramaRESUMEN:setTramaRESUMEN,
-  getTramaRes:getTramaRes
+  getTramaRes:getTramaRes,
+  getFuaByNumAndLote:getFuaByNumAndLote
 };

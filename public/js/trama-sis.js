@@ -742,6 +742,15 @@ document.getElementById("btn-send").disabled = false
 document.getElementById("btn-logs").style = "display:block;"
 }
 
+function enableButtonsError(){
+  loader.style = "display:none;"
+  document.getElementById("btn-logs").style = "display:none;"
+  document.getElementById("btn-logs").disabled = false
+  document.getElementById("btn-query").disabled = false
+  document.getElementById("btn-send").disabled = false
+  document.getElementById("btn-logs").style = "display:block;"
+  }
+
 function validateData(d){
 
     let ctx = 0
@@ -836,6 +845,7 @@ function sendTrama(ATENCION,ATENCIONDIA,ATENCIONMED,ATENCIONINS,ATENCIONPRO,ATEN
                 'Trama enviada!',
                 'success'
               )
+              enableButtons()
          }
       })
       .catch(error => {
@@ -845,6 +855,7 @@ function sendTrama(ATENCION,ATENCIONDIA,ATENCIONMED,ATENCIONINS,ATENCIONPRO,ATEN
             'warning'
           )
         console.error(error)
+        enableButtonsError()
     });
 }
 
@@ -856,6 +867,17 @@ function postTrama(){
     var mes_selected = mes.value
     var anio_selected = anio.value
 
+    atencion = ``
+    diagnostico = ``
+    medicamentos = ``
+    insumos = ``
+    procedimientos = ``
+    smi = ``
+    ser = ``
+    rn = ``
+    res = ``
+
+    disabledButtons()
     sendAllTramas(anio_selected,mes_selected)
 
 }
@@ -887,7 +909,7 @@ function sendAllTramas(anio,mes){
       }).catch(err => {
         
         console.log(err)
-        enableButtons()
+        enableButtonsError()
       }); 
 
 }
@@ -920,7 +942,7 @@ function getTramaDiagnostico(anio,mes){
       }).catch(err => {
         
         console.log(err)
-        enableButtons()
+        enableButtonsError()
       }); 
 
 }
@@ -954,7 +976,7 @@ function getTramaMedicamentos(anio,mes){
     }).catch(err => {
       
       console.log(err)
-      enableButtons()
+      enableButtonsError()
     }); 
 
 }
@@ -987,7 +1009,7 @@ function getTramaInsumos(anio,mes){
     }).catch(err => {
       
       console.log(err)
-      enableButtons()
+      enableButtonsError()
     }); 
 
 }
@@ -1020,7 +1042,7 @@ function getTramaProcedimientos(anio,mes){
     }).catch(err => {
       
       console.log(err)
-      enableButtons()
+      enableButtonsError()
     }); 
 
 }
@@ -1053,7 +1075,7 @@ function getTramaSmi(anio,mes){
     }).catch(err => {
       
       console.log(err)
-      enableButtons()
+      enableButtonsError()
     }); 
 
 }
@@ -1090,7 +1112,7 @@ function getTramaSer(anio,mes){
     }).catch(err => {
       
       console.log(err)
-      enableButtons()
+      enableButtonsError()
     }); 
 
 }
@@ -1124,7 +1146,7 @@ function getTramaRn(anio,mes){
     }).catch(err => {
       
       console.log(err)
-      enableButtons()
+      enableButtonsError()
     }); 
 
 }
@@ -1155,7 +1177,7 @@ function getLastCorrelative(anio,mes){
     }).catch(err => {
       
       console.log(err)
-      enableButtons()
+      enableButtonsError()
     }); 
 
 }
@@ -1163,7 +1185,7 @@ function getLastCorrelative(anio,mes){
 function setResum(correlative,anio,mes){
 
   let codReanes = '00002698'
-  let nZip = codReanes+anio+mes+nSend(correlative)+'.zip'
+  let nZip = codReanes+anio+padNumber(mes)+nSend(correlative)+'.zip'
 
   let data = {
     anio: anio,
@@ -1192,6 +1214,7 @@ function setResum(correlative,anio,mes){
      }
   })
   .catch(error => {
+    enableButtonsError()
     Swal.fire(
         'Oops!',
         'Se produjo un error',
@@ -1214,6 +1237,7 @@ function getAtencionResumen(anio,mes,nEnvio){
 
     res += data[0].Anio.toString()+"\n"
     res += padNumber(data[0].Mes)+"\n"
+    res += data[0].NroEnvio+"\n"
     res += data[0].NomPaquete+"\n"
     res += data[0].VersionGTI+"\n"
     res += data[0].CantFilATE.toString()+"\n"
@@ -1234,7 +1258,7 @@ function getAtencionResumen(anio,mes,nEnvio){
 
     
   }).catch(err => {
-    
+    enableButtonsError()
     console.log(err)
     enableButtons()
   }); 

@@ -27,14 +27,35 @@
     <h2>Diagnosticos y procedimientos</h2>
     <p></p>
     <div class="input-group mb-3" style="width: 60%;">
-      <div class="input-group-prepend">
-        <span class="input-group-text">Fecha de inicio</span>
-      </div>
-      <input type="date" class="form-control" id="d-init">
-      <div class="input-group-prepend">
-          <span class="input-group-text">Fecha final</span>
+      
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="anio">Año</label>
         </div>
-        <input type="date" class="form-control" id="d-final">
+        <select class="custom-select" id="anio">
+          <option value="2020">2020</option>
+          <option value="2021">2021</option>
+          <option value="2022">2022</option>
+          <option value="2023" selected>2023</option>
+        </select>
+      
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="mes">Mes</label>
+        </div>
+        <select class="custom-select" id="mes">
+          <option selected value="01">Enero</option>
+          <option value="02">Febrero</option>
+          <option value="03">Marzo</option>
+          <option value="04">Abril</option>
+          <option value="05">Mayo</option>
+          <option value="06">Junio</option>
+          <option value="07">Julio</option>
+          <option value="08">Agosto</option>
+          <option value="09">Septiembre</option>
+          <option value="10">Octubre</option>
+          <option value="11">Noviembre</option>
+          <option value="12">Diciembre</option>
+        </select>
+
         <button class="btn btn-primary" id="btn-search" onclick="query()">Buscar</button>
         <button class="btn btn-success" style="display: none;" id="btn-xls" onclick="exportToExcel()"><i class='bx bxs-file-doc'></i>&nbsp;Exportar</button>
         <a><div class="loaderSmall" id="loader"></div></a>
@@ -50,12 +71,21 @@
             <th class="minText" scope="col">Historia</th>
             <th class="minText" scope="col">N° Cuenta</th>
             <th class="minText" scope="col">Nombres y Apellidos</th>
-            <th class="minText" scope="col">D1</th>
-            <th class="minText" scope="col">D2</th>
-            <th class="minText" scope="col">D3</th>
-            <th class="minText" scope="col">D4</th>
-            <th class="minText" scope="col">D5</th>
-            <th class="minText" scope="col">D6</th>
+            <th class="minText" scope="col">Código</th>
+            <th style="color: blue;" class="minText" scope="col">D1</th>
+            <th style="color: blue;" class="minText" scope="col">D2</th>
+            <th style="color: blue;" class="minText" scope="col">D3</th>
+            <th style="color: blue;" class="minText" scope="col">D4</th>
+            <th style="color: blue;" class="minText" scope="col">D5</th>
+            <th style="color: blue;" class="minText" scope="col">D6</th>
+            <th style="color: rgb(0, 133, 18);" class="minText" scope="col">P1</th>
+            <th style="color: rgb(0, 133, 18);" class="minText" scope="col">P2</th>
+            <th style="color: rgb(0, 133, 18);" class="minText" scope="col">P3</th>
+            <th style="color: rgb(0, 133, 18);" class="minText" scope="col">P4</th>
+            <th style="color: rgb(0, 133, 18);" class="minText" scope="col">P5</th>
+            <th style="color: rgb(0, 133, 18);" class="minText" scope="col">P6</th>
+            <th style="color: rgb(0, 133, 18);" class="minText" scope="col">P7</th>
+
           </tr>
         </thead>
         <tbody id="tbody">

@@ -2,25 +2,28 @@ const { json } = require('express');
 var express = require('express');
 var router = express.Router();
 const sql = require("../dboperation");
+
+const largeData = []; // Array con los datos que deseas enviar en la respuesta JSON
+const pageSize = 100; // Tamaño máximo de cada página
+const pageNumber = 2;
+
+function getPagedData(data, pageSize, pageNumber) {
+  const startIndex = (pageNumber - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const pagedData = data.slice(startIndex, endIndex);
+  return pagedData;
+}
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
-
 
 //test connection
 router.get('/test', function(req, res, next) {
   sql.getdata();
   res.render('index', { title: 'Express' });
 });
-
-/*
-router.get("/getdata_withQuery", function (req, res, next) {
-  sql.getdata_withQuery().then((result) => {
-    res.json(result[0]);
-  });
-});*/
-
 
 router.get("/getdata_invoice_charge/:quantity", function (req, res, next) {
   let query = req.params.quantity 
@@ -145,12 +148,44 @@ router.get("/production/:x/:y", function (req, res,next) {
   });
 });
 
+router.get("/production_ins_med/:x/:y", function (req, res,next) {
+  let f_init = req.params.x;
+  let f_fin = req.params.y;
+
+  sql.production_ins_med(f_init,f_fin).then((result) => {
+    if(result[0].length>0){
+
+      const data = result[0]
+
+      data.forEach(item => {
+        if (!result[item.nro_formato]) {
+          result[item.nro_formato] = {
+            nro_formato: item.nro_formato,
+            insumos: item.insumos,
+            medicamentos: item.medicamentos
+          };
+        } else {
+          result[item.nro_formato].insumos += '|' + item.insumos;
+          result[item.nro_formato].medicamentos += '|' + item.medicamentos;
+        }
+      });
+      
+      const output = {
+        items: Object.values(result)
+      };
+      res.json(output);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
 router.get("/discharge_control/:x/:y", function (req, res,next) {
   let f_init = req.params.x;
   let f_fin = req.params.y;
 
   sql.discharge_control(f_init,f_fin).then((result) => {
-
     if(result[0].length>0){
       res.json(result[0]);
     }else{

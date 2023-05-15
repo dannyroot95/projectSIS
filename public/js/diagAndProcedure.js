@@ -163,7 +163,6 @@ result.forEach(function(element) {
   output2.push(obj);
 });
    
-console.log(output2)
 insertData(output2)
 
 }

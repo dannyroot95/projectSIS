@@ -158,6 +158,20 @@ console.log("error :" + error);
     }
   }
 
+  async function production_ins_med(f_init,f_fin) {
+
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('f_ini',f_init)
+      .input('f_fin',f_fin)
+      .execute(`PRODUCCION_INS_MED`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
   async function discharge_control(f_init,f_fin) {
 
     try {
@@ -533,6 +547,7 @@ module.exports = {
   status_atention_pro:status_atention_pro,
   diag_and_proc:diag_and_proc,
   production:production,
+  production_ins_med:production_ins_med,
   searchAffiliate:searchAffiliate,
   discharge_control:discharge_control,
   tramaAtencion:tramaAtencion,

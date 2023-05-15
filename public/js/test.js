@@ -1,131 +1,70 @@
-let output = [];
-let output2 = [];
-const result = [];
 
-
-let input  = [
-
+let data   = 
+  [
   {
-  name:"jose",
-  diagnostico : "paralisis",
-  procedimiento : "pisiquiatria"
+  usuario : "etuesta",
+  insumo : "SODIO CLORURO 0.9  X 1L",
+  medicamento : "JERINGA DESCARTABLE"
   },
-  
   {
-  name:"jose",
-  diagnostico : "ruptura",
-  procedimiento : "traumatologia"
+  usuario : "etuesta",
+  insumo : "SODIO CLORURO 0.12  X 1L",
+  medicamento : "JERINGA 10ml"
   },
-  
   {
-  name:"jose",
-  diagnostico : "pierna rota",
-  procedimiento : "vendaje"
+  usuario : "oporto",
+  insumo : "SODIO DE POTACIO 1L",
+  medicamento : "GASA 10ml"
   },
-  
   {
-    name:"jose",
-    diagnostico : "ruptura",
-    procedimiento : "cirujia"
-    },
-
-  {
-  name:"danny",
-  diagnostico : "caida",
-  procedimiento : "curacion"
+  usuario : "oporto",
+  insumo : "SODIO DE POTACIO 1L",
+  medicamento : "JERINGA 10ml"
   },
-  
   {
-  name:"danny",
-  diagnostico : "caida",
-  procedimiento : "topico"
+  usuario : "oporto",
+  insumo : "SODIO DE POTACIO 1L",
+  medicamento : "PASTILLAS 10ml"
   }
-  
-  ];
+  ]
+
    
 
 
-  input.forEach(item => {
-    let patient = output.find(p => p.name === item.name);
-    if (!patient) {
-      patient = { name: item.name };
-      output.push(patient);
+  const result = {};
+
+  data.forEach(item => {
+    if (!result[item.usuario]) {
+      result[item.usuario] = {
+        usuario: item.usuario,
+        insumo: item.insumo,
+        medicamento: item.medicamento
+      };
+    } else {
+      result[item.usuario].insumo += '|' + item.insumo;
+      result[item.usuario].medicamento += '|' + item.medicamento;
     }
-    let diagNum = 1;
-    let procNum = 1;
-    for (let i = 1; i <= 4; i++) {
-      if (patient[`diagnostico${i}`] === undefined) {
-        diagNum = i;
-        break;
-      }
-    }
-    for (let i = 1; i <= 5; i++) {
-      if (patient[`procedimiento${i}`] === undefined) {
-        procNum = i;
-        break;
-      }
-    }
-    patient[`diagnostico${diagNum}`] = item.diagnostico;
-    patient[`procedimiento${procNum}`] = item.procedimiento;
   });
   
-
-for (let i = 0; i < output.length; i++) {
-  const obj = {};
-  const uniqueKeys = {};
-  for (let key in output[i]) {
-    if (!uniqueKeys.hasOwnProperty(output[i][key])) {
-      uniqueKeys[output[i][key]] = true;
-      obj[key] = output[i][key];
-    }
-  }
-  result.push(obj);
-}
-
-result.forEach(function(element) {
-  let name = element.name;
-  let diagnostico = [];
-  let procedimiento = [];
-  let max_diagnostico = 6;
-  let max_procedimiento = 7;
-
-  for (let i = 1; i <= max_diagnostico; i++) {
-    let diag_key = "diagnostico" + i;
-    if (element.hasOwnProperty(diag_key)) {
-      diagnostico.push(element[diag_key]);
-    } else {
-      diagnostico.push(null);
-    }
-  }
-
-  for (let i = 1; i <= max_procedimiento; i++) {
-    let proc_key = "procedimiento" + i;
-    if (element.hasOwnProperty(proc_key)) {
-      procedimiento.push(element[proc_key]);
-    } else {
-      procedimiento.push(null);
-    }
-  }
-
-  let obj = {
-    "name": name,
-    "diagnostico1": diagnostico[0],
-    "diagnostico2": diagnostico[1],
-    "diagnostico3": diagnostico[2],
-    "diagnostico4": diagnostico[3],
-    "diagnostico5": diagnostico[4],
-    "diagnostico6": diagnostico[5],
-    "procedimiento1": procedimiento[0],
-    "procedimiento2": procedimiento[1],
-    "procedimiento3": procedimiento[2],
-    "procedimiento4": procedimiento[3],
-    "procedimiento5": procedimiento[4],
-    "procedimiento6": procedimiento[5],
-    "procedimiento7": procedimiento[6]
+  const output = {
+    items: Object.values(result)
   };
+  
+  console.log(output);
 
-  output2.push(obj);
-});
+  fetch(`http://172.16.2.85:8080/production_ins_med/2023-03-01/2023-03-08/`,{
+    method: 'get',
+    headers: {
+      'Accept': 'application/json'
+    }
+})
+  .then(response => response.json())
+  .then(data => {
 
-
-console.log(output2);
+    console.log(data)
+    
+  }).catch(err => {
+    
+    console.log(err)
+  
+  }); 

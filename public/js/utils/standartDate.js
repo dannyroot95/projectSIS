@@ -22,7 +22,7 @@ function typeService(service){
     let type = ""
 
     if(service == null){
-        type = service
+        type = "<center>-</center>"
     }else if(service == "TOPICO CIRUGIA" || service == "TOPICO OBSTÉTRICA" || service == "TOPICO MEDICINA" || service == "TOPICO TRAUMATOLOGIA" || 
         service == "OBSERVACION EMERGENCIA MASCULINO" || service == "OBSERVACION EMERGENCIA FEMENINO" || service == "TOPICO DE MEDICINA 1" || 
         service == "TRAUMA SHOCK" || service == "OBSERVACIÓN EMERGENCIA MASCULINO"){

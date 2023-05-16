@@ -1,8 +1,8 @@
-const server = 'localhost'
-const port = 49926
+const server = 'shsr1'
+const port = 1433
 const database = 'BD_APP'
-const user = 'root'
-const password = 'root'
+const user = 'poa3'
+const password = 'poa15121001'
 
 const config = {
     user: user,

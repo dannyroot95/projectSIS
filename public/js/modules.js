@@ -23,6 +23,8 @@ $('document').ready(function () {
           diag_and_procedure()
         }else if (direccion == '#produccion') {
           produccion()
+        }else if (direccion == '#produccion_ins_med') {
+          produccion_ins_med()
         }else if (direccion == '#afiliados') {
           affiliate()
         }else if (direccion == '#control_altas') {
@@ -63,6 +65,10 @@ $('document').ready(function () {
   function produccion() {
     window.location.hash = "#produccion"
     contentModulo.innerHTML = urlModule("/content/produccion.html");
+  }
+  function produccion_ins_med() {
+    window.location.hash = "#produccion_ins_med"
+    contentModulo.innerHTML = urlModule("/content/produccion-ins-med.html");
   }
   function affiliate() {
     window.location.hash = "#afiliados"

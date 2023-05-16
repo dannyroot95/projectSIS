@@ -3,16 +3,6 @@ var express = require('express');
 var router = express.Router();
 const sql = require("../dboperation");
 
-const largeData = []; // Array con los datos que deseas enviar en la respuesta JSON
-const pageSize = 100; // Tamaño máximo de cada página
-const pageNumber = 2;
-
-function getPagedData(data, pageSize, pageNumber) {
-  const startIndex = (pageNumber - 1) * pageSize;
-  const endIndex = startIndex + pageSize;
-  const pagedData = data.slice(startIndex, endIndex);
-  return pagedData;
-}
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -155,12 +145,25 @@ router.get("/production_ins_med/:x/:y", function (req, res,next) {
   sql.production_ins_med(f_init,f_fin).then((result) => {
     if(result[0].length>0){
 
-      const data = result[0]
+      let data = result[0]
 
       data.forEach(item => {
         if (!result[item.nro_formato]) {
           result[item.nro_formato] = {
+            cuenta:item.cuenta,
             nro_formato: item.nro_formato,
+            f_atencion:item.f_atencion,
+            beneficiario:item.beneficiario,
+            servicio:item.servicio,
+            hist_clinica:item.hist_clinica,
+            digitador:item.digitador,
+            mes:item.mes,
+            medico:item.medico,
+            periodo:item.periodo,
+            servicio:item.servicio,
+            servicio_egreso:item.servicio_egreso,
+            nombre_digitador:item.nombre_digitador,
+            usuario:item.usuario,
             insumos: item.insumos,
             medicamentos: item.medicamentos
           };
@@ -170,14 +173,14 @@ router.get("/production_ins_med/:x/:y", function (req, res,next) {
         }
       });
       
-      const output = {
-        items: Object.values(result)
-      };
-      res.json(output);
+      let output = Object.values(result)
+      let newArray = [...output]; // Copia el array original
+      newArray.splice(0, 1);
+      res.json(newArray);
+
     }else{
       res.json({error:"sin datos"})
     }
-   
   });
 });
 
@@ -191,7 +194,6 @@ router.get("/discharge_control/:x/:y", function (req, res,next) {
     }else{
       res.json({error:"sin datos"})
     }
-   
   });
 });
 
@@ -205,7 +207,6 @@ router.get("/affiliate/:nro", function (req, res,next) {
     }else{
       res.json({error:"sin datos"})
     }
-   
   });
 });
 
@@ -237,7 +238,6 @@ router.get("/get-trama-atencion/:a/:b/:c", function (req, res,next) {
     }else{
       res.json({error:"sin datos"})
     }
-   
   });
 });
 
@@ -252,7 +252,6 @@ router.get("/trama-diagnostico/:a/:b", function (req, res,next) {
     }else{
       res.json({error:"sin datos"})
     }
-   
   });
 });
 
@@ -267,7 +266,6 @@ router.get("/get-trama-diagnostico/:a/:b", function (req, res,next) {
     }else{
       res.json({error:"sin datos"})
     }
-   
   });
 });
 
@@ -283,7 +281,6 @@ router.get("/trama-medicamentos/:a/:b", function (req, res,next) {
     }else{
       res.json({error:"sin datos"})
     }
-   
   });
 });
 
@@ -298,7 +295,6 @@ router.get("/get-trama-medicamentos/:a/:b", function (req, res,next) {
     }else{
       res.json({error:"sin datos"})
     }
-   
   });
 });
 
@@ -313,7 +309,6 @@ router.get("/trama-insumos/:a/:b", function (req, res,next) {
     }else{
       res.json({error:"sin datos"})
     }
-   
   });
 });
 

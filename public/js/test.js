@@ -1,4 +1,9 @@
 
+const cadena = "SODIO CLORURO 0.12  X 1L|SODIO CLORURO 0.12  X 1L|SODIO DE POTACIO 1L"
+
+const cadenaSinDuplicados = [...new Set(cadena.split('|'))].join('|')
+console.log(cadenaSinDuplicados)
+
 let data   = 
   [
   {
@@ -50,7 +55,8 @@ let data   =
     items: Object.values(result)
   };
   
-  console.log(output);
+  //console.log(output);
+  /*
 
   fetch(`http://172.16.2.85:8080/production_ins_med/2023-03-01/2023-03-08/`,{
     method: 'get',
@@ -68,3 +74,5 @@ let data   =
     console.log(err)
   
   }); 
+
+  */

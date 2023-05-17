@@ -533,6 +533,44 @@ console.log("error :" + error);
     }
   }
 
+  async function getFuaByAccount(num) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('num',num)
+      .execute(`BUSCAR_FUA_POR_CUENTA`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
+  async function getFuaByDNI(dni) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('dni',dni)
+      .execute(`BUSCAR_FUA_POR_DNI`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
+  async function getFuaByFullname(LASTNAME1,LASTNAME2,NAME) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('ap',LASTNAME1)
+      .input('am',LASTNAME2)
+      .input('name',NAME)
+      .execute(`BUSCAR_FUA_POR_NOMBRES`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
 
 module.exports = {
   getdata: getdata,
@@ -569,5 +607,8 @@ module.exports = {
   getLastCorrelative:getLastCorrelative,
   setTramaRESUMEN:setTramaRESUMEN,
   getTramaRes:getTramaRes,
-  getFuaByNumAndLote:getFuaByNumAndLote
+  getFuaByNumAndLote:getFuaByNumAndLote,
+  getFuaByAccount:getFuaByAccount,
+  getFuaByDNI:getFuaByDNI,
+  getFuaByFullname:getFuaByFullname
 };

@@ -54,7 +54,9 @@
 
           </div>
 
-          <button class="btn btn-success" id="btn-query" onclick="search()" style="font-weight: bold;" type="button"><i class="bi bi-search"></i>Consultar</button>
+          <a id="btnType">
+            <button class="btn btn-success" id="btn-query" onclick="searchByFullname()" style="font-weight: bold;"
+             type="button"><i class="bi bi-search"></i>Consultar</button></a>
           <button class="btn btn-danger" id="btn-cancel" onclick="cancelFetch()" style="font-weight: bold;display: none;" type="button"><i class="bi bi-x-circle-fill"></i>Cancelar</button>
           <button class="btn btn-dark" id="btn-export" onclick="exportToExcel()" style="display: none;"  type="button"><i class="bi bi-file-earmark-spreadsheet"></i>Exportar</button>
  
@@ -64,16 +66,16 @@
   
 
 <div id="body">
-
   <div id="type-content">
-
     <div class="table-responsive">
       <table class="table table-hover table-bordered display" id="tb-data">
           <thead>
             <tr>
               <th scope="col"><center>#</center></th>
               <th scope="col"><center>Paciente</center></th>
-              <th scope="col"><center>Fecha de atención (FUA)</center></th>
+              <th scope="col"><center>FUA</center></th>
+              <th scope="col"><center>Lote</center></th>
+              <th scope="col"><center>F.Ate(FUA)</center></th>
               <th scope="col"><center>N° de cuenta</center></th>
               <th scope="col"><center>Médico</center></th>
               <th scope="col"><center>Digitador</center></th>
@@ -83,7 +85,6 @@
           </tbody>
         </table>
       </div>
-
     </div>
    
 

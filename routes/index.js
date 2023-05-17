@@ -526,6 +526,50 @@ router.get("/get-fua-by-num-and-lote/:a/:b", function (req, res,next) {
   });
 });
 
+router.get("/get-fua-by-account/:a", function (req, res,next) {
+  let num = req.params.a;
+
+  sql.getFuaByAccount(num).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
+router.get("/get-fua-by-dni/:a", function (req, res,next) {
+  let dni = req.params.a;
+
+  sql.getFuaByDNI(dni).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+  
+  });
+});
+
+router.get("/get-fua-by-fullname/:a/:b/:c", function (req, res,next) {
+  let ap = req.params.a;
+  let am = req.params.b;
+  let name = req.params.c;
+
+  sql.getFuaByFullname(ap,am,name).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+  
+  });
+});
+
 module.exports = router;
 
 

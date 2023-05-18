@@ -1,0 +1,153 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="/libraries/sweetalert2/dist/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="/libraries/sweetalert2/dist/sweetalert2.min.css">
+    <link href='/bootstrap/css/bootstrap.min.css' rel='stylesheet'>
+    <link href='/bootstrap/datatables.min.css' rel='stylesheet'>
+    <link href='/css/styles.css' rel='stylesheet'>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="/bootstrap/icons/font/bootstrap-icons.css">
+    <script type="text/javascript" src="/libraries/xlsexport/xls-export.es5.js"></script>
+  
+    <style>
+      .form-control:disabled {
+    background-color: #ffffff;
+    opacity: 1;
+}
+    </style>
+
+</head>
+<body>
+    
+    <h2>Usuarios &nbsp;<button onclick="openModal()" class="btn btn-success"><i class='bx bxs-user-detail' ></i>&nbsp; Crear usuario</button></h2>
+    
+<div id="body">
+
+   <div class="table-responsive">
+    <table class="table table-hover table-bordered display" id="tb-data">
+        <thead>
+          <tr>
+            <th class="minText" scope="col">ID</th>
+            <th class="minText" scope="col">Nombres</th>
+            <th class="minText" scope="col">DNI</th>
+            <th class="minText" scope="col">Tipo</th>
+            <th class="minText" scope="col">F.registro</th>
+            <th class="minText" scope="col">Usuario</th>
+            <th class="minText" scope="col">Sexo</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+        </tbody>
+      </table>
+    </div>
+    </div>
+   
+      <!--modal-->
+
+      <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="d-title">Crear usuario</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              
+                <div class="input-group mb-3" style="width: 30%;">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1">DNI</span>
+                    </div>
+                    <input maxLength="8" onKeypress='if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;' type="tel" id="dni" class="form-control" aria-label="dni" aria-describedby="basic-addon1">
+                    <button onclick="search()" class="btn btn-dark"><i class='bx bx-search-alt-2'></i>&nbsp;Buscar</button>  
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1">Apellido paterno</span>
+                    </div>
+                    <input disabled style="text-transform: uppercase;background-color: white;color: black;" type="text" class="form-control" id="ap" aria-describedby="basic-addon1">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">Apellido materno</span>
+                      </div>
+                      <input disabled style="text-transform: uppercase;background-color: white;color: black;" type="text" class="form-control" id="am" aria-describedby="basic-addon1">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">Nombres</span>
+                      </div>
+                      <input disabled style="text-transform: uppercase;background-color: white;color: black;" type="text" class="form-control" id="fullname" aria-describedby="basic-addon1">
+                </div>
+
+                <div class="input-group mb-3" style="width: 80%;">
+                    
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">Fecha de nacimiento</span>
+                      </div>
+                      <input style="background-color: white;color: black;" disabled type="text" id="f_nacimiento" class="form-control" aria-describedby="basic-addon1">
+                    
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1">Fecha de ingreso</span>
+                    </div>
+                    <input style="background-color: white;color: black;" disabled type="text" id="f_ingreso" class="form-control" aria-describedby="basic-addon1">
+                </div>
+
+
+                <div class="input-group mb-3" style="width: 70%;">
+                    
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">ID tipo de usuario</span>
+                      </div>
+                      <input style="background-color: white;color: black;" disabled type="text" id="id_tipo_usuario" class="form-control" aria-describedby="basic-addon1">
+                    
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1">Descripción</span>
+                    </div>
+                    <input style="background-color: white;color: black;" disabled type="text" id="tipo_descripcion" class="form-control" aria-describedby="basic-addon1">
+                </div>
+
+                <div class="input-group mb-3">
+                    
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">Cod.planilla</span>
+                      </div>
+                      <input style="background-color: white;color: black;" disabled type="text" id="c_planilla" class="form-control" aria-describedby="basic-addon1">
+                    
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1">Usuario</span>
+                    </div>
+                    <input style="background-color: white;color: black;" disabled type="text" id="usuario" class="form-control" aria-describedby="basic-addon1">
+                
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">Sexo</span>
+                      </div>
+                      <input style="background-color: white;color: black;" disabled type="text" id="sex" class="form-control" aria-describedby="basic-addon1">
+                </div>
+
+                <div class="input-group mb-3" style="width: 40%;">
+                    
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">Contraseña</span>
+                      </div>
+                      <input style="background-color: white;color: black;" type="password" id="password" class="form-control" aria-describedby="basic-addon1">
+                </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success">Registrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+        <!--modal-->
+
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/bootstrap/datatables.min.js"></script>
+    <script src="/js/utils/standartDate.js"></script>
+    <script src="/js/utils/constants.js"></script>
+    <script src="/js/users.js"></script>
+</body>
+</html>

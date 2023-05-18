@@ -570,6 +570,51 @@ router.get("/get-fua-by-fullname/:a/:b/:c", function (req, res,next) {
   });
 });
 
+router.get("/get-employee/:a", function (req, res,next) {
+  let dni = req.params.a;
+
+  sql.getEmployee(dni).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+  
+  });
+});
+
+router.post("/create-user", function (req, res,next) {
+
+  const data = req.body;
+  const idEmpleado = data.IdEmpleado
+  const ApellidoPaterno = data.ApellidoPaterno
+  const ApellidoMaterno = data.ApellidoMaterno
+  const Nombres = data.Nombres
+  const IdCondicionTrabajo = data.IdCondicionTrabajo
+  const IdTipoEmpleado = data.IdTipoEmpleado
+  const TipoEmpleado = data.Descripcion
+  const DNI = data.DNI
+  const CodigoPlanilla = data.CodigoPlanilla
+  const FechaIngreso = data.FechaIngreso
+  const Usuario = data.Usuario
+  const FechaRegistroHerramienta = data.FechaRegistroHerramienta
+  const ClaveSisHerramientas = data.ClaveSisHerramientas
+  const ReniecAutorizado = data.ReniecAutorizado
+  const idTipoDocumento = data.idTipoDocumento
+  const idTipoSexo = data.idTipoSexo
+ 
+
+  sql.setUser(idEmpleado,ApellidoPaterno,ApellidoMaterno,Nombres,IdCondicionTrabajo,IdTipoEmpleado,DNI,CodigoPlanilla,FechaIngreso,FechaRegistroHerramienta,Usuario,ClaveSisHerramientas,ReniecAutorizado,idTipoDocumento,idTipoSexo,TipoEmpleado).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
 module.exports = router;
 
 

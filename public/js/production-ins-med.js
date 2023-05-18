@@ -16,7 +16,6 @@ function search(){
       var dias = (Math.floor(diferenciaMilisegundos / (1000 * 60 * 60 * 24)))+1
 
       if(dias <= 15){
-        alert(dias)
         document.getElementById("btn-search").disabled = true
         document.getElementById("btn-cancel").style = "display:block;"
         loader.style = "display:block;"
@@ -184,9 +183,11 @@ function exportToExcel(){
         },
       })
   
+    let d_init = document.getElementById("d-init").value
+    let d_final = document.getElementById("d-final").value
 
     let xls = new XlsExport(allData, 'reporte');
-    xls.exportToXLS('produccion_ins_med.xls')
+    xls.exportToXLS('produccion_ins_med_del_'+d_init+'_al_'+d_final+'.xls')
   }
 
   function cancel(){

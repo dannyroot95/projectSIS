@@ -94,7 +94,7 @@ console.log("error :" + error);
       .input('idFiltroTipo',type)
       .input('fecInicio',init_month)
       .input('fecFin',final_month)
-      .execute(`sigh..ReporteSisImplementacionSoaSis`) 
+      .execute(`SIGH.ReporteSisImplementacionSoaSis`) 
       return res.recordsets
     } catch (error) {
       console.log("error : " + error);
@@ -571,6 +571,33 @@ console.log("error :" + error);
     }
   }
 
+  async function getEmployee(dni) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('DNI',dni)
+      .execute(`BUSCAR_EMPLEADO`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
+  async function setUser(idEmpleado,ApellidoPaterno,ApellidoMaterno,Nombres,IdCondicionTrabajo,IdTipoEmpleado,DNI,CodigoPlanilla,FechaIngreso,FechaRegistroHerramienta,Usuario,ClaveSisHerramientas,ReniecAutorizado,idTipoDocumento,idTipoSexo,TipoEmpleado) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .query(`
+      INSERT INTO usuarios_sis_tools (idEmpleado,ApellidoPaterno,ApellidoMaterno,Nombres,IdCondicionTrabajo,IdTipoEmpleado,DNI,CodigoPlanilla,FechaIngreso,FechaRegistroHerramienta,Usuario,ClaveSisHerramientas,ReniecAutorizado,idTipoDocumento,idTipoSexo,TipoEmpleado)
+      VALUES (${idEmpleado},${ApellidoPaterno},${ApellidoMaterno},${Nombres},${IdCondicionTrabajo},${IdTipoEmpleado},${DNI},${CodigoPlanilla},${FechaIngreso},${FechaRegistroHerramienta},${Usuario},${ClaveSisHerramientas},${ReniecAutorizado},${idTipoDocumento},${idTipoSexo},${TipoEmpleado});
+      `);
+      return [[{success:"creado"}]]
+    } catch (error) {
+      console.log("error :" + error);
+    }finally {
+      sql.close();
+    }
+  }
 
 module.exports = {
   getdata: getdata,
@@ -610,5 +637,7 @@ module.exports = {
   getFuaByNumAndLote:getFuaByNumAndLote,
   getFuaByAccount:getFuaByAccount,
   getFuaByDNI:getFuaByDNI,
-  getFuaByFullname:getFuaByFullname
+  getFuaByFullname:getFuaByFullname,
+  getEmployee:getEmployee,
+  setUser:setUser
 };

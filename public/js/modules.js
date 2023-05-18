@@ -10,6 +10,8 @@ $('document').ready(function () {
   
         if (direccion == '#inicio') {
           inicio()
+        }else if (direccion == '#usuarios') {
+          users()
         }
         else if (direccion == '#estado_comprobante') {
           estado_comprobante()
@@ -89,6 +91,10 @@ $('document').ready(function () {
   function plot_sis() {
     window.location.hash = "#trama_sis"
     contentModulo.innerHTML = urlModule("/content/trama-sis.html");
+  }
+  function users() {
+    window.location.hash = "#usuarios"
+    contentModulo.innerHTML = urlModule("/content/usuarios.html");
   }
   function routeErrE() {
     console.log("ruta error")

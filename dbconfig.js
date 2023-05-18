@@ -1,6 +1,6 @@
 const server = 'localhost'
 const port = 49926
-const database = 'BD_APP'
+const database = 'BD_SIS_TOOLS'
 const user = 'root'
 const password = 'root'
 

@@ -56,6 +56,19 @@
           <option value="12">Diciembre</option>
         </select>
 
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="mes">Modalidad</label>
+        </div>
+        <select class="custom-select" id="modalidad">
+          <option selected value="1">Todos</option>
+           <option value="2">Código de servicio</option>
+           <option value="3">Nombre de servicio</option>
+        </select>
+
+        <input style="display: none;" id="code" type="tel" maxLength="8" onKeypress='if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;' class="form-control" placeholder="Ingrese el código..." aria-describedby="basic-addon1">
+        <input style="display: none;" id="name" type="text" class="form-control" placeholder="Ingrese el nombre..." aria-describedby="basic-addon1">
+
+
         <button class="btn btn-primary" id="btn-search" onclick="query()">Buscar</button>
         <button class="btn btn-success" style="display: none;" id="btn-xls" onclick="exportToExcel()"><i class='bx bxs-file-doc'></i>&nbsp;Exportar</button>
         <a><div class="loaderSmall" id="loader"></div></a>
@@ -71,6 +84,30 @@
             <th class="minText" scope="col">Historia</th>
             <th class="minText" scope="col">N° Cuenta</th>
             <th class="minText" scope="col">Nombres y Apellidos</th>
+            <th class="minText" scope="col">Sexo</th>
+            <th class="minText" scope="col">Edad</th>
+            <th class="minText" scope="col">Departamento</th>
+            <th class="minText" scope="col">Provincia</th>
+            <th class="minText" scope="col">Distrito</th>
+            <th class="minText" scope="col">Cod.Seguro</th>
+            <th class="minText" scope="col">Seguro</th>
+            <th class="minText" scope="col">Fecha de solicitud</th>
+            <th class="minText" scope="col">Hora de inicio</th>
+            <th class="minText" scope="col">Fecha de apertura</th>
+            <th class="minText" scope="col">Hora de ingreso</th>
+            <th class="minText" scope="col">Fecha de egreso</th>
+            <th class="minText" scope="col">Hora de egreso</th>
+            <th class="minText" scope="col">Teléfono</th>
+            <th class="minText" scope="col">Domicilio</th>
+            <th class="minText" scope="col">Médico</th>
+            <th class="minText" scope="col">Origen</th>
+            <th class="minText" scope="col">N° de Origen</th>
+            <th class="minText" scope="col">Diagnostico de referencia</th>
+            <th class="minText" scope="col">Digitador</th>
+            <th class="minText" scope="col">Fecha de digitación</th>
+            <th class="minText" scope="col">ID Atención</th>
+            <th class="minText" scope="col">ID Cita</th>
+            <th class="minText" scope="col">Servicio</th>
             <th class="minText" scope="col">Código</th>
             <th style="color: blue;" class="minText" scope="col">D1</th>
             <th style="color: blue;" class="minText" scope="col">D2</th>

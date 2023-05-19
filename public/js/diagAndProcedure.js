@@ -1,4 +1,20 @@
+var type = document.getElementById("modalidad")
 
+type.addEventListener('change', function handleChange(event) {
+  let value = event.target.value
+  
+  if(value == 1){
+    document.getElementById("code").style = "display:none;"
+    document.getElementById("name").style = "display:none;"
+  }else if(value == 2){
+    document.getElementById("code").style = "display:block;"
+    document.getElementById("name").style = "display:none;"
+  }else{
+    document.getElementById("code").style = "display:none;"
+    document.getElementById("name").style = "display:block;"
+  }
+
+})
 var allData=[]
 createDatatable()
 
@@ -172,8 +188,37 @@ function query(){
 
     let d1 = document.getElementById("anio").value
     let d2 = document.getElementById("mes").value
-   
-    fetchQuery(d1,d2)
+    let modalidad = document.getElementById("modalidad").value
+
+    if(modalidad == 1){
+      fetchQuery(d1,d2)
+    }else if(modalidad == 2){
+      let code = document.getElementById("code").value
+
+      if(code != ""){
+        fetchQueryByCode(d1,d2,code)
+      }else{
+        Swal.fire(
+          "Oops!",
+          "Ingrese el código del servicio!",
+          "info"
+        )
+      }
+
+    }else{
+      let name = document.getElementById("name").value
+
+      if(name != ""){
+        fetchQueryByName(d1,d2,name)
+      }else{
+        Swal.fire(
+          "Oops!",
+          "Ingrese el nombre del servicio!",
+          "info"
+        )
+      }
+      
+    }
 
 }
 
@@ -198,6 +243,48 @@ function fetchQuery(d1,d2){
       }); 
 }
 
+function fetchQueryByCode(d1,d2,code){
+  disabledButtons()
+  allData = []
+  fetch(`${url}/diagnosticos_procedimientos_codigo/${d1}/${d2}/${code}`,{
+      method: 'get',
+      headers: {
+        'Accept': 'application/json'
+      }
+  })
+    .then(response => response.json())
+    .then(data => {
+
+      clearJSON(data)
+
+    }).catch(err => {
+      
+      console.log(err)
+      enableButtons()
+    }); 
+}
+
+function fetchQueryByName(d1,d2,name){
+  disabledButtons()
+  allData = []
+  fetch(`${url}/diagnosticos_procedimientos_nom/${d1}/${d2}/${name}`,{
+      method: 'get',
+      headers: {
+        'Accept': 'application/json'
+      }
+  })
+    .then(response => response.json())
+    .then(data => {
+
+      clearJSON(data)
+
+    }).catch(err => {
+      
+      console.log(err)
+      enableButtons()
+    }); 
+}
+
 function insertData(data){
     document.getElementById("tbody").innerHTML = ""
     allData = data
@@ -212,6 +299,30 @@ function insertData(data){
               <td class="minText2">${d.NroHistoriaClinica}</td>
               <td class="minText2">${d.nrocuenta}</td>
               <td class="minText2">${d.ApellidoPaterno+" "+d.ApellidoMaterno+" "+d.PrimerNombre}</td>
+              <td class="minText2">${d.sexo}</td>
+              <td class="minText2">${d.Edad+' '+d.tipoedad}</td>
+              <td class="minText2">${d.departamento}</td>
+              <td class="minText2">${d.provincia}</td>
+              <td class="minText2">${d.distrito}</td>
+              <td class="minText2">${d.codigoseguro}</td>
+              <td class="minText2">${d.seguro}</td>
+              <td class="minText2">${d.FechaSolicitud}</td>
+              <td class="minText2">${d.HoraInicio}</td>
+              <td class="minText2">${d.FechaApertura}</td>
+              <td class="minText2">${d.HoraIngreso}</td>
+              <td class="minText2">${d.FechaEgreso}</td>
+              <td class="minText2">${d.HoraEgreso}</td>
+              <td class="minText2">${d.Telefono}</td>
+              <td class="minText2">${d.DireccionDomicilio}</td>
+              <td class="minText2">${d.MedicoAtiende}</td>
+              <td class="minText2">${d.Establecimieto_Origen}</td>
+              <td class="minText2">${d.NroReferenciaOrigen}</td>
+              <td class="minText2">${d.diaggnostico_referencia}</td>
+              <td class="minText2">${d.Usuariodigitaros}</td>
+              <td class="minText2">${d.Fecha_Digitador}</td>
+              <td class="minText2">${d.IdAtencion}</td>
+              <td class="minText2">${d.IdCita}</td>
+              <td class="minText2">${d.Nombre}</td>
               <td class="minText2">${d.Codigo}</td>
               <td class="minText2">${d.diagnostico1}</td>
               <td class="minText2">${d.diagnostico2}</td>

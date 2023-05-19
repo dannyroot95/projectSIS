@@ -58,6 +58,40 @@ router.get("/diagnosticos_procedimientos/:st/:id", function (req, res, next) {
   });
 });
 
+router.get("/diagnosticos_procedimientos_codigo/:st/:id/:code", function (req, res, next) {
+  let anio = req.params.st;
+	let mes = req.params.id;
+  let code = req.params.code;
+  
+  sql.diag_and_proc_by_code(anio,mes,code).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+
+   
+  });
+});
+
+router.get("/diagnosticos_procedimientos_nom/:st/:id/:nom", function (req, res, next) {
+  let anio = req.params.st;
+	let mes = req.params.id;
+  let nom = req.params.nom;
+  
+  sql.diag_and_proc_by_name(anio,mes,nom).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
+
 router.post("/update_status_invoice/:st/:id", function (req, res, next) {
   let query = req.params.st
   let query2 = req.params.id
@@ -593,16 +627,16 @@ router.post("/create-user", function (req, res,next) {
   const Nombres = data.Nombres
   const IdCondicionTrabajo = data.IdCondicionTrabajo
   const IdTipoEmpleado = data.IdTipoEmpleado
-  const TipoEmpleado = data.Descripcion
   const DNI = data.DNI
   const CodigoPlanilla = data.CodigoPlanilla
   const FechaIngreso = data.FechaIngreso
-  const Usuario = data.Usuario
   const FechaRegistroHerramienta = data.FechaRegistroHerramienta
+  const Usuario = data.Usuario
   const ClaveSisHerramientas = data.ClaveSisHerramientas
   const ReniecAutorizado = data.ReniecAutorizado
   const idTipoDocumento = data.idTipoDocumento
   const idTipoSexo = data.idTipoSexo
+  const TipoEmpleado = data.Descripcion
  
 
   sql.setUser(idEmpleado,ApellidoPaterno,ApellidoMaterno,Nombres,IdCondicionTrabajo,IdTipoEmpleado,DNI,CodigoPlanilla,FechaIngreso,FechaRegistroHerramienta,Usuario,ClaveSisHerramientas,ReniecAutorizado,idTipoDocumento,idTipoSexo,TipoEmpleado).then((result) => {

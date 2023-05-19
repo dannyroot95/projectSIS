@@ -98,3 +98,63 @@ function search(){
 
     
 }
+
+function createUser(){
+
+    let v = currentUser
+
+    if (Object.keys(v).length === 0) {
+        console.log("El objeto está vacío.")
+      } else {
+        let x = {
+                IdEmpleado: v.IdEmpleado,
+                ApellidoPaterno: v.ApellidoPaterno,
+                ApellidoMaterno: v.ApellidoMaterno,
+                Nombres: v.Nombres,
+                IdCondicionTrabajo: v.IdCondicionTrabajo,
+                IdTipoEmpleado: v.IdTipoEmpleado,
+                DNI: (v.DNI).trim(),
+                CodigoPlanilla: v.CodigoPlanilla,
+                FechaIngreso: v.FechaIngreso,
+                FechaRegistroHerramienta: 1684523234,
+                Usuario: v.Usuario,
+                ClaveSisHerramientas:"12345678",
+                ReniecAutorizado : v.ReniecAutorizado,
+                idTipoDocumento: v.idTipoDocumento,
+                idTipoSexo: v.idTipoSexo,
+                Descripcion: v.Descripcion
+        }
+        postData(x)
+      }
+
+}
+
+function postData(x){
+
+    fetch(`${url}/create-user/`, {
+        method: 'POST', // o 'PUT', 'DELETE', etc.
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(x) // data es un objeto con los datos a enviar
+      })
+      .then(response => response.json())
+      .then(data => {
+         if(data[0].success == "creado"){
+            Swal.fire(
+                'Muy bien!',
+                'Usuario creado!',
+                'success'
+              )
+         }
+      })
+      .catch(error => {
+        Swal.fire(
+            'Oops!',
+            'Se produjo un error',
+            'warning'
+          )
+        console.error(error)
+    });
+
+}

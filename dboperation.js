@@ -17,7 +17,6 @@ console.log("error :" + error);
   }
 }
  
-
   async function getdata_invoice_charge(quantity) {
     const q = quantity
     try {
@@ -84,8 +83,6 @@ console.log("error :" + error);
     }
   }
 
-
-
   async function insurance_report(type , init_month , final_month ) {
 
     try {
@@ -138,6 +135,36 @@ console.log("error :" + error);
       .input('year1',anio)
       .input('month1',mes)
       .execute(`CONSULTA_DIAGNOSTICOS_Y_PROCEDIMIENTOS`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
+  async function diag_and_proc_by_code(anio,mes,codigo) {
+
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('year1',anio)
+      .input('month1',mes)
+      .input('codigo',codigo)
+      .execute(`CONSULTA_DIAGNOSTICOS_Y_PROCEDIMIENTOS_POR_COD_SERV`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
+  async function diag_and_proc_by_name(anio,mes,name) {
+
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('year1',anio)
+      .input('month1',mes)
+      .input('nom',name)
+      .execute(`CONSULTA_DIAGNOSTICOS_Y_PROCEDIMIENTOS_POR_NOM_SERV`) 
       return res.recordsets
     } catch (error) {
       console.log("error : " + error);
@@ -583,14 +610,30 @@ console.log("error :" + error);
     }
   }
 
-  async function setUser(idEmpleado,ApellidoPaterno,ApellidoMaterno,Nombres,IdCondicionTrabajo,IdTipoEmpleado,DNI,CodigoPlanilla,FechaIngreso,FechaRegistroHerramienta,Usuario,ClaveSisHerramientas,ReniecAutorizado,idTipoDocumento,idTipoSexo,TipoEmpleado) {
+  async function setUser(idEmpleado,ApellidoPaterno,ApellidoMaterno,Nombres,
+    IdCondicionTrabajo,IdTipoEmpleado,DNI,CodigoPlanilla,FechaIngreso,
+    FechaRegistroHerramienta,Usuario,ClaveSisHerramientas,ReniecAutorizado,
+    idTipoDocumento,idTipoSexo,TipoEmpleado) {
     try {
       let pool = await sql.connect(config);
       let res = await pool.request()
-      .query(`
-      INSERT INTO usuarios_sis_tools (idEmpleado,ApellidoPaterno,ApellidoMaterno,Nombres,IdCondicionTrabajo,IdTipoEmpleado,DNI,CodigoPlanilla,FechaIngreso,FechaRegistroHerramienta,Usuario,ClaveSisHerramientas,ReniecAutorizado,idTipoDocumento,idTipoSexo,TipoEmpleado)
-      VALUES (${idEmpleado},${ApellidoPaterno},${ApellidoMaterno},${Nombres},${IdCondicionTrabajo},${IdTipoEmpleado},${DNI},${CodigoPlanilla},${FechaIngreso},${FechaRegistroHerramienta},${Usuario},${ClaveSisHerramientas},${ReniecAutorizado},${idTipoDocumento},${idTipoSexo},${TipoEmpleado});
-      `);
+      .input('idEmpleado',idEmpleado)
+      .input('ApellidoPaterno',ApellidoPaterno)
+      .input('ApellidoMaterno',ApellidoMaterno)
+      .input('Nombres',Nombres)
+      .input('IdCondicionTrabajo',IdCondicionTrabajo)
+      .input('IdTipoEmpleado',IdTipoEmpleado)
+      .input('DNI',DNI)
+      .input('CodigoPlanilla',CodigoPlanilla)
+      .input('FechaIngreso',FechaIngreso)
+      .input('FechaRegistroHerramienta',FechaRegistroHerramienta)
+      .input('Usuario',Usuario)
+      .input('ClaveSisHerramientas',ClaveSisHerramientas)
+      .input('ReniecAutorizado',ReniecAutorizado)
+      .input('idTipoDocumento',idTipoDocumento)
+      .input('idTipoSexo',idTipoSexo)
+      .input('TipoEmpleado',TipoEmpleado)
+      .execute(`CREAR_USUARIO`) 
       return [[{success:"creado"}]]
     } catch (error) {
       console.log("error :" + error);
@@ -611,6 +654,8 @@ module.exports = {
   status_atention:status_atention,
   status_atention_pro:status_atention_pro,
   diag_and_proc:diag_and_proc,
+  diag_and_proc_by_name:diag_and_proc_by_name,
+  diag_and_proc_by_code:diag_and_proc_by_code,
   production:production,
   production_ins_med:production_ins_med,
   searchAffiliate:searchAffiliate,

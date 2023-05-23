@@ -5,15 +5,7 @@ const sql = require("../dboperation");
 
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
 
-//test connection
-router.get('/test', function(req, res, next) {
-  sql.getdata();
-  res.render('index', { title: 'Express' });
-});
 
 router.get("/getdata_invoice_charge/:quantity", function (req, res, next) {
   let query = req.params.quantity 
@@ -618,6 +610,31 @@ router.get("/get-employee/:a", function (req, res,next) {
   });
 });
 
+router.get("/get-employee-by-user/:a/:b", function (req, res,next) {
+  let dni = req.params.a;
+  let user = req.params.b;
+
+  sql.getEmployee(dni,user).then((result) => {
+
+    if(result[0].length>0){
+      let type = {
+        content : getTypeUser(result[0][0].IdTipoEmpleado)
+      }
+
+      for (let i = result.length - 1; i >= 1; i--) {
+        result[i + 1] = result[i];
+      }
+
+      result[1] = type;
+
+      res.json(result);
+    }else{
+      res.json({error:"sin datos"})
+    }
+  
+  });
+});
+
 router.post("/create-user", function (req, res,next) {
 
   const data = req.body;
@@ -648,6 +665,378 @@ router.post("/create-user", function (req, res,next) {
    
   });
 });
+
+function getTypeUser(value){
+
+  let x = ''
+
+  if(value == 102){
+    x = `
+    
+    <div class="sidebar">
+      <div class="logo-details">
+        <i class='bx bxs-ambulance' ></i>
+        <span style="font-size: 18px;margin-left: -12px;" class="logo_name">Herramientas SIS</span>
+      </div>
+  
+      <ul class="nav-links" id="links">
+  
+        <li>
+          <a href="#inicio">
+            <i class='bx bx-grid-alt' ></i>
+            <span class="link_name">Inicio</span>
+          </a>
+          <ul class="sub-menu blank">
+            <li><a class="link_name" href="#inicio">Inicio</a></li>
+          </ul>
+        </li>
+  
+        <li>
+          <a href="#usuarios">
+            <i class='bx bx-user'></i>
+            <span class="link_name">Usuarios</span>
+          </a>
+          <ul class="sub-menu blank">
+            <li><a class="link_name" href="#usuarios">Usuarios</a></li>
+          </ul>
+        </li>
+  
+        <li>
+          <a href="#afiliados">
+            <i class='bx bxs-vector'></i>
+            <span class="link_name">Afiliados</span>
+          </a>
+          <ul class="sub-menu blank">
+            <li><a class="link_name" href="#afiliados">Afiliados</a></li>
+          </ul>
+        </li>
+  
+        <li>
+        <a href="#">
+        <i class='bx bx-folder-open'></i>
+          <span class="link_name">Catalogo</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="#">Catalogo</a></li>
+        </ul>
+      </li>
+
+        <li>
+          <div class="iocn-link">
+            <a>
+              <i class='bx bx-file'></i>
+              <span class="link_name">Digitación</span>
+            </a>
+            <i class='bx bxs-chevron-down arrow' ></i>
+          </div>
+          <ul class="sub-menu">
+            <li><a class="link_name" href="#">Digitación</a></li>
+            <li><a href="#fua_analysis">Análisis de FUA</a></li>
+          </ul>
+        </li>
+  
+        <li>
+          <div class="iocn-link">
+            <a>
+              <i class='bx bx-collection' ></i>
+              <span class="link_name">Caja</span>
+            </a>
+            <i class='bx bxs-chevron-down arrow' ></i>
+          </div>
+          <ul class="sub-menu">
+            <li><a class="link_name" href="#">Caja</a></li>
+            <li><a href="#estado_comprobante">Estado de comprobantes</a></li>
+          </ul>
+        </li>
+      
+        <li>
+        <div class="iocn-link">
+          <a>
+            <i class='bx bx-objects-vertical-bottom'></i>
+            <span class="link_name">Reportes</span>
+          </a>
+          <i class='bx bxs-chevron-down arrow' ></i>
+        </div>
+        <ul class="sub-menu">
+          <li><a class="link_name" href="#">Reportes</a></li>
+          <li><a href="#reporte_seguros">Reporte de seguros SOAT</a></li>
+          <li><a href="#produccion">Producción</a></li>
+          <li><a href="#produccion_ins_med">Producción con ins y med.</a></li>
+        </ul>
+      </li>
+  
+      <li>
+        <div class="iocn-link">
+          <a>
+            <i class='bx bx-clipboard'></i>
+            <span class="link_name">Atenciones</span>
+          </a>
+          <i class='bx bxs-chevron-down arrow' ></i>
+        </div>
+        <ul class="sub-menu">
+          <li><a class="link_name">Atenciones</a></li>
+          <li><a href="#control_altas">Control de altas</a></li>
+          <li><a href="#control_altas_cpt">Control de altas CPT</a></li>
+          <li><a href="#estado_atencion">Estado de atenciones</a></li>
+          <li><a href="#diag_proc">Diagnosticos y Proced.</a></li>
+        </ul>
+      </li>
+  
+      <li>
+        <div class="iocn-link">
+          <a>
+            <i class='bx bx-label'></i>
+            <span class="link_name">Tramas</span>
+          </a>
+          <i class='bx bxs-chevron-down arrow' ></i>
+        </div>
+        <ul class="sub-menu">
+          <li><a class="link_name">Tramas</a></li>
+          <li><a href="#trama_sis">Trama SIS</a></li>
+        </ul>
+      </li>
+  
+       <li>
+      <div class="profile-details">
+        <div class="profile-content">
+        <i onclick="logout()" class='bx bx-log-out'></i>
+          <img src="/image/profile.jpg" alt="profileImg">
+        </div>
+        <div class="name-job">
+        <div id="nameuser" class="profile_name">Nombre de usuario</div>
+        <div id="typeuser" class="job">Tipo de usuario</div>
+        </div>
+ 
+      </div>
+    </li>
+  </ul>
+  
+  
+    </div>
+    <section class="home-section">
+      <div class="home-content">
+        <i class='bx bx-menu' ></i>
+      </div>
+  
+      <div class="myContent">
+      </div>
+    </section>
+
+    `
+  }
+  else if(value == 212){
+    x = `
+    
+    <div class="sidebar">
+      <div class="logo-details">
+        <i class='bx bxs-ambulance' ></i>
+        <span style="font-size: 18px;margin-left: -12px;" class="logo_name">Herramientas SIS</span>
+      </div>
+  
+      <ul class="nav-links" id="links">
+  
+        <li>
+          <a href="#inicio">
+            <i class='bx bx-grid-alt' ></i>
+            <span class="link_name">Inicio</span>
+          </a>
+          <ul class="sub-menu blank">
+            <li><a class="link_name" href="#inicio">Inicio</a></li>
+          </ul>
+        </li>
+  
+        <li>
+          <div class="iocn-link">
+            <a>
+              <i class='bx bx-file'></i>
+              <span class="link_name">Digitación</span>
+            </a>
+            <i class='bx bxs-chevron-down arrow' ></i>
+          </div>
+          <ul class="sub-menu">
+            <li><a class="link_name" href="#">Digitación</a></li>
+            <li><a href="#fua_analysis">Análisis de FUA</a></li>
+          </ul>
+        </li>
+  
+        <li>
+          <div class="iocn-link">
+            <a>
+              <i class='bx bx-collection' ></i>
+              <span class="link_name">Caja</span>
+            </a>
+            <i class='bx bxs-chevron-down arrow' ></i>
+          </div>
+          <ul class="sub-menu">
+            <li><a class="link_name" href="#">Caja</a></li>
+            <li><a href="#estado_comprobante">Estado de comprobantes</a></li>
+          </ul>
+        </li>
+      
+        <li>
+        <div class="iocn-link">
+          <a>
+            <i class='bx bx-objects-vertical-bottom'></i>
+            <span class="link_name">Reportes</span>
+          </a>
+          <i class='bx bxs-chevron-down arrow' ></i>
+        </div>
+        <ul class="sub-menu">
+          <li><a class="link_name" href="#">Reportes</a></li>
+          <li><a href="#reporte_seguros">Reporte de seguros SOAT</a></li>
+          <li><a href="#produccion">Producción</a></li>
+          <li><a href="#produccion_ins_med">Producción con ins y med.</a></li>
+        </ul>
+      </li>
+  
+      <li>
+        <div class="iocn-link">
+          <a>
+            <i class='bx bx-clipboard'></i>
+            <span class="link_name">Atenciones</span>
+          </a>
+          <i class='bx bxs-chevron-down arrow' ></i>
+        </div>
+        <ul class="sub-menu">
+          <li><a class="link_name">Atenciones</a></li>
+          <li><a href="#control_altas">Control de altas</a></li>
+          <li><a href="#control_altas_cpt">Control de altas CPT</a></li>
+          <li><a href="#estado_atencion">Estado de atenciones</a></li>
+          <li><a href="#diag_proc">Diagnosticos y Proced.</a></li>
+        </ul>
+      </li>
+  
+      <li>
+        <div class="iocn-link">
+          <a>
+            <i class='bx bx-label'></i>
+            <span class="link_name">Tramas</span>
+          </a>
+          <i class='bx bxs-chevron-down arrow' ></i>
+        </div>
+        <ul class="sub-menu">
+          <li><a class="link_name">Tramas</a></li>
+          <li><a href="#trama_sis">Trama SIS</a></li>
+        </ul>
+      </li>
+  
+       <li>
+      <div class="profile-details">
+        <div class="profile-content">
+        <i onclick="logout()" class='bx bx-log-out'></i>
+          <img src="/image/profile.jpg" alt="profileImg">
+        </div>
+        <div class="name-job">
+        <div id="nameuser" class="profile_name">Nombre de usuario</div>
+        <div id="typeuser" class="job">Tipo de usuario</div>
+        </div>
+    </li>
+  </ul>
+  
+  
+    </div>
+    <section class="home-section">
+      <div class="home-content">
+        <i class='bx bx-menu' ></i>
+      </div>
+  
+      <div class="myContent">
+      </div>
+    </section>
+
+    `
+  }else if(value == 44){
+    x = `
+    
+    <div class="sidebar">
+      <div class="logo-details">
+        <i class='bx bxs-ambulance' ></i>
+        <span style="font-size: 18px;margin-left: -12px;" class="logo_name">Herramientas SIS</span>
+      </div>
+  
+      <ul class="nav-links" id="links">
+  
+        <li>
+          <a href="#inicio">
+            <i class='bx bx-grid-alt' ></i>
+            <span class="link_name">Inicio</span>
+          </a>
+          <ul class="sub-menu blank">
+            <li><a class="link_name" href="#inicio">Inicio</a></li>
+          </ul>
+        </li>
+  
+  
+  
+        <li>
+          <a href="#">
+          <i class='bx bx-folder-open'></i>
+            <span class="link_name">Catalogo</span>
+          </a>
+          <ul class="sub-menu blank">
+            <li><a class="link_name" href="#">Catalogo</a></li>
+          </ul>
+        </li>
+
+  
+       <li>
+      <div class="profile-details">
+        <div class="profile-content">
+          <i onclick="logout()" class='bx bx-log-out'></i>
+          <img src="/image/profile.jpg" alt="profileImg">
+        </div>
+        <div class="name-job">
+        <div id="nameuser" class="profile_name">Nombre de usuario</div>
+        <div id="typeuser" class="job">Tipo de usuario</div>
+        </div>
+      </div>
+    </li>
+  </ul>
+  
+  
+    </div>
+    <section class="home-section">
+      <div class="home-content">
+        <i class='bx bx-menu' ></i>
+      </div>
+  
+      <div class="myContent">
+      </div>
+    </section>
+
+    `
+  }else{
+    x = `
+   
+    <div class="sidebar">
+      <div class="logo-details">
+        <i class='bx bxs-ambulance' ></i>
+        <span style="font-size: 18px;margin-left: -12px;" class="logo_name">Herramientas SIS</span>
+      </div>
+ 
+
+    </div>
+    <section class="home-section">
+      <div class="home-content">
+        <i class='bx bx-menu' ></i>
+      </div>
+  
+      <div><center>
+      <H1 style="margin-top:10%;">Módulos en mantenimiento</H1>
+      
+      <div class="form__group" style="margin-top: 10px;">
+      <button style="cursor: pointer;" onclick="logout()" id="btn-login" class="btn-login">&nbsp;Cerrar sesión &nbsp;</button>
+      </div>
+
+      </center>
+      </div>
+    </section>
+    `
+  }
+
+  return x
+
+}
 
 module.exports = router;
 

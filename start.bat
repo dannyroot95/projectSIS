@@ -1,1 +1,2 @@
-node index.js
+C:\node\projectSIS\
+forever start index.js

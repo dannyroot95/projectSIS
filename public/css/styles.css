@@ -166,7 +166,7 @@ body{
 .sidebar .profile-details{
   position: fixed;
   bottom: 0;
-  width: 260px;
+  width: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -493,3 +493,55 @@ body{
     overflow-y: scroll;
     height: 700px; /*o cualquier otra altura que desees*/
  }
+
+
+
+.form__input {
+  color: #333;
+  font-size: 1.0rem;
+	margin: 0 auto;
+  padding: 1.2rem 2rem;
+  border-radius: 0.2rem;
+  background-color: rgb(233, 233, 233);
+  border: black;
+  width: 15%;
+  display: block;
+  border-bottom: black;
+  transition: all 0.3s;
+}
+
+
+.btn-login {
+  color: white;
+  font-size: 1.1rem;
+	margin: 0 auto;
+  padding: 1.2rem 2rem;
+  border-radius: 0.2rem;
+  background-color: #11101d;
+  border: white;
+  font-weight: bold;
+  width: 15%;
+  display: block;
+  border-bottom: black;
+  transition: all 0.3s;
+}
+
+
+.btn-login:hover {
+  outline: none;
+  background-color: #333;
+  color: #fff;
+}
+
+.swal2-popup.swal2-toast.swal2-icon-success.swal2-show{
+  color: #4b4b4b;
+}
+
+.bx.bx-log-out{
+  margin-right: -30px;
+  margin-left: -20px;
+}
+
+.name-job{
+  margin-right: 20px;
+}

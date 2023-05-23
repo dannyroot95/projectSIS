@@ -5,7 +5,21 @@ const archiver = require('archiver');
 archiver.registerFormat('zip-encrypted', require("archiver-zip-encrypted"));
 const password = '7017FuaE47121'; 
 const passwordTest = 'PilotoFUAE123'
- 
+
+const bcrypt = require('bcrypt');
+const password2 = '1234578'
+const storedHash = 'Q86wc5quJnvrW6a31ZDQiw=='
+
+bcrypt.compare(password2, storedHash, (err, result) => {
+  if (err) {
+    console.log(err)
+  } else if (result) {
+    console.log("Correcto!")
+  } else {
+    console.log("Incorrecto!")
+  }
+});
+
 async function getdata() {
   try {
     let pool = await sql.connect(config);
@@ -610,6 +624,19 @@ console.log("error :" + error);
     }
   }
 
+  async function getEmployeeByDniAndUser(dni,user) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('DNI',dni)
+      .input('USER',user)
+      .execute(`BUSCAR_EMPLEADO`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
   async function setUser(idEmpleado,ApellidoPaterno,ApellidoMaterno,Nombres,
     IdCondicionTrabajo,IdTipoEmpleado,DNI,CodigoPlanilla,FechaIngreso,
     FechaRegistroHerramienta,Usuario,ClaveSisHerramientas,ReniecAutorizado,
@@ -684,5 +711,6 @@ module.exports = {
   getFuaByDNI:getFuaByDNI,
   getFuaByFullname:getFuaByFullname,
   getEmployee:getEmployee,
+  getEmployeeByDniAndUser:getEmployeeByDniAndUser,
   setUser:setUser
 };

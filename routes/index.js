@@ -1038,6 +1038,19 @@ function getTypeUser(value){
 
 }
 
+
+router.post("/get-package-trama/:a/:b/:c", function (req, res,next) {
+  let anio = req.params.a;
+  let month = req.params.b;
+  let n_send = req.params.c;
+
+    sql.getPackageTrama(anio,month,n_send).then((result) => {
+
+      res.send(result);
+  });
+});
+
+
 module.exports = router;
 
 

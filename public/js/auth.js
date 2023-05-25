@@ -113,8 +113,8 @@ if(inputDNI != null){
     document.head.appendChild(scriptElement);
     document.head.appendChild(scriptElement2);
 
-    localStorage.setItem("content",content)
-    localStorage.setItem("user",JSON.stringify(x))
+    sessionStorage.setItem("content",content)
+    sessionStorage.setItem("user",JSON.stringify(x))
 
     document.getElementById("nameuser").innerHTML = x.Usuario 
     document.getElementById("typeuser").innerHTML = x.Descripcion

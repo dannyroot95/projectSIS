@@ -61,6 +61,10 @@
 
       <button class="btn btn-primary" id="btn-query" onclick="query()" ><i class="bi bi-search"></i>&nbsp;Consultar</button>
       <button class="btn btn-dark" onclick="donwloadLog()" id="btn-logs" style="display: none;" ><i class="bi bi-file-medical"></i>&nbsp;Logs</button>
+      <button class="btn" onclick="openModalPackage()" 
+      style="background-color: rgb(73, 1, 141);color: white;" id="btn-package" >
+        <i class="bi bi-file-earmark-zip-fill"></i>
+        &nbsp;Consultar paquete</button>
       <button class="btn btn-success" onclick="postTrama()" id="btn-send" ><i class="bi bi-send-fill"></i>&nbsp;Enviar trama</button>
       <a><div class="loaderSmall" id="loader"></div></a>
     </div>
@@ -177,8 +181,85 @@
       </div>
 
      </div>
+
+<!---->
+
+<div class="modal fade" id="packageModal" tabindex="-1" aria-labelledby="packageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="packageModalLabel">Consulta paquete de trama</h1>
+        <button type="button" class="btn-close" onclick="closeModalPackage()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+       
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="inputGroupSelectPackageYear">Año</label>
+          </div>
+          <select class="custom-select" id="inputGroupSelectPackageYear">
+            <option selected value="2020" >2020</option>
+            <option  value="2021" >2021</option>
+            <option  value="2022" >2022</option>
+            <option  value="2023" >2023</option>
+          </select>
+
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="inputGroupSelectPackageMonth">Mes</label>
+          </div>
+          <select class="custom-select" id="inputGroupSelectPackageMonth">
+            <option selected value="01" >Enero</option>
+            <option  value="02" >Febrero</option>
+            <option  value="03" >Marzo</option>
+            <option  value="04" >Abril</option>
+            <option  value="05" >Mayo</option>
+            <option  value="06" >Junio</option>
+            <option  value="07" >Julio</option>
+            <option  value="08" >Agosto</option>
+            <option  value="09" >Septiembre</option>
+            <option  value="10" >Octubre</option>
+            <option  value="11" >Noviembre</option>
+            <option  value="12" >Diciembre</option>
+          </select>
+
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">N° de envío</span>
+          </div>
+          <input type="tel" id="numSending" maxlength="3" class="form-control" aria-describedby="basic-addon1">
+
+        </div>
+
+        <label style="font-weight: 700;">Estado del paquete :&nbsp;</label><label style="font-size: 14px;color: rgb(15, 15, 94);" id="statusP">Ninguno</label>
+        <p></p>
+        <label style="font-weight: 700;">Descripción del paso :&nbsp;</label><label style="font-size: 14px;color: rgb(15, 15, 94);" id="descriptionP">Ninguno</label>
+        <p></p>
+        <label style="font-weight: 700;">Estado del paso :&nbsp;</label><label style="font-size: 14px;color: rgb(15, 15, 94);" id="statusP2">Ninguno</label>
+        <p></p>
+        <label style="font-weight: 700;">ATE cargadas :&nbsp;</label><label style="font-size: 14px;color: rgb(15, 15, 94);" id="ateCar">Ninguno</label>
+        <p></p>
+        <label style="font-weight: 700;">ATE duplicadas :&nbsp;</label><label style="font-size: 14px;color: rgb(15, 15, 94);" id="ateDu">Ninguno</label>
+        <p></p>
+        <label style="font-weight: 700;">ATE consolidadas :&nbsp;</label><label style="font-size: 14px;color: rgb(15, 15, 94);" id="ateCon">Ninguno</label>
+        <p></p>
+        <label style="font-weight: 700;">ATE observadas :&nbsp;</label><label style="font-size: 14px;color: rgb(15, 15, 94);" id="ateObs">Ninguno</label>
+        <p></p>
+        <label style="font-weight: 700;">ATE en produción :&nbsp;</label><label style="font-size: 14px;color: rgb(15, 15, 94);" id="ateProd">Ninguno</label>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModalPackage()">Cerrar</button>
+        <button type="button" onclick="queryPackage()" class="btn btn-success">Consultar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!---->
+
     
      <script>
+
+      let actualYear = new Date().getFullYear()
 
       document.getElementById("inputGroupSelectYearSend").value = new Date().getFullYear()
       document.getElementById("inputGroupSelectProductionMonth").value = new Date().getMonth()+1
@@ -254,6 +335,10 @@
       }
       $(item).appendTo('#tr-table-8')
      }
+
+
+     
+
 
      </script>
 

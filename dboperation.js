@@ -1,6 +1,7 @@
 var config = require("./dbconfig")
 const sql = require("mssql")
 const fs = require('fs');
+const axios = require('axios');
 const archiver = require('archiver');
 archiver.registerFormat('zip-encrypted', require("archiver-zip-encrypted"));
 const password = '7017FuaE47121'; 
@@ -9,6 +10,8 @@ const passwordTest = 'PilotoFUAE123'
 const bcrypt = require('bcrypt');
 const password2 = '1234578'
 const storedHash = 'Q86wc5quJnvrW6a31ZDQiw=='
+
+//requestSeachPackageTramaSOAP()
 
 bcrypt.compare(password2, storedHash, (err, result) => {
   if (err) {
@@ -19,6 +22,42 @@ bcrypt.compare(password2, storedHash, (err, result) => {
     console.log("Incorrecto!")
   }
 });
+
+async function getPackageTrama(anio,month,n_send) {
+  try {
+    const url = 'http://ws01.sis.gob.pe/cxf/esb/negocio/registroFuaBatch/v2'; // URL del servicio web SOAP
+    const xmlRequest = `
+      <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v2="http://sis.gob.pe/esb/negocio/registroFuaBatch/v2/">
+         <soapenv:Header>
+            <v2:requestHeader>
+               <!--Optional:-->
+               <v2:canal>SOAP</v2:canal>
+               <v2:usuario>HSRPM</v2:usuario>
+               <v2:autorizacion>DsutgQ3U</v2:autorizacion>
+            </v2:requestHeader>
+         </soapenv:Header>
+         <soapenv:Body>
+            <v2:consultarPaqueteRequest>
+               <v2:paqueteNombre>00002698${anio}${month}${n_send}</v2:paqueteNombre>
+            </v2:consultarPaqueteRequest>
+         </soapenv:Body>
+      </soapenv:Envelope>`;
+
+    const headers = {
+      'Content-Type': 'text/xml',
+    };
+
+    const response = await axios.post(url, xmlRequest, { headers });
+    const responseData = {data:response.data};
+
+    // Procesar la respuesta SOAP aquí
+    console.log(responseData);
+    return responseData
+    
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 async function getdata() {
   try {
@@ -712,5 +751,6 @@ module.exports = {
   getFuaByFullname:getFuaByFullname,
   getEmployee:getEmployee,
   getEmployeeByDniAndUser:getEmployeeByDniAndUser,
-  setUser:setUser
+  setUser:setUser,
+  getPackageTrama:getPackageTrama
 };

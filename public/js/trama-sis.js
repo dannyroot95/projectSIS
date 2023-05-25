@@ -729,7 +729,8 @@ function insertDataRN(data){
 
 function disabledButtons(){
 loader.style = "display:block;"
-document.getElementById("btn-logs").disabled = false
+document.getElementById("btn-logs").disabled = true
+document.getElementById("btn-package").disabled = true
 document.getElementById("btn-query").disabled = true
 document.getElementById("btn-send").disabled = true
 }
@@ -738,6 +739,7 @@ function enableButtons(){
 loader.style = "display:none;"
 document.getElementById("btn-logs").disabled = false
 document.getElementById("btn-query").disabled = false
+document.getElementById("btn-package").disabled = false
 document.getElementById("btn-send").disabled = false
 document.getElementById("btn-logs").style = "display:block;"
 }
@@ -747,6 +749,7 @@ function enableButtonsError(){
   document.getElementById("btn-logs").style = "display:none;"
   document.getElementById("btn-logs").disabled = false
   document.getElementById("btn-query").disabled = false
+  document.getElementById("btn-package").disabled = false
   document.getElementById("btn-send").disabled = false
   document.getElementById("btn-logs").style = "display:block;"
   }
@@ -1293,4 +1296,99 @@ function padNumber(n){
 
   return x
 
+}
+
+function queryPackage(){
+
+  let anio = document.getElementById("inputGroupSelectPackageYear").value
+  let month = document.getElementById("inputGroupSelectPackageMonth").value
+  let num = document.getElementById("numSending").value
+
+  if(num != ""){
+    fetch(`${url}/get-package-trama/${anio}/${month}/${numSend(num)}`,{
+      method: 'post',
+      headers: {
+        'Accept': 'application/json'
+      }
+  })
+    .then(response => response.json())
+    .then(data => {
+  
+      showDataPackage(data.data)
+      //console.log(data.data)
+      
+    }).catch(err => {
+      console.log(err)
+    }); 
+  }else{
+    Swal.fire(
+      'Oops!',
+      'Ingrese el Número de envío',
+      'info'
+    )
+  }
+
+}
+
+function showDataPackage(data){
+  var xmlString = data;
+
+  var parser = new DOMParser();
+  var xmlDoc = parser.parseFromString(xmlString, "text/xml");
+  
+  // Obtener la respuesta SOAP
+  var response = xmlDoc.getElementsByTagName("consultarPaqueteResponse")[0];
+  
+  // Obtener los elementos de la respuesta
+  var paqueteEstado = response.getElementsByTagName("paqueteEstado")[0].textContent;
+  var pasoDescripcion = response.getElementsByTagName("pasoDescripcion")[0].textContent;
+  var pasoEstado = response.getElementsByTagName("pasoEstado")[0].textContent;
+  var ateCargadas = response.getElementsByTagName("ateCargadas")[0].textContent;
+  var ateDuplicadas = response.getElementsByTagName("ateDuplicadas")[0].textContent;
+  var ateConsolidadas = response.getElementsByTagName("ateConsolidadas")[0].textContent;
+  var ateObservadas = response.getElementsByTagName("ateObservadas")[0].textContent;
+  var ateProduccion = response.getElementsByTagName("ateProduccion")[0].textContent;
+  
+  document.getElementById("statusP").innerHTML = paqueteEstado
+  document.getElementById("descriptionP").innerHTML = pasoDescripcion.replaceAll("�",'ó')
+  document.getElementById("statusP2").innerHTML = pasoEstado
+  document.getElementById("ateCar").innerHTML = ateCargadas
+  document.getElementById("ateDu").innerHTML = ateDuplicadas
+  document.getElementById("ateCon").innerHTML = ateConsolidadas
+  document.getElementById("ateObs").innerHTML = ateObservadas
+  document.getElementById("ateProd").innerHTML = ateProduccion
+
+}
+
+function openModalPackage(){
+  $('#packageModal').modal('show')
+}
+
+function numSend(num){
+
+  let x = ""
+  
+  if(num.length == 1){
+    x = '0000'+num
+  }else if(num.length == 2){
+    x = '000'+num
+  }else{
+    x = '00'+num
+  }
+
+  return x
+
+}
+
+function closeModalPackage(){
+  $('#packageModal').modal('hide')
+  document.getElementById("numSending").value = ""
+  document.getElementById("statusP").innerHTML = "Ninguno"
+  document.getElementById("descriptionP").innerHTML = "Ninguno"
+  document.getElementById("statusP2").innerHTML = "Ninguno"
+  document.getElementById("ateCar").innerHTML = "Ninguno"
+  document.getElementById("ateDu").innerHTML = "Ninguno"
+  document.getElementById("ateCon").innerHTML = "Ninguno"
+  document.getElementById("ateObs").innerHTML = "Ninguno"
+  document.getElementById("ateProd").innerHTML = "Ninguno"
 }

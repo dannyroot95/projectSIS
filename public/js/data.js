@@ -1,6 +1,6 @@
 
-let cache = localStorage.getItem("content")
-let user = localStorage.getItem("user")
+let cache = sessionStorage.getItem("content")
+let user = sessionStorage.getItem("user")
 
 
 if(cache != "" && cache != null){
@@ -33,8 +33,8 @@ function setContentFromCache(content){
 
   function logout(){
 
-    localStorage.removeItem("content")
-    localStorage.removeItem("user")
+    sessionStorage.removeItem("content")
+    sessionStorage.removeItem("user")
 
     location.reload()
 

@@ -35,6 +35,8 @@ $('document').ready(function () {
           discharge_control_cpt()
         }else if (direccion == '#trama_sis') {
           plot_sis()
+        }else if (direccion == '#catalogo') {
+          catalog()
         }    
          else {
           routeErrE();
@@ -95,6 +97,10 @@ $('document').ready(function () {
   function users() {
     window.location.hash = "#usuarios"
     contentModulo.innerHTML = urlModule("/content/usuarios.html");
+  }
+  function catalog() {
+    window.location.hash = "#catalogo"
+    contentModulo.innerHTML = urlModule("/content/catalogo.html");
   }
   function routeErrE() {
     console.log("ruta error")

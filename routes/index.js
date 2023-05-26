@@ -712,12 +712,12 @@ function getTypeUser(value){
         </li>
   
         <li>
-        <a href="#">
+        <a href="#catalogo">
         <i class='bx bx-folder-open'></i>
           <span class="link_name">Catalogo</span>
         </a>
         <ul class="sub-menu blank">
-          <li><a class="link_name" href="#">Catalogo</a></li>
+          <li><a class="link_name" href="#catalogo">Catalogo</a></li>
         </ul>
       </li>
 

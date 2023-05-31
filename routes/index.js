@@ -236,6 +236,21 @@ router.get("/affiliate/:nro", function (req, res,next) {
   });
 });
 
+router.get("/affiliate-by-name/:a/:b/:c", function (req, res,next) {
+  let ap1 = req.params.a;
+  let ap2 = req.params.b;
+  let n = req.params.c;
+
+  sql.searchAffiliateByName(ap1,ap2,n).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+  });
+});
+
 router.get("/trama-atencion/:a/:b/:c", function (req, res,next) {
   let anio = req.params.a;
   let mes = req.params.b;

@@ -65,7 +65,8 @@
       style="background-color: rgb(73, 1, 141);color: white;" id="btn-package" >
         <i class="bi bi-file-earmark-zip-fill"></i>
         &nbsp;Consultar paquete</button>
-      <button class="btn btn-success" onclick="postTrama()" id="btn-send" ><i class="bi bi-send-fill"></i>&nbsp;Enviar trama</button>
+        <button class="btn btn-dark" id="btn-send" ><i class="bi bi-bug-fill"></i>&nbsp;Enviar a pruebas</button>
+      <button class="btn btn-success" onclick="postTrama()" id="btn-send" ><i class="bi bi-send-fill"></i>&nbsp;Enviar a produccion</button>
       <a><div class="loaderSmall" id="loader"></div></a>
     </div>
 
@@ -345,6 +346,7 @@
     <script src="/bootstrap/js/bootstrap.min.js"></script>
     <script src="/bootstrap/datatables.min.js"></script>
     <script src="/js/utils/constants.js"></script>
+    <script src="/js/debugTrama.js"></script>
     <script src="/js/trama-sis.js"></script>
   
 </body>

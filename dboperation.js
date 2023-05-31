@@ -51,7 +51,7 @@ async function getPackageTrama(anio,month,n_send) {
     const responseData = {data:response.data};
 
     // Procesar la respuesta SOAP aquí
-    console.log(responseData);
+    //console.log(responseData);
     return responseData
     
   } catch (error) {
@@ -278,6 +278,20 @@ console.log("error :" + error);
     }
   }
 
+  async function searchAffiliateByName(ap1,ap2,n) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('APELLIDO_PARTERNO',ap1)
+      .input('APELLIDO_MARTERNO',ap2)
+      .input('NOMBRE1',n)
+      .execute(`BUSCAR_AFILIADOS_POR_NOMBRES`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
   async function tramaAtencion(ANIO,MES,MESPRODUCCION) {
     try {
       let pool = await sql.connect(config);
@@ -299,6 +313,7 @@ console.log("error :" + error);
       .input('ANIO',ANIO)
       .input('MES',MES)
       .input('MESPRODUCCION',MESPRODUCCION)
+      .input('ANIOPRODUCCION',ANIO)
       .execute(`SIGH.dbo.ATENCION`) 
       return res.recordsets
     } catch (error) {
@@ -498,6 +513,7 @@ console.log("error :" + error);
       .input('NENVIO',NENVIO)
       .input('NOMBREZIP',NOMBREZIP)
       .input('DNI',DNI)
+      .input('ANIOPRODUCCION',ANIO)
       .input('MESPRODUCCION',MESPRODUCCION)
       .execute(`SIGH.dbo.ATENCIONRESUMEN`) 
       return [[{success:"Enviado!"}]]
@@ -538,59 +554,45 @@ console.log("error :" + error);
     try{
    
       // create archive and specify method of encryption and password
-      let archive = archiver.create('zip-encrypted', {zlib: {level: 8}, encryptionMethod: 'aes256', password: passwordTest});
+      let archive = archiver.create('zip-encrypted', {zlib: {level: 8}, encryptionMethod: 'zip20', password: passwordTest});
       
+      function writeFileWithUTF8(fileName, content) {
+        fs.writeFileSync(fileName, content, 'utf8');
+      }
+    
       // Crea un archivo de texto y escribe algunos datos
-      const file1 = fs.createWriteStream('ATENCION.txt');
-      file1.write(data.ATENCION);
-      file1.end();
-      
+      writeFileWithUTF8('ATENCION.TXT', data.ATENCION);
+    
       // Crea otro archivo de texto y escribe algunos datos
-      const file2 = fs.createWriteStream('ATENCIONDIA.txt');
-      file2.write(data.ATENCIONDIA);
-      file2.end();
-
-      const file3 = fs.createWriteStream('ATENCIONMED.txt');
-      file3.write(data.ATENCIONMED);
-      file3.end();
-
-      const file4 = fs.createWriteStream('ATENCIONINS.txt');
-      file4.write(data.ATENCIONINS);
-      file4.end();
-
-      const file5 = fs.createWriteStream('ATENCIONPRO.txt');
-      file5.write(data.ATENCIONPRO);
-      file5.end();
-
-      const file6 = fs.createWriteStream('ATENCIONSMI.txt');
-      file6.write(data.ATENCIONSMI);
-      file6.end();
-      
-      const file7 = fs.createWriteStream('ATENCIONSER.txt');
-      file7.write(data.ATENCIONSER);
-      file7.end()
-
-      const file8 = fs.createWriteStream('ATENCIONRN.txt');
-      file8.write(data.ATENCIONRN);
-      file8.end()
-
-      const file9 = fs.createWriteStream('RESUMEN.txt');
-      file9.write(data.RESUMEN);
-      file9.end()
+      writeFileWithUTF8('ATENCIONDIA.TXT', data.ATENCIONDIA);
+    
+      writeFileWithUTF8('ATENCIONMED.TXT', data.ATENCIONMED);
+    
+      writeFileWithUTF8('ATENCIONINS.TXT', data.ATENCIONINS);
+    
+      writeFileWithUTF8('ATENCIONPRO.TXT', data.ATENCIONPRO);
+    
+      writeFileWithUTF8('ATENCIONSMI.TXT', data.ATENCIONSMI);
+    
+      writeFileWithUTF8('ATENCIONSER.TXT', data.ATENCIONSER);
+    
+      writeFileWithUTF8('ATENCIONRN.TXT', data.ATENCIONRN);
+    
+      writeFileWithUTF8('RESUMEN.TXT', data.RESUMEN);
 
       // Agrega los archivos al objeto Archiver
-      archive.file('ATENCION.txt', { name: 'ATENCION.txt' });
-      archive.file('ATENCIONDIA.txt', { name: 'ATENCIONDIA.txt' });
-      archive.file('ATENCIONMED.txt', { name: 'ATENCIONMED.txt' });
-      archive.file('ATENCIONINS.txt', { name: 'ATENCIONINS.txt' });
-      archive.file('ATENCIONPRO.txt', { name: 'ATENCIONPRO.txt' });
-      archive.file('ATENCIONSMI.txt', { name: 'ATENCIONSMI.txt' });
-      archive.file('ATENCIONSER.txt', { name: 'ATENCIONSER.txt' });
-      archive.file('ATENCIONRN.txt', { name: 'ATENCIONRN.txt' });
-      archive.file('RESUMEN.txt', { name: 'RESUMEN.txt' });
+      archive.file('ATENCION.TXT', { name: 'ATENCION.TXT' });
+      archive.file('ATENCIONDIA.TXT', { name: 'ATENCIONDIA.TXT' });
+      archive.file('ATENCIONMED.TXT', { name: 'ATENCIONMED.TXT' });
+      archive.file('ATENCIONINS.TXT', { name: 'ATENCIONINS.TXT' });
+      archive.file('ATENCIONPRO.TXT', { name: 'ATENCIONPRO.TXT' });
+      archive.file('ATENCIONSMI.TXT', { name: 'ATENCIONSMI.TXT' });
+      archive.file('ATENCIONSER.TXT', { name: 'ATENCIONSER.TXT' });
+      archive.file('ATENCIONRN.TXT', { name: 'ATENCIONRN.TXT' });
+      archive.file('RESUMEN.TXT', { name: 'RESUMEN.TXT' });
 
       // Crea el archivo ZIP
-      const output = fs.createWriteStream('C:/users/USUARIO/desktop/'+data.nameTrama);
+      const output = fs.createWriteStream('C:/users/USUARIO/desktop/tramas/'+data.nameTrama);
       archive.pipe(output);
       archive.finalize();
       return [[{success:"Enviado!"}]]
@@ -725,6 +727,7 @@ module.exports = {
   production:production,
   production_ins_med:production_ins_med,
   searchAffiliate:searchAffiliate,
+  searchAffiliateByName:searchAffiliateByName,
   discharge_control:discharge_control,
   tramaAtencion:tramaAtencion,
   getTramaAtencion:getTramaAtencion,

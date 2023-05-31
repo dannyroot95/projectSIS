@@ -541,7 +541,7 @@ function insertDataDiagnostico(data){
 
             if (param == 'x') {
 
-                return validateData(d)
+                return `<td class="minText2"><button class="btn btn-success" onclick="alert('0 Errores')"><i class="bi bi-file-check"></i></button></td>`
 
                 
             } else {
@@ -566,7 +566,7 @@ function insertDataMedicamentos(data){
 
             if (param == 'x') {
 
-                return validateData(d)
+                return `<td class="minText2"><button class="btn btn-success" onclick="alert('0 Errores')"><i class="bi bi-file-check"></i></button></td>`
 
                 
             } else {
@@ -591,7 +591,7 @@ function insertDataInsumos(data){
 
             if (param == 'x') {
 
-                return validateData(d)
+                return `<td class="minText2"><button class="btn btn-success" onclick="alert('0 Errores')"><i class="bi bi-file-check"></i></button></td>`
 
                 
             } else {
@@ -617,7 +617,7 @@ function insertDataProcedimientos(data){
   
               return `
               <tr style="cursor: pointer;">
-              ${validateDataOnlyValue(it[0])}
+              <td class="minText2"><button class="btn btn-success" onclick="alert('0 Errores')"><i class="bi bi-file-check"></i></button></td>
               <td class="minText2">${it[0]}</td>
               <td class="minText2">${it[1]}</td>
               <td class="minText2">${it[2]}</td>
@@ -646,7 +646,7 @@ function insertDataSMI(data){
 
               return `
               <tr style="cursor: pointer;">
-              ${validateDataOnlyValue(it[0])}
+              <td class="minText2"><button class="btn btn-success" onclick="alert('0 Errores')"><i class="bi bi-file-check"></i></button></td>
               <td class="minText2">${it[0]}</td>
               <td class="minText2">${it[1]}</td>
               <td class="minText2">${it[2]}</td>
@@ -672,7 +672,7 @@ function insertDataSER(data){
 
               return `
               <tr style="cursor: pointer;">
-              ${validateDataOnlyValue(it[0])}
+              <td class="minText2"><button class="btn btn-success" onclick="alert('0 Errores')"><i class="bi bi-file-check"></i></button></td>
               <td class="minText2">${it[0]}</td>
               <td class="minText2">${it[1]}</td>
               </tr>`;
@@ -701,7 +701,7 @@ function insertDataRN(data){
 
               return `
               <tr style="cursor: pointer;">
-              ${validateDataOnlyValue(it[0])}
+              <td class="minText2"><button class="btn btn-success" onclick="alert('0 Errores')"><i class="bi bi-file-check"></i></button></td>
               <td class="minText2">${it[0]}</td>
               <td class="minText2">${it[1]}</td>
               <td class="minText2">${it[2]}</td>
@@ -771,11 +771,12 @@ function validateDataATE(d){
 
     let ctx = 0
   
-    if(d["A33"].length > 6){
+    if(d["A17"] == "" || d["A17"] == null){
         ctx++
         c++
-        let warning = `${c}.- HISTORIA CLINICA INCORRECTA [33] -> N° DE CUENTA : ${d["A1"]}`
+        let warning = `${c}.- EL CAMPO ATE#17 (FORMATO DEL CODIGO DE ASEGURADO) CONTIENE UN VALOR NO PERMITIDO -> N° DE CUENTA : ${d["A1"]}`
         log = log+warning+"\n"
+        searchAndUpdateAtentionFromAfiliate(d["A26"],d["A27"],d["A28"])
     }
 
 

@@ -6,7 +6,6 @@ const archiver = require('archiver');
 archiver.registerFormat('zip-encrypted', require("archiver-zip-encrypted"));
 const password = '7017FuaE47121'; 
 const passwordTest = 'PilotoFUAE123'
-
 const bcrypt = require('bcrypt');
 const password2 = '1234578'
 const storedHash = 'Q86wc5quJnvrW6a31ZDQiw=='
@@ -522,11 +521,41 @@ console.log("error :" + error);
     }
   }
 
+  async function setTramaRESUMENDEBUG(ANIO,MES,NENVIO,NOMBREZIP,DNI,MESPRODUCCION) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('ANIO',ANIO)
+      .input('MES',MES)
+      .input('NENVIO',NENVIO)
+      .input('NOMBREZIP',NOMBREZIP)
+      .input('DNI',DNI)
+      .input('ANIOPRODUCCION',ANIO)
+      .input('MESPRODUCCION',MESPRODUCCION)
+      .execute(`ATENCIONRESUMENDEBUG`) 
+      return [[{success:"Enviado!"}]]
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
   
   async function getTramaRes(ANIO,MES,NENVIO) {
     try {
       let pool = await sql.connect(config);
       let res = await pool.request().query(`select * from SIGH_EXTERNA..SisFuaResumen where anio = ${ANIO} and mes = ${MES} and NroEnvio = ${NENVIO}`);
+      return res.recordsets;
+    } catch (error) {
+      console.log("error :" + error);
+    }finally {
+      sql.close();
+    }
+  }
+
+  async function getTramaResDebug(ANIO,MES,NENVIO) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request().query(`select * from BD_SIS_TOOLS..SisFuaResumenDebug where anio = ${ANIO} and mes = ${MES} and NroEnvio = ${NENVIO}`);
       return res.recordsets;
     } catch (error) {
       console.log("error :" + error);
@@ -600,6 +629,100 @@ console.log("error :" + error);
       console.log("error : " + error);
     }
 
+  }
+
+  async function sendTramaDebug(data) {
+
+    try{
+      // create archive and specify method of encryption and password
+      let archive = archiver.create('zip-encrypted', {zlib: {level: 8}, encryptionMethod: 'zip20', password: passwordTest});
+      
+      function writeFileWithUTF8(fileName, content) {
+        fs.writeFileSync(fileName, content, 'utf8');
+      }
+    
+      // Crea un archivo de texto y escribe algunos datos
+      writeFileWithUTF8('ATENCION.TXT', data.ATENCION);
+    
+      // Crea otro archivo de texto y escribe algunos datos
+      writeFileWithUTF8('ATENCIONDIA.TXT', data.ATENCIONDIA);
+    
+      writeFileWithUTF8('ATENCIONMED.TXT', data.ATENCIONMED);
+    
+      writeFileWithUTF8('ATENCIONINS.TXT', data.ATENCIONINS);
+    
+      writeFileWithUTF8('ATENCIONPRO.TXT', data.ATENCIONPRO);
+    
+      writeFileWithUTF8('ATENCIONSMI.TXT', data.ATENCIONSMI);
+    
+      writeFileWithUTF8('ATENCIONSER.TXT', data.ATENCIONSER);
+    
+      writeFileWithUTF8('ATENCIONRN.TXT', data.ATENCIONRN);
+    
+      writeFileWithUTF8('RESUMEN.TXT', data.RESUMEN);
+
+      // Agrega los archivos al objeto Archiver
+      archive.file('ATENCION.TXT', { name: 'ATENCION.TXT' });
+      archive.file('ATENCIONDIA.TXT', { name: 'ATENCIONDIA.TXT' });
+      archive.file('ATENCIONMED.TXT', { name: 'ATENCIONMED.TXT' });
+      archive.file('ATENCIONINS.TXT', { name: 'ATENCIONINS.TXT' });
+      archive.file('ATENCIONPRO.TXT', { name: 'ATENCIONPRO.TXT' });
+      archive.file('ATENCIONSMI.TXT', { name: 'ATENCIONSMI.TXT' });
+      archive.file('ATENCIONSER.TXT', { name: 'ATENCIONSER.TXT' });
+      archive.file('ATENCIONRN.TXT', { name: 'ATENCIONRN.TXT' });
+      archive.file('RESUMEN.TXT', { name: 'RESUMEN.TXT' });
+
+      // Crea el archivo ZIP
+      const output = fs.createWriteStream('C:/users/USUARIO/desktop/tramas/'+data.nameTrama);
+      archive.pipe(output);
+      archive.finalize();
+      
+      const fileContent = readFileAsBase64('C:/users/USUARIO/desktop/tramas/'+data.nameTrama); // Ruta al archivo que deseas adjuntar
+      const url = 'http://pruebaws01.sis.gob.pe/cxf/esb/negocio/registroFuaBatch/v2/'; // URL del servicio SOAP
+
+      const xmlBody = `
+      <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v2="http://sis.gob.pe/esb/negocio/registroFuaBatch/v2/">
+      <soapenv:Header>
+        <v2:requestHeader>
+          <!--Optional:-->
+          <v2:canal>SOAPUI</v2:canal>
+          <v2:usuario>HSRPM</v2:usuario>
+          <v2:autorizacion>123456</v2:autorizacion>
+        </v2:requestHeader>
+      </soapenv:Header>
+      <soapenv:Body>
+        <v2:registrarFuaRequest>
+          <v2:nombreZip>0000269820230600001.zip</v2:nombreZip>
+          <v2:dataZip>${fileContent}</v2:dataZip>
+        </v2:registrarFuaRequest>
+      </soapenv:Body>
+    </soapenv:Envelope>
+  `;
+
+  const headers = {
+    'Content-Type': 'text/xml',
+  };
+   
+  const response = await axios.post(url, xmlBody, { headers });
+  //console.log(response.data);
+
+  return [[
+    {
+      success:"Enviado!",
+      server_response:response.data
+    }]]
+
+    //SI FALLA UTILIZAR TRY CATCH
+
+    }catch (error) {
+      console.log("error : " + error);
+    }
+
+  }
+
+  function readFileAsBase64(filePath) {
+    const fileData = fs.readFileSync(filePath);
+    return Buffer.from(fileData).toString('base64');
   }
 
   async function getFuaByNumAndLote(FUA,LOTE) {
@@ -713,6 +836,7 @@ console.log("error :" + error);
 module.exports = {
   getdata: getdata,
   sendTrama:sendTrama,
+  sendTramaDebug:sendTramaDebug,
   getdata_invoice_charge:getdata_invoice_charge,
   getdata_by_num_doc:getdata_by_num_doc,
   getdata_by_razon_social:getdata_by_razon_social,
@@ -747,7 +871,9 @@ module.exports = {
   getTramaRN:getTramaRN,
   getLastCorrelative:getLastCorrelative,
   setTramaRESUMEN:setTramaRESUMEN,
+  setTramaRESUMENDEBUG:setTramaRESUMENDEBUG,
   getTramaRes:getTramaRes,
+  getTramaResDebug:getTramaResDebug,
   getFuaByNumAndLote:getFuaByNumAndLote,
   getFuaByAccount:getFuaByAccount,
   getFuaByDNI:getFuaByDNI,

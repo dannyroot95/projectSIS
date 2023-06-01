@@ -691,7 +691,7 @@ function insertDataSER(data){
 
 function insertDataRN(data){
   
-   
+  if(data[0].error != "sin datos"){
     document.getElementById("tbody8").innerHTML = ""
     $('#tb-data-8').DataTable().destroy()
 
@@ -720,9 +720,9 @@ function insertDataRN(data){
           })
           .join("")
       );
-
       createDatatable8()
-
+  }
+   
 }
 
 
@@ -819,7 +819,7 @@ link.click();
 
 }
 
-function sendTrama(ATENCION,ATENCIONDIA,ATENCIONMED,ATENCIONINS,ATENCIONPRO,ATENCIONSMI,ATENCIONSER,ATENCIONRN,RESUMEN,NAMEZIP){
+function sendTrama(ATENCION,ATENCIONDIA,ATENCIONMED,ATENCIONINS,ATENCIONPRO,ATENCIONSMI,ATENCIONSER,ATENCIONRN,RESUMEN,NAMEZIP,n){
 
     let data = {
         ATENCION:ATENCION,
@@ -834,7 +834,8 @@ function sendTrama(ATENCION,ATENCIONDIA,ATENCIONMED,ATENCIONINS,ATENCIONPRO,ATEN
         nameTrama : NAMEZIP
     }
 
-    fetch(`${url}/send-trama/`, {
+    if(n != 0){
+      fetch(`${url}/send-trama/`, {
         method: 'POST', // o 'PUT', 'DELETE', etc.
         headers: {
           'Content-Type': 'application/json'
@@ -861,10 +862,37 @@ function sendTrama(ATENCION,ATENCIONDIA,ATENCIONMED,ATENCIONINS,ATENCIONPRO,ATEN
         console.error(error)
         enableButtonsError()
     });
+  }else{
+    fetch(`${url}/send-trama-debug/`, {
+      method: 'POST', // o 'PUT', 'DELETE', etc.
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data) // data es un objeto con los datos a enviar
+    })
+    .then(response => response.json())
+    .then(data => {
+       if(data.length > 0){
+            showDataResponse(data[0].server_response)
+            enableButtons()
+       }
+    })
+    .catch(error => {
+      Swal.fire(
+          'Oops!',
+          'Se produjo un error',
+          'warning'
+        )
+      console.error(error)
+      enableButtonsError()
+  });
+  }
+
+    
 }
 
 
-function postTrama(){
+function postTrama(n){
 
     let mes = document.getElementById("inputGroupSelectProductionMonth")
     let anio = document.getElementById("inputGroupSelectYearSend")
@@ -882,11 +910,11 @@ function postTrama(){
     res = ``
 
     disabledButtons()
-    sendAllTramas(anio_selected,mes_selected)
+    sendAllTramas(anio_selected,mes_selected,n)
 
 }
 
-function sendAllTramas(anio,mes){
+function sendAllTramas(anio,mes,n){
     
     fetch(`${url}/get-trama-atencion/${anio}/${mes}/${mes}`,{
         method: 'get',
@@ -908,7 +936,7 @@ function sendAllTramas(anio,mes){
             }
         });
 
-        getTramaDiagnostico(anio,mes)
+        getTramaDiagnostico(anio,mes,n)
 
       }).catch(err => {
         
@@ -918,7 +946,7 @@ function sendAllTramas(anio,mes){
 
 }
 
-function getTramaDiagnostico(anio,mes){
+function getTramaDiagnostico(anio,mes,n){
 
     
     fetch(`${url}/get-trama-diagnostico/${anio}/${mes}`,{
@@ -941,7 +969,7 @@ function getTramaDiagnostico(anio,mes){
                 diagnostico += value
             }
         });
-        getTramaMedicamentos(anio,mes)
+        getTramaMedicamentos(anio,mes,n)
 
       }).catch(err => {
         
@@ -951,7 +979,7 @@ function getTramaDiagnostico(anio,mes){
 
 }
 
-function getTramaMedicamentos(anio,mes){
+function getTramaMedicamentos(anio,mes,n){
 
     
   fetch(`${url}/get-trama-medicamentos/${anio}/${mes}`,{
@@ -975,7 +1003,7 @@ function getTramaMedicamentos(anio,mes){
           }
       });
       
-      getTramaInsumos(anio,mes)
+      getTramaInsumos(anio,mes,n)
 
     }).catch(err => {
       
@@ -985,7 +1013,7 @@ function getTramaMedicamentos(anio,mes){
 
 }
 
-function getTramaInsumos(anio,mes){
+function getTramaInsumos(anio,mes,n){
 
     
   fetch(`${url}/get-trama-insumos/${anio}/${mes}`,{
@@ -1008,7 +1036,7 @@ function getTramaInsumos(anio,mes){
               insumos += value
           }
       });
-      getTramaProcedimientos(anio,mes)
+      getTramaProcedimientos(anio,mes,n)
 
     }).catch(err => {
       
@@ -1018,7 +1046,7 @@ function getTramaInsumos(anio,mes){
 
 }
 
-function getTramaProcedimientos(anio,mes){
+function getTramaProcedimientos(anio,mes,n){
 
     
   fetch(`${url}/get-trama-procedimientos/${anio}/${mes}`,{
@@ -1041,7 +1069,7 @@ function getTramaProcedimientos(anio,mes){
             procedimientos += value
           }
       });
-      getTramaSmi(anio,mes)
+      getTramaSmi(anio,mes,n)
 
     }).catch(err => {
       
@@ -1051,7 +1079,7 @@ function getTramaProcedimientos(anio,mes){
 
 }
 
-function getTramaSmi(anio,mes){
+function getTramaSmi(anio,mes,n){
 
     
   fetch(`${url}/get-trama-smi/${anio}/${mes}`,{
@@ -1074,7 +1102,7 @@ function getTramaSmi(anio,mes){
             smi += value
           }
       });
-      getTramaSer(anio,mes)
+      getTramaSer(anio,mes,n)
 
     }).catch(err => {
       
@@ -1084,7 +1112,7 @@ function getTramaSmi(anio,mes){
 
 }
 
-function getTramaSer(anio,mes){
+function getTramaSer(anio,mes,n){
 
     
   fetch(`${url}/get-trama-ser/${anio}/${mes}`,{
@@ -1108,9 +1136,9 @@ function getTramaSer(anio,mes){
             ser += value
           }
       });
-      getTramaRn(anio,mes)
+      getTramaRn(anio,mes,n)
       }else{
-        getTramaRn(anio,mes)
+        getTramaRn(anio,mes,n)
       }
       
     }).catch(err => {
@@ -1121,7 +1149,7 @@ function getTramaSer(anio,mes){
 
 }
 
-function getTramaRn(anio,mes){
+function getTramaRn(anio,mes,n){
 
     
   fetch(`${url}/get-trama-rn/${anio}/${mes}`,{
@@ -1134,18 +1162,22 @@ function getTramaRn(anio,mes){
     .then(data => {
 
       let ctx = 0
+
+      if(data[0].error != "sin datos"){
+        data.forEach(e => {
+          let value = e.items
+          ctx++
+          if(data.length != ctx){
+              rn += value+"\n"
+          }else{
+            rn += value
+          }
+      });
+      
+      }
  
-      data.forEach(e => {
-        let value = e.items
-        ctx++
-        if(data.length != ctx){
-            rn += value+"\n"
-        }else{
-          rn += value
-        }
-    });
     
-    getLastCorrelative(anio,mes)
+    getLastCorrelative(anio,mes,n)
       
     }).catch(err => {
       
@@ -1155,7 +1187,7 @@ function getTramaRn(anio,mes){
 
 }
 
-function getLastCorrelative(anio,mes){
+function getLastCorrelative(anio,mes,n){
 
   var correlative = '00000'
     
@@ -1172,9 +1204,9 @@ function getLastCorrelative(anio,mes){
   
       if(x != null){
         correlative = x
-        setResum(correlative,anio,mes)
+        setResum(correlative,anio,mes,n)
       }else{
-        setResum(correlative,anio,mes)
+        setResum(correlative,anio,mes,n)
       }
       
       
@@ -1186,7 +1218,7 @@ function getLastCorrelative(anio,mes){
 
 }
 
-function setResum(correlative,anio,mes){
+function setResum(correlative,anio,mes,n){
 
   let codReanes = '00002698'
   let nZip = codReanes+anio+padNumber(mes)+nSend(correlative)+'.zip'
@@ -1200,37 +1232,112 @@ function setResum(correlative,anio,mes){
     mesP:mes
   }
 
- 
-  fetch(`${url}/send-resum/`, {
-    method: 'POST', // o 'PUT', 'DELETE', etc.
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data) // data es un objeto con los datos a enviar
-  })
-  .then(response => response.json())
-  .then(data => {
-     if(data.length > 0){
-      
-      //GET RESUMEN
-      getAtencionResumen(anio,mes,nSend(correlative))
+  if(n != 0){
+    fetch(`${url}/send-resum/`, {
+      method: 'POST', // o 'PUT', 'DELETE', etc.
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data) // data es un objeto con los datos a enviar
+    })
+    .then(response => response.json())
+    .then(data => {
+       if(data.length > 0){
+        
+        //GET RESUMEN
+        getAtencionResumen(anio,mes,nSend(correlative),n)
+  
+       }
+    })
+    .catch(error => {
+      enableButtonsError()
+      Swal.fire(
+          'Oops!',
+          'Se produjo un error',
+          'warning'
+        )
+      console.error(error)
+  });
+  }
+  
+  else{
 
-     }
-  })
-  .catch(error => {
-    enableButtonsError()
-    Swal.fire(
-        'Oops!',
-        'Se produjo un error',
-        'warning'
-      )
-    console.error(error)
-});
+    fetch(`${url}/send-resum-debug/`, {
+      method: 'POST', // o 'PUT', 'DELETE', etc.
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data) // data es un objeto con los datos a enviar
+    })
+    .then(response => response.json())
+    .then(data => {
+       if(data.length > 0){
+        
+        //GET RESUMEN
+        getAtencionResumenDebug(anio,mes,nSend(correlative),n)
+  
+       }
+    })
+    .catch(error => {
+      enableButtonsError()
+      Swal.fire(
+          'Oops!',
+          'Se produjo un error',
+          'warning'
+        )
+      console.error(error)
+  });
+
+  }
+ 
+  
+
 }
 
-function getAtencionResumen(anio,mes,nEnvio){
+function getAtencionResumen(anio,mes,nEnvio,n){
 
-  fetch(`${url}/get-trama-res/${anio}/${mes}/${nEnvio}`,{
+    fetch(`${url}/get-trama-res/${anio}/${mes}/${nEnvio}`,{
+      method: 'get',
+      headers: {
+        'Accept': 'application/json'
+      }
+  })
+    .then(response => response.json())
+    .then(data => {
+  
+      res += data[0].Anio.toString()+"\n"
+      res += padNumber(data[0].Mes)+"\n"
+      res += data[0].NroEnvio+"\n"
+      res += data[0].NomPaquete+"\n"
+      res += data[0].VersionGTI+"\n"
+      res += data[0].CantFilATE.toString()+"\n"
+      res += data[0].CantFilSMI.toString()+"\n"
+      res += data[0].CantFilDIA.toString()+"\n"
+      res += data[0].CantFilMED.toString()+"\n"
+      res += data[0].CantFilINS.toString()+"\n"
+      res += data[0].CantFilPRO.toString()+"\n"
+      res += data[0].CantFilSER.toString()+"\n"
+      res += data[0].CantFilRN.toString()+"\n"
+      res += data[0].NomApp+"\n"
+      res += data[0].VersApp+"\n"
+      res += data[0].VersEnvio+"\n"
+      res += data[0].IdResp+"\n"
+      res += data[0].NroDoc+"\n"
+      
+      sendTrama(atencion,diagnostico,medicamentos,insumos,procedimientos,smi,ser,rn,res,data[0].NomPaquete,n)
+  
+      
+    }).catch(err => {
+      enableButtonsError()
+      console.log(err)
+      enableButtons()
+    }); 
+
+}
+
+function getAtencionResumenDebug(anio,mes,nEnvio,n){
+
+  fetch(`${url}/get-trama-res-debug/${anio}/${mes}/${nEnvio}`,{
     method: 'get',
     headers: {
       'Accept': 'application/json'
@@ -1258,7 +1365,7 @@ function getAtencionResumen(anio,mes,nEnvio){
     res += data[0].IdResp+"\n"
     res += data[0].NroDoc+"\n"
     
-    sendTrama(atencion,diagnostico,medicamentos,insumos,procedimientos,smi,ser,rn,res,data[0].NomPaquete)
+    sendTrama(atencion,diagnostico,medicamentos,insumos,procedimientos,smi,ser,rn,res,data[0].NomPaquete,n)
 
     
   }).catch(err => {
@@ -1266,7 +1373,6 @@ function getAtencionResumen(anio,mes,nEnvio){
     console.log(err)
     enableButtons()
   }); 
-
 
 }
 
@@ -1358,6 +1464,28 @@ function showDataPackage(data){
   document.getElementById("ateCon").innerHTML = ateConsolidadas
   document.getElementById("ateObs").innerHTML = ateObservadas
   document.getElementById("ateProd").innerHTML = ateProduccion
+
+}
+
+function showDataResponse(data){
+  var xmlString = data;
+
+  var parser = new DOMParser();
+  var xmlDoc = parser.parseFromString(xmlString, "text/xml");
+  
+  // Obtener la respuesta SOAP
+  var response = xmlDoc.getElementsByTagName("registrarFuaResponse")[0];
+  
+  // Obtener los elementos de la respuesta
+  var cod = response.getElementsByTagName("codigo")[0].textContent;
+  var res = response.getElementsByTagName("respuesta")[0].textContent;
+  var status = response.getElementsByTagName("paqueteNombre")[0].textContent;
+
+  document.getElementById("cod-resp").innerHTML = cod
+  document.getElementById("mes-resp").innerHTML = res
+  document.getElementById("pack-resp").innerHTML = status+'.zip'
+
+  $('#modalTramaResponse').modal('show')
 
 }
 

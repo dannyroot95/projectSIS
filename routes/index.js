@@ -466,7 +466,7 @@ router.get("/trama-rn/:a/:b", function (req, res,next) {
     if(result[0].length>0){
       res.json(result[0]);
     }else{
-      res.json({error:"sin datos"})
+      res.json([{error:"sin datos"}])
     }
    
   });
@@ -481,7 +481,7 @@ router.get("/get-trama-rn/:a/:b", function (req, res,next) {
     if(result[0].length>0){
       res.json(result[0]);
     }else{
-      res.json({error:"sin datos"})
+      res.json([{error:"sin datos"}])
     }
    
   });
@@ -522,6 +522,27 @@ router.post("/send-resum", function (req, res,next) {
   });
 });
 
+router.post("/send-resum-debug", function (req, res,next) {
+
+  const data = req.body
+  const anio = data.anio
+  const mes = data.mes
+  const nroEnvio = data.nroEnvio
+  const nZip = data.nZip
+  const dni = data.dni
+  const mesP = data.mesP
+
+  sql.setTramaRESUMENDEBUG(anio,mes,nroEnvio,nZip,dni,mesP).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
+
 router.get("/get-trama-res/:a/:b/:c", function (req, res,next) {
   let anio = req.params.a;
   let mes = req.params.b;
@@ -538,11 +559,41 @@ router.get("/get-trama-res/:a/:b/:c", function (req, res,next) {
   });
 });
 
+router.get("/get-trama-res-debug/:a/:b/:c", function (req, res,next) {
+  let anio = req.params.a;
+  let mes = req.params.b;
+  let nenvio = req.params.c
+
+  sql.getTramaResDebug(anio,mes,nenvio).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
 router.post("/send-trama", function (req, res,next) {
 
   const data = req.body;
 
   sql.sendTrama(data).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+   
+  });
+});
+
+router.post("/send-trama-debug", function (req, res,next) {
+
+  const data = req.body;
+
+  sql.sendTramaDebug(data).then((result) => {
     if(result[0].length>0){
       res.json(result[0]);
     }else{

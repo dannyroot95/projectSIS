@@ -42,6 +42,11 @@ if(inputDNI != null){
 
   function getData(dni,user){
 
+    document.getElementById("loader").style = "display:block;border-top: 4px solid #0f062b;"
+    document.getElementById("btn-login").style = "display:none;"
+    document.getElementById("user").disabled = true
+    document.getElementById("dni").disabled = true
+
     fetch(`${url}/get-employee-by-user/${dni}/${user}`,{
       method: 'get',
       headers: {
@@ -56,6 +61,10 @@ if(inputDNI != null){
               'Usuario no encontrado!',
               'warning'
             )
+            document.getElementById("btn-login").style = "display:block;"
+            document.getElementById("loader").style = "display:none;"
+            document.getElementById("user").disabled = false
+            document.getElementById("dni").disabled = false
       }else{
         let dniF = (data[0][0].DNI).trim()
         let userF = (data[0][0].Usuario).trim()
@@ -63,6 +72,11 @@ if(inputDNI != null){
         if(dniF == dni && userF == user){
           let x = data[0][0]
           let content = data[1].content
+          document.getElementById("btn-login").style = "display:block;"
+          document.getElementById("loader").style = "display:none;"
+          document.getElementById("user").disabled = false
+          document.getElementById("dni").disabled = false
+
           setContent(content,x)
           const Toast = Swal.mixin({
             toast: true,
@@ -86,12 +100,20 @@ if(inputDNI != null){
             'Error , verifique sus datos!',
             'info'
           )
+          document.getElementById("btn-login").style = "display:block;"
+          document.getElementById("loader").style = "display:none;"
+          document.getElementById("user").disabled = false
+          document.getElementById("dni").disabled = false
         }
 
       }
 
     }).catch(err => {
       console.log(err)
+      document.getElementById("btn-login").style = "display:block;"
+      document.getElementById("loader").style = "display:none;"
+      document.getElementById("user").disabled = false
+      document.getElementById("dni").disabled = false
     });  
 
   }

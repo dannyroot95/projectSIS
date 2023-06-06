@@ -733,6 +733,8 @@ document.getElementById("btn-logs").disabled = true
 document.getElementById("btn-package").disabled = true
 document.getElementById("btn-query").disabled = true
 document.getElementById("btn-send").disabled = true
+document.getElementById("btn-send-debug").disabled = true
+
 }
 
 function enableButtons(){
@@ -741,6 +743,7 @@ document.getElementById("btn-logs").disabled = false
 document.getElementById("btn-query").disabled = false
 document.getElementById("btn-package").disabled = false
 document.getElementById("btn-send").disabled = false
+document.getElementById("btn-send-debug").disabled = false
 document.getElementById("btn-logs").style = "display:block;"
 }
 
@@ -751,6 +754,7 @@ function enableButtonsError(){
   document.getElementById("btn-query").disabled = false
   document.getElementById("btn-package").disabled = false
   document.getElementById("btn-send").disabled = false
+  document.getElementById("btn-send-debug").disabled = false
   document.getElementById("btn-logs").style = "display:block;"
   }
 
@@ -777,6 +781,11 @@ function validateDataATE(d){
         let warning = `${c}.- EL CAMPO ATE#17 (FORMATO DEL CODIGO DE ASEGURADO) CONTIENE UN VALOR NO PERMITIDO -> N° DE CUENTA : ${d["A1"]}`
         log = log+warning+"\n"
         searchAndUpdateAtentionFromAfiliate(d["A26"],d["A27"],d["A28"])
+    }if(d["A42"] == '056' && d["A34"] != 2){
+      ctx++
+      c++
+      let warning = `${c}.- EL CAMPO ATE#40 (IPRESS DE REFERENCIA) DEBE SER VACÍO DEACUERDO AL CAMPO ATE#34 (TIPO DE ATENCION) Y AL CAMPO ATE#43 (ORIGEN DE PERSONAL) -> N° DE CUENTA : ${d["A1"]}`
+      log = log+warning+"\n"
     }
 
 

@@ -291,13 +291,14 @@ console.log("error :" + error);
     }
   }
 
-  async function tramaAtencion(ANIO,MES,MESPRODUCCION) {
+  async function tramaAtencion(ANIO,MES,MESPRODUCCION,ANIOPRODUCCION) {
     try {
       let pool = await sql.connect(config);
       let res = await pool.request()
       .input('ANIO',ANIO)
       .input('MES',MES)
       .input('MESPRODUCCION',MESPRODUCCION)
+      .input('ANIOPRODUCCION',ANIOPRODUCCION)
       .execute(`CONSULTA_TRAMA_ATENCIONES`) 
       return res.recordsets
     } catch (error) {
@@ -305,14 +306,14 @@ console.log("error :" + error);
     }
   }
 
-  async function getTramaAtencion(ANIO,MES,MESPRODUCCION) {
+  async function getTramaAtencion(ANIO,MES,MESPRODUCCION,ANIOPRODUCCION) {
     try {
       let pool = await sql.connect(config);
       let res = await pool.request()
       .input('ANIO',ANIO)
       .input('MES',MES)
       .input('MESPRODUCCION',MESPRODUCCION)
-      .input('ANIOPRODUCCION',ANIO)
+      .input('ANIOPRODUCCION',ANIOPRODUCCION)
       .execute(`SIGH.dbo.ATENCION`) 
       return res.recordsets
     } catch (error) {

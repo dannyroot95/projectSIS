@@ -251,12 +251,13 @@ router.get("/affiliate-by-name/:a/:b/:c", function (req, res,next) {
   });
 });
 
-router.get("/trama-atencion/:a/:b/:c", function (req, res,next) {
+router.get("/trama-atencion/:a/:b/:c/:d", function (req, res,next) {
   let anio = req.params.a;
   let mes = req.params.b;
   let mesP = req.params.c;
+  let anioP = req.params.d;
 
-  sql.tramaAtencion(anio,mes,mesP).then((result) => {
+  sql.tramaAtencion(anio,mes,mesP,anioP).then((result) => {
 
     if(result[0].length>0){
       res.json(result[0]);
@@ -267,12 +268,14 @@ router.get("/trama-atencion/:a/:b/:c", function (req, res,next) {
   });
 });
 
-router.get("/get-trama-atencion/:a/:b/:c", function (req, res,next) {
+router.get("/get-trama-atencion/:a/:b/:c/:d", function (req, res,next) {
   let anio = req.params.a;
   let mes = req.params.b;
   let mesP = req.params.c;
+  let anioP = req.params.d;
 
-  sql.getTramaAtencion(anio,mes,mesP).then((result) => {
+
+  sql.getTramaAtencion(anio,mes,mesP,anioP).then((result) => {
 
     if(result[0].length>0){
       res.json(result[0]);

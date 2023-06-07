@@ -14,6 +14,7 @@ var ser = ``
 var rn = ``
 var res = ``
 
+yearLater()
 createDatatable()
 createDatatable2()
 createDatatable3()
@@ -25,7 +26,7 @@ createDatatable8()
 arrayParams()
 
 function arrayParams(){
-    for(let i = 1 ; i<= 86 ; i++){
+    for(let i = 1 ; i<= 88 ; i++){
         if(i == 1){
             params.push("x")
         }
@@ -40,6 +41,42 @@ function arrayParams(){
         let x = 'A'+i.toString()
         params2.push(x)
     }
+
+}
+
+function yearLater(){
+  var select = document.getElementById("inputGroupSelectYearSend");
+  var select2 = document.getElementById("inputGroupSelectYearSend2");
+  
+  // Obtener el año actual
+  var currentYear = new Date().getFullYear();
+  
+  // Agregar las opciones de los tres años anteriores y el actual
+  for (var i = currentYear - 3; i <= currentYear; i++) {
+    var option = document.createElement("option");
+    option.value = i;
+    option.text = i;
+    
+    // Establecer el año actual como seleccionado por defecto
+    if (i === currentYear) {
+      option.selected = true;
+    }
+    
+    select.appendChild(option);
+  }
+
+  for (var i = currentYear - 3; i <= currentYear; i++) {
+    var option = document.createElement("option");
+    option.value = i;
+    option.text = i;
+    
+    // Establecer el año actual como seleccionado por defecto
+    if (i === currentYear) {
+      option.selected = true;
+    }
+    
+    select2.appendChild(option);
+  }
 
 }
 
@@ -288,29 +325,30 @@ function query(){
     c = 0
     log = ""
     document.getElementById("errors").style = "display:none;"
-    let mes = document.getElementById("inputGroupSelectProductionMonth")
-    let anio = document.getElementById("inputGroupSelectYearSend")
-    var mes_selected = mes.value
-    var anio_selected = anio.value
+    let mes_ATENCION = document.getElementById("inputGroupSelectProductionMonth").value
+    let anio_ATENCION = document.getElementById("inputGroupSelectYearSend").value
+    let mes_SEND= document.getElementById("inputGroupSelectProductionMonth2").value
+    let anio_SEND = document.getElementById("inputGroupSelectYearSend2").value
+   
 
-    fetchTramaAtencion(mes_selected,anio_selected)
-    fetchTramaDiagnostico(mes_selected,anio_selected)
-    fetchTramaInsumos(mes_selected,anio_selected)
-    fetchTramaMedicamentos(mes_selected,anio_selected)
-    fetchTramaProcedimientos(mes_selected,anio_selected)
-    fetchTramaSMI(mes_selected,anio_selected)
-    fetchTramaSER(mes_selected,anio_selected)
-    fetchTramaRN(mes_selected,anio_selected)
+    fetchTramaAtencion(mes_ATENCION,anio_ATENCION,mes_SEND,anio_SEND)
+    fetchTramaDiagnostico(mes_ATENCION,anio_ATENCION)
+    fetchTramaInsumos(mes_ATENCION,anio_ATENCION)
+    fetchTramaMedicamentos(mes_ATENCION,anio_ATENCION)
+    fetchTramaProcedimientos(mes_ATENCION,anio_ATENCION)
+    fetchTramaSMI(mes_ATENCION,anio_ATENCION)
+    fetchTramaSER(mes_ATENCION,anio_ATENCION)
+    fetchTramaRN(mes_ATENCION,anio_ATENCION)
     
 
 }
 
-function fetchTramaAtencion(mes,anio){
+function fetchTramaAtencion(mes_ATENCION,anio_ATENCION,mes_SEND,anio_SEND){
 
         document.getElementById("body").style = "display:none;"
         disabledButtons()
         
-        fetch(`${url}/trama-atencion/${anio}/${mes}/${mes}`,{
+        fetch(`${url}/trama-atencion/${anio_ATENCION}/${mes_ATENCION}/${mes_SEND}/${anio_SEND}`,{
             method: 'get',
             headers: {
               'Accept': 'application/json'
@@ -778,14 +816,14 @@ function validateDataATE(d){
     if(d["A17"] == "" || d["A17"] == null){
         ctx++
         c++
-        let warning = `${c}.- EL CAMPO ATE#17 (FORMATO DEL CODIGO DE ASEGURADO) CONTIENE UN VALOR NO PERMITIDO -> N° DE CUENTA : ${d["A1"]}`
-        log = log+warning+"\n"
+        let warning = `${c}.- SIN REGISTRO EN LOS CAMPOS DE AFILIACIÓN -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]} `
+        log = log+warning+"\n\n"
         searchAndUpdateAtentionFromAfiliate(d["A26"],d["A27"],d["A28"])
     }if(d["A42"] == '056' && d["A34"] != 2){
       ctx++
       c++
-      let warning = `${c}.- EL CAMPO ATE#40 (IPRESS DE REFERENCIA) DEBE SER VACÍO DEACUERDO AL CAMPO ATE#34 (TIPO DE ATENCION) Y AL CAMPO ATE#43 (ORIGEN DE PERSONAL) -> N° DE CUENTA : ${d["A1"]}`
-      log = log+warning+"\n"
+      let warning = `${c}.- EL CAMPO ATE#40 (IPRESS DE REFERENCIA) DEBE SER VACÍO DEACUERDO AL CAMPO ATE#34 (TIPO DE ATENCION 1: AMBULATORIO , 2 :REFERENCIA 3:EMERGENCIA) Y AL CAMPO ATE#43 (ORIGEN DE PERSONAL DEL ESTABLECIMIENTO) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
+      log = log+warning+"\n\n"
     }
 
 
@@ -903,10 +941,10 @@ function sendTrama(ATENCION,ATENCIONDIA,ATENCIONMED,ATENCIONINS,ATENCIONPRO,ATEN
 
 function postTrama(n){
 
-    let mes = document.getElementById("inputGroupSelectProductionMonth")
-    let anio = document.getElementById("inputGroupSelectYearSend")
-    var mes_selected = mes.value
-    var anio_selected = anio.value
+  let mes_ATENCION = document.getElementById("inputGroupSelectProductionMonth").value
+  let anio_ATENCION = document.getElementById("inputGroupSelectYearSend").value
+  let mes_SEND= document.getElementById("inputGroupSelectProductionMonth2").value
+  let anio_SEND = document.getElementById("inputGroupSelectYearSend2").value
 
     atencion = ``
     diagnostico = ``
@@ -919,13 +957,13 @@ function postTrama(n){
     res = ``
 
     disabledButtons()
-    sendAllTramas(anio_selected,mes_selected,n)
+    sendAllTramas(anio_ATENCION,mes_ATENCION,mes_SEND,anio_SEND,n)
 
 }
 
-function sendAllTramas(anio,mes,n){
+function sendAllTramas(anio,mes,mes_send,anio_send,n){
     
-    fetch(`${url}/get-trama-atencion/${anio}/${mes}/${mes}`,{
+    fetch(`${url}/get-trama-atencion/${anio}/${mes}/${mes_send}/${anio_send}`,{
         method: 'get',
         headers: {
           'Accept': 'application/json'

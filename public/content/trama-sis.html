@@ -26,22 +26,14 @@
     <div class="input-group mb-3">
 
       <div class="input-group-prepend">
-        <label class="input-group-text" for="inputGroupSelectYearSend">Año de envío</label>
+        <label class="input-group-text" for="inputGroupSelectYearSend">Año de atención</label>
       </div>
       <select class="custom-select" id="inputGroupSelectYearSend">
-        
-        <option value="2021">2020</option>
-        <option value="2021">2021</option>
-        <option value="2022">2022</option>
-        <option value="2023">2023</option>
-        <option value="2024">2024</option>
-        <option value="2025">2025</option>
+    
       </select>
 
-      &nbsp;&nbsp;
-
       <div class="input-group-prepend">
-        <label class="input-group-text" for="inputGroupSelectProductionMonth">Mes de producción</label>
+        <label class="input-group-text" for="inputGroupSelectProductionMonth">Mes de atención</label>
       </div>
       <select class="custom-select" id="inputGroupSelectProductionMonth">
        
@@ -59,15 +51,47 @@
         <option value="12">Diciembre</option>
       </select>
 
-      <button class="btn btn-primary" id="btn-query" onclick="query()" ><i class="bi bi-search"></i>&nbsp;Consultar</button>
-      <button class="btn btn-dark" onclick="donwloadLog()" id="btn-logs" style="display: none;" ><i class="bi bi-file-medical"></i>&nbsp;Logs</button>
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="inputGroupSelectYearSend2">Año de envío</label>
+      </div>
+      <select class="custom-select" id="inputGroupSelectYearSend2">
+    
+      </select>
+
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="inputGroupSelectProductionMonth2">Mes de envío</label>
+      </div>
+      <select class="custom-select" id="inputGroupSelectProductionMonth2">
+       
+        <option value="1">Enero</option>
+        <option value="2">Febrero</option>
+        <option value="3">Marzo</option>
+        <option value="4">Abril</option>
+        <option value="5">Mayo</option>
+        <option value="6">Junio</option>
+        <option value="7">Julio</option>
+        <option value="8">Agosto</option>
+        <option value="9">Septiembre</option>
+        <option value="10">Octubre</option>
+        <option value="11">Noviembre</option>
+        <option value="12">Diciembre</option>
+      </select>
+
+
+    </div>
+
+    <div style="display: flex;width: max-content;">
+
+      <button class="btn btn-primary" id="btn-query" onclick="query()" ><i class="bi bi-search"></i>&nbsp;Consultar</button>&nbsp;
+      <a  id="btn-logs" style="display: none;" ><button class="btn btn-dark" onclick="donwloadLog()"><i class="bi bi-file-medical"></i>&nbsp;Logs</button>&nbsp;</a>
       <button class="btn" onclick="openModalPackage()" 
-      style="background-color: rgb(73, 1, 141);color: white;" id="btn-package" >
-        <i class="bi bi-file-earmark-zip-fill"></i>
-        &nbsp;Consultar paquete</button>
-        <button class="btn btn-secondary" onclick="postTrama(0)" id="btn-send-debug" ><i class="bi bi-bug-fill"></i>&nbsp;Enviar a pruebas</button>
-      <button class="btn btn-success" onclick="postTrama(1)" id="btn-send" ><i class="bi bi-send-fill"></i>&nbsp;Enviar a produccion</button>
-      <a><div class="loaderSmall" id="loader"></div></a>
+       style="background-color: rgb(73, 1, 141);color: white;" id="btn-package" >
+       <i class="bi bi-file-earmark-zip-fill"></i>
+        &nbsp;Consultar paquete</button>&nbsp;
+       <button class="btn btn-secondary" onclick="postTrama(0)" id="btn-send-debug" ><i class="bi bi-bug-fill"></i>&nbsp;Enviar a pruebas</button>&nbsp;
+       <button class="btn btn-success" onclick="postTrama(1)" id="btn-send" ><i class="bi bi-send-fill"></i>&nbsp;Enviar a produccion</button>&nbsp;
+       <a><div class="loaderSmall" id="loader"></div></a>
+
     </div>
 
 
@@ -285,7 +309,7 @@
       let actualMonth = new Date().getMonth()+1
 
       document.getElementById("inputGroupSelectYearSend").value = actualYear
-      document.getElementById("inputGroupSelectProductionMonth").value = actualMonth
+      document.getElementById("inputGroupSelectProductionMonth2").value = actualMonth
       document.getElementById("inputGroupSelectPackageYear").value = actualYear
 
       if (actualMonth <= 9) {
@@ -293,7 +317,7 @@
       } 
 
 
-     for(let i = 1 ; i<= 86 ; i++ ){
+     for(let i = 1 ; i<= 88 ; i++ ){
       let item = `<th class="minText" scope="col"><center>${i}</center></th>`
       if(i == 1){
         let x = `<th id="logATE" class="minText" scope="col"><center>Log</center></th>`

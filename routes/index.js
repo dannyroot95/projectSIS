@@ -223,6 +223,19 @@ router.get("/discharge_control/:x/:y", function (req, res,next) {
   });
 });
 
+router.get("/discharge_control_with_procedures/:x/:y", function (req, res,next) {
+  let f_init = req.params.x;
+  let f_fin = req.params.y;
+
+  sql.discharge_control_with_procedures(f_init,f_fin).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+  });
+});
+
 router.get("/affiliate/:nro", function (req, res,next) {
   let nroFormato = req.params.nro;
 

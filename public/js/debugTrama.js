@@ -11,7 +11,7 @@ function searchAndUpdateAtentionFromAfiliate(LASTNAME1,LASTNAME2,FIRSTNAME){
       .then(data => {
         
         aff++
-        console.log(aff+data[0])
+        console.log(data[0])
 
       }).catch(err => {
         console.log(err)

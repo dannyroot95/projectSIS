@@ -80,21 +80,42 @@
 
     </div>
 
+    
+    </div>
+
+
     <div style="display: flex;width: max-content;">
 
-      <button class="btn btn-primary" id="btn-query" onclick="query()" ><i class="bi bi-search"></i>&nbsp;Consultar</button>&nbsp;
+      <button class="btn btn-primary" id="btn-query" onclick="query()" ><i class="bi bi-search"></i>&nbsp;Consultar trama</button>&nbsp;
       <a  id="btn-logs" style="display: none;" ><button class="btn btn-dark" onclick="donwloadLog()"><i class="bi bi-file-medical"></i>&nbsp;Logs</button>&nbsp;</a>
       <button class="btn" onclick="openModalPackage()" 
        style="background-color: rgb(73, 1, 141);color: white;" id="btn-package" >
        <i class="bi bi-file-earmark-zip-fill"></i>
-        &nbsp;Consultar paquete</button>&nbsp;
-       <button class="btn btn-secondary" onclick="postTrama(0)" id="btn-send-debug" ><i class="bi bi-bug-fill"></i>&nbsp;Enviar a pruebas</button>&nbsp;
-       <button class="btn btn-success" onclick="postTrama(1)" id="btn-send" ><i class="bi bi-send-fill"></i>&nbsp;Enviar a produccion</button>&nbsp;
+        &nbsp;Consultar paquete de trama</button>&nbsp;
+       <button class="btn btn-secondary" onclick="postTrama(0)" id="btn-send-debug" ><i class="bi bi-bug-fill"></i>&nbsp;Enviar trama a pruebas</button>&nbsp;
+       <button class="btn btn-success" onclick="postTrama(1)" id="btn-send" ><i class="bi bi-send-fill"></i>&nbsp;Enviar trama a produccion</button>&nbsp;
        <a><div class="loaderSmall" id="loader"></div></a>
 
     </div>
+ 
 
+    <p></p>
 
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="inputGroupSelectRules">
+          Validacion de reglas de consistencia</label>
+      </div>
+      <select class="custom-select" id="inputGroupSelectRules">
+        <option selected value="1" >RC-01</option>
+        <option  value="4" >RC-04</option>
+        <option  value="5" >RC-05</option>
+        <option  value="12" >RC-12</option>
+      </select>
+
+      <button style="background-color: #1c1842;color: white;"
+       class="btn btn-dark"><i class="bi bi-search"></i>&nbsp;Consultar regla</button>
+    </div>
   <p></p>
 
   <label style="display:none;" id="errors"></label>

@@ -265,6 +265,20 @@ console.log("error :" + error);
     }
   }
 
+  async function discharge_control_with_procedures(f_init,f_fin) {
+
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('fecha_in',f_init)
+      .input('fecha_out',f_fin)
+      .execute(`CONTROL_DE_ALTAS_CON_PROCEDIMIENTOS`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
   async function searchAffiliate(nroFormato) {
     try {
       let pool = await sql.connect(config);
@@ -854,6 +868,7 @@ module.exports = {
   searchAffiliate:searchAffiliate,
   searchAffiliateByName:searchAffiliateByName,
   discharge_control:discharge_control,
+  discharge_control_with_procedures:discharge_control_with_procedures,
   tramaAtencion:tramaAtencion,
   getTramaAtencion:getTramaAtencion,
   tramaDiagnostico:tramaDiagnostico,

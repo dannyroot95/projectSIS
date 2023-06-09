@@ -64,16 +64,16 @@ function insertData(data){
             'N° Formato':d.nro_formato,
             'Fecha de atención':d.f_atencion,
             'Beneficiario':d.beneficiario,
+            'Hist.Clinica':d.hist_clinica,
             'Servicio':d.servicio,
             'Medico':d.medico,
-            'Hist.Clinica':d.hist_clinica,
             'Digitador':d.digitador,
-            'Mes':d.mes,
-            'Periodo':d.periodo,
             'Usuario':d.usuario,
             'Nombre de usuario':d.nombre_digitador,
             'Nombre de servicio':typeService(d.servicio_egreso),
-            'Valorizado':d.TotalValorizado
+            'Valorizado':d.TotalValorizado,
+            'Mes':d.mes,
+            'Periodo':d.periodo
 
         })
 

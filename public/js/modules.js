@@ -35,6 +35,8 @@ $('document').ready(function () {
           discharge_control_cpt()
         }else if (direccion == '#trama_sis') {
           plot_sis()
+        }else if (direccion == '#trama_saludpol') {
+          plot_saludpol()
         }else if (direccion == '#catalogo') {
           catalog()
         }    
@@ -93,6 +95,10 @@ $('document').ready(function () {
   function plot_sis() {
     window.location.hash = "#trama_sis"
     contentModulo.innerHTML = urlModule("/content/trama-sis.html");
+  }
+  function plot_saludpol() {
+    window.location.hash = "#trama_saludpol"
+    contentModulo.innerHTML = urlModule("/content/trama-saludpol.html");
   }
   function users() {
     window.location.hash = "#usuarios"

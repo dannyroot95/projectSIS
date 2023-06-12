@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="/libraries/sweetalert2/dist/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="/libraries/sweetalert2/dist/sweetalert2.min.css">
+    <link href='/bootstrap/css/bootstrap.min.css' rel='stylesheet'>
+    <link href='/bootstrap/datatables.min.css' rel='stylesheet'>
+    <link href='/css/styles.css' rel='stylesheet'>
+    <link rel="stylesheet" href="/bootstrap/icons/font/bootstrap-icons.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+    
+</head>
+<body id="g-body">
+    
+  <h2>Trama Saludpol</h2>
+  <p></p>
+
+    
+    <div class="input-group mb-3">
+
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="inputGroupSelectProductionMonth">Mes de producción</label>
+      </div>
+      <select class="custom-select" id="inputGroupSelectProductionMonth">
+       
+        <option value="1">Enero</option>
+        <option value="2">Febrero</option>
+        <option value="3">Marzo</option>
+        <option value="4">Abril</option>
+        <option value="5">Mayo</option>
+        <option value="6">Junio</option>
+        <option value="7">Julio</option>
+        <option value="8">Agosto</option>
+        <option value="9">Septiembre</option>
+        <option value="10">Octubre</option>
+        <option value="11">Noviembre</option>
+        <option value="12">Diciembre</option>
+      </select>
+
+      
+      <button class="btn btn-primary" id="btn-query" onclick="query()" ><i class="bi bi-search"></i>&nbsp;Consultar atenciones</button>
+      <button class="btn btn-danger" id="btn-deleted" onclick="showDeleteAcounts()" ><i class="bi bi-trash3-fill"></i>&nbsp;Quitar y consultar atenciones</button>&nbsp; 
+      <a><div class="loaderSmall" id="loader"></div></a>
+
+    </div>
+
+    
+    </div>
+
+
+
+ 
+
+    <p></p>
+
+      
+  <div id="body">
+    <br>
+    <label style="font-weight: bolder;font-size: 22px;">Trama 1</label>
+    <div class="table-responsive">
+     <table class="table table-hover table-bordered display" id="tb-data-1">
+         <thead>
+           <tr id="tr-table-1">
+           </tr>
+         </thead>
+         <tbody id="tbody">
+         </tbody>
+       </table>
+     </div>
+
+     <br>
+
+     <label style="font-weight: bolder;font-size: 22px;">Trama 2</label>
+     <div class="table-responsive">
+      <table class="table table-hover table-bordered display" id="tb-data-2">
+          <thead>
+            <tr id="tr-table-2">
+            </tr>
+          </thead>
+          <tbody id="tbody2">
+          </tbody>
+        </table>
+      </div>
+
+      <br>
+ 
+      <label style="font-weight: bolder;font-size: 22px;">Trama 3</label>
+      <div class="table-responsive">
+       <table class="table table-hover table-bordered display" id="tb-data-3">
+           <thead>
+             <tr id="tr-table-3">
+             </tr>
+           </thead>
+           <tbody id="tbody3">
+           </tbody>
+         </table>
+       </div>
+
+       <br>
+ 
+       <label style="font-weight: bolder;font-size: 22px;">Trama 4</label>
+       <div class="table-responsive">
+        <table class="table table-hover table-bordered display" id="tb-data-4">
+            <thead>
+              <tr id="tr-table-4">
+              </tr>
+            </thead>
+            <tbody id="tbody4">
+            </tbody>
+          </table>
+        </div>
+
+     </div>
+
+<!---->
+
+
+
+
+
+    
+     <script>
+
+     for(let i = 1 ; i<= 24 ; i++ ){
+      let item = `<th class="minText" scope="col"><center>CAMPO ${i}</center></th>`
+      $(item).appendTo('#tr-table-1')
+     }
+
+     for(let i = 1 ; i<= 4 ; i++ ){
+      let item = `<th class="minText" scope="col"><center>CAMPO ${i}</center></th>`
+      $(item).appendTo('#tr-table-2')
+     }
+
+     for(let i = 1 ; i<= 4 ; i++ ){
+      let item = `<th class="minText" scope="col"><center>CAMPO ${i}</center></th>`
+      $(item).appendTo('#tr-table-3')
+     }
+
+     for(let i = 1 ; i<= 5 ; i++ ){
+      let item = `<th class="minText" scope="col"><center>CAMPO ${i}</center></th>`
+      $(item).appendTo('#tr-table-4')
+     }
+
+
+
+     </script>
+
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/bootstrap/datatables.min.js"></script>
+    <script src="/js/utils/constants.js"></script>
+    <script src="/js/debugTrama.js"></script>
+    <script src="/js/trama-saludpol.js"></script>
+  
+</body>
+</html>

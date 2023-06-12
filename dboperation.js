@@ -848,6 +848,36 @@ console.log("error :" + error);
     }
   }
 
+  async function setExcludes(values) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool
+        .request()
+        .query(`INSERT INTO BD_SIS_TOOLS..excluidos_saludpol (IdCuentaAtencion) 
+        VALUES ${values.map((value) => `(${value})`).join(", ")}`);
+      return res.recordsets;
+    } catch (error) {
+      console.log("error: " + error);
+    } finally {
+      sql.close();
+    }
+  }
+
+  async function constructTramaSaludpol(f1,f2) {
+    f1 = f1.replace(/-/g, "/");
+    f2 = f2.replace(/-/g, "/");
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('F1',f1)
+      .input('F2',f2)
+      .execute(`REGISTRO_TRAMA_SALUDPOL`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
 module.exports = {
   getdata: getdata,
   sendTrama:sendTrama,
@@ -897,5 +927,7 @@ module.exports = {
   getEmployee:getEmployee,
   getEmployeeByDniAndUser:getEmployeeByDniAndUser,
   setUser:setUser,
-  getPackageTrama:getPackageTrama
+  getPackageTrama:getPackageTrama,
+  setExcludes:setExcludes,
+  constructTramaSaludpol:constructTramaSaludpol
 };

@@ -692,6 +692,35 @@ router.get("/get-employee/:a", function (req, res,next) {
   });
 });
 
+router.post("/excludes", function (req, res, next) {
+  const { values } = req.body;
+
+  sql.setExcludes(values)
+    .then(() => {
+      res.json({ success: "insertado" });
+    })
+    .catch((error) => {
+      console.error("Error al insertar los valores:", error);
+      res.status(500).json({ success: "error" });
+    });
+});
+
+router.get("/saludpol/:a/:b", function (req, res,next) {
+  let f1 = req.params.a;
+  let f2 = req.params.b;
+
+  sql.constructTramaSaludpol(f1,f2).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result);
+    }else{
+      res.json({error:"sin datos"})
+    }
+  
+  });
+});
+
+
 router.get("/get-employee-by-user/:a/:b", function (req, res,next) {
   let dni = req.params.a;
   let user = req.params.b;
@@ -875,6 +904,7 @@ function getTypeUser(value){
         <ul class="sub-menu">
           <li><a class="link_name">Tramas</a></li>
           <li><a href="#trama_sis">Trama SIS</a></li>
+          <li><a href="#trama_saludpol">Trama Saludpol</a></li>
         </ul>
       </li>
   
@@ -999,6 +1029,7 @@ function getTypeUser(value){
         <ul class="sub-menu">
           <li><a class="link_name">Tramas</a></li>
           <li><a href="#trama_sis">Trama SIS</a></li>
+          <li><a href="#trama_saludpol">Trama Saludpol</a></li>
         </ul>
       </li>
   

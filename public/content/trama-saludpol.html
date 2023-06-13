@@ -46,7 +46,9 @@
 
       
       <button class="btn btn-primary" id="btn-query" onclick="query()" ><i class="bi bi-search"></i>&nbsp;Consultar atenciones</button>
-      <button class="btn btn-danger" id="btn-deleted" onclick="showDeleteAcounts()" ><i class="bi bi-trash3-fill"></i>&nbsp;Quitar y consultar atenciones</button>&nbsp; 
+      <button class="btn btn-danger" id="btn-deleted" onclick="showModalDeleteAccount()" ><i class="bi bi-trash3-fill"></i>&nbsp;Quitar y consultar atenciones</button>
+       <button style="display: none;" class="btn btn-dark" id="btn-trama" onclick="buildTrama()" ><i class="bi bi-bounding-box"></i>&nbsp;Generar trama</button>
+      &nbsp; 
       <a><div class="loaderSmall" id="loader"></div></a>
 
     </div>
@@ -122,7 +124,43 @@
 <!---->
 
 
+<!-- Modal -->
+<div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="modalDeleteLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modalDeleteLabel">Agrege a la tabla los N° de cuentas</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
 
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">N° de cuenta</span>
+          <input type="number" id="nAccount" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+          <button class="btn btn-primary" onclick="addToTable()" ><i class="bi bi-plus-circle"></i>&nbsp; Agregar a la tabla</button>
+        </div>
+        
+        <div class="table-responsive">
+          <table class="table table-hover table-bordered display" id="tb-data-accounts">
+              <thead>
+                <tr>
+                  <th class="minText" scope="col"><center><b># de cuenta</b></center></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="tbodyAccount">
+              </tbody>
+            </table>
+          </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button onclick="deleteAndConsult()" type="button" class="btn btn-success"><i class="bi bi-check-all"></i>&nbsp; Quitar y consultar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
     

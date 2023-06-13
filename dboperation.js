@@ -878,6 +878,32 @@ console.log("error :" + error);
     }
   }
 
+  async function constructTramaSaludpolExcludes(f1,f2) {
+    f1 = f1.replace(/-/g, "/");
+    f2 = f2.replace(/-/g, "/");
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('F1',f1)
+      .input('F2',f2)
+      .execute(`REGISTRO_TRAMA_SALUDPOL_EXCLUIDOS`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
+  async function generateTramaSaludpol() {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .execute(`BUILD_TRAMA_SALUDPOL`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
 module.exports = {
   getdata: getdata,
   sendTrama:sendTrama,
@@ -929,5 +955,7 @@ module.exports = {
   setUser:setUser,
   getPackageTrama:getPackageTrama,
   setExcludes:setExcludes,
-  constructTramaSaludpol:constructTramaSaludpol
+  constructTramaSaludpol:constructTramaSaludpol,
+  constructTramaSaludpolExcludes:constructTramaSaludpolExcludes,
+  generateTramaSaludpol:generateTramaSaludpol
 };

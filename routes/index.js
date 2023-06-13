@@ -720,6 +720,33 @@ router.get("/saludpol/:a/:b", function (req, res,next) {
   });
 });
 
+router.get("/saludpol-excludes/:a/:b", function (req, res,next) {
+  let f1 = req.params.a;
+  let f2 = req.params.b;
+
+  sql.constructTramaSaludpolExcludes(f1,f2).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result);
+    }else{
+      res.json({error:"sin datos"})
+    }
+  
+  });
+});
+
+router.get("/trama-saludpol", function (req, res,next) {
+
+  sql.generateTramaSaludpol().then((result) => {
+
+    if(result[0].length>0){
+      res.json(result);
+    }else{
+      res.json({error:"sin datos"})
+    }
+  
+  });
+});
 
 router.get("/get-employee-by-user/:a/:b", function (req, res,next) {
   let dni = req.params.a;

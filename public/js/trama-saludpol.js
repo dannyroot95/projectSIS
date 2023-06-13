@@ -167,6 +167,37 @@ function fetchTramaSaludpol(init,final){
             insertDataTrama4(data[3])
             loader.style = "display:none;"
             enableButtons()
+            document.getElementById("btn-trama").style = "display:block;"
+          }).catch(err => {
+            
+            console.log(err)
+            enableButtons()
+          }); 
+
+}
+
+function fetchTramaSaludpolEx(init,final){
+
+  loader.style = "display:block;"
+  disableButtons()
+
+  $('#modalDelete').modal('hide')
+
+        fetch(`${url}/saludpol-excludes/${init}/${final}`,{
+            method: 'get',
+            headers: {
+              'Accept': 'application/json'
+            }
+        })
+          .then(response => response.json())
+          .then(data => {
+            insertDataTrama1(data[0])
+            insertDataTrama2(data[1])
+            insertDataTrama3(data[2])
+            insertDataTrama4(data[3])
+            loader.style = "display:none;"
+            enableButtons()
+            document.getElementById("btn-trama").style = "display:block;"
           }).catch(err => {
             
             console.log(err)
@@ -204,10 +235,15 @@ function insertDataTrama1(data){
   $("#tbody").html(data.map((d) => {
 
     ctx++
+    let color = "white"
+
+    if(d.CAMPO3 == null){
+      color = "#FFDFE7"
+    }
 
           return `
 
-          <tr style="cursor: pointer;">
+          <tr style="cursor: pointer;background-color:${color};">
           <td class="minText2">${d.CAMPO1}</td>
           <td class="minText2">${d.CAMPO2}</td>
           <td class="minText2">${d.CAMPO3}</td>
@@ -330,9 +366,252 @@ function getDays(mes) {
 function disableButtons(){
 document.getElementById("btn-query").disabled = true
 document.getElementById("btn-deleted").disabled = true
+document.getElementById("btn-trama").disabled = true
 }
+
 
 function enableButtons(){
   document.getElementById("btn-query").disabled = false
   document.getElementById("btn-deleted").disabled = false
+  document.getElementById("btn-trama").disabled = false
 }
+
+function showModalDeleteAccount(){
+  $('#modalDelete').modal('show')
+}
+
+function addToTable(){
+
+  let n = document.getElementById("nAccount").value;
+
+  if (n != "") {
+    let table = document.getElementById('tb-data-accounts');
+    let tbody = table.getElementsByTagName('tbody')[0];
+    let rowS = tbody.getElementsByTagName('tr');
+
+    // Verificar si el valor ya existe en alguna fila
+    let exist = false;
+    for (let i = 0; i < rowS.length; i++) {
+      let cell = rowS[i].getElementsByTagName('td')[0];
+      let valueCell = cell.innerText || cell.textContent;
+      if (valueCell.trim() === n.trim()) {
+        exist = true;
+        break;
+      }
+    }
+
+    if (exist) {
+      Swal.fire(
+        'Oops!',
+        'El número de cuenta ya existe en la tabla!',
+        'info'
+      );
+    } else {
+      let td =
+        `<tr>
+          <td> <center>${n}</center></td>
+          <td><center>
+          <button onclick="deleteItem(this)" class="btn btn-danger">Eliminar</button>
+          </center></td>
+        </tr>`;
+      $(td).appendTo('#tbodyAccount');
+      document.getElementById("nAccount").value = "";
+    }
+  } else {
+    Swal.fire(
+      'Oops!',
+      'Ingrese el número de cuenta!',
+      'info'
+    );
+  }
+}
+
+function deleteItem(button){
+  var row = button.parentNode.parentNode.parentNode; // Obtener la fila que contiene el botón
+  row.parentNode.removeChild(row);
+}
+
+function deleteAndConsult() {
+  var table = document.getElementById('tb-data-accounts');
+  var tbody = table.getElementsByTagName('tbody')[0];
+  
+  var values = [];
+  
+  // Recorrer las filas de la tabla
+  for (var i = 0; i < tbody.rows.length; i++) {
+    var row = tbody.rows[i];
+    var cell = row.cells[0]; // Primera celda de la fila
+    
+    // Obtener el valor y agregarlo al arreglo
+    var val = cell.innerText || cell.textContent;
+    values.push(val.trim());
+    
+  }
+  
+  // Generar el objeto JSON de ejemplo
+  var json = {
+    "values": values
+  };
+  
+
+  if(isEmpty()){
+    Swal.fire(
+      'Oops!',
+      'La tabla está vacía!',
+      'info'
+    )
+  }else{
+    fetchTramaSaludpolExcludes(json)
+  }
+
+
+  // Realizar la acción deseada con el objeto JSON
+  
+}
+
+function fetchTramaSaludpolExcludes(json){
+
+
+  fetch(`${url}/excludes/`, {
+    method: 'POST', // o 'PUT', 'DELETE', etc.
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(json) // data es un objeto con los datos a enviar
+  })
+  .then(response => response.json())
+  .then(data => {
+     if(data.success == "insertado"){
+      
+      let month = document.getElementById("inputGroupSelectProductionMonth").value
+      const { primerDiaMes, ultimoDiaMes } = getDays(month);
+      let init = primerDiaMes
+      let final = ultimoDiaMes
+      fetchTramaSaludpolEx(init,final)
+
+     }else{
+      Swal.fire(
+        'Oops!',
+        'Se produjo un error',
+        'warning'
+      )
+     }
+  })
+  .catch(error => {
+    Swal.fire(
+        'Oops!',
+        'Se produjo un error',
+        'warning'
+      )
+    console.error(error)
+
+});
+
+}
+
+function isEmpty() {
+  var table = document.getElementById('tb-data-accounts');
+  var tbody = table.getElementsByTagName('tbody')[0];
+  
+  return tbody.rows.length === 0;
+}
+
+function buildTrama(){
+
+  loader.style = "display:block;"
+  disableButtons()
+
+        fetch(`${url}/trama-saludpol`,{
+            method: 'get',
+            headers: {
+              'Accept': 'application/json'
+            }
+        })
+          .then(response => response.json())
+          .then(data => {
+            
+            let ctx = 0
+            let ctx2 = 0
+            let ctx3 = 0
+            let ctx4 = 0
+            let trama1 = ""
+            let trama2 = ""
+            let trama3 = ""
+            let trama4 = ""
+
+            data[0].forEach(e => {
+              let value = e.Items
+              ctx++
+              if(value != null){
+              if(data[0].length != ctx){
+                trama1 += value+"\n"
+              }else{
+                trama1 += value
+              }}
+          });
+
+          data[1].forEach(e => {
+            let value = e.Items
+            ctx2++
+            if(value != null){
+            if(data[1].length != ctx2){
+              trama2 += value+"\n"
+            }else{
+              trama2 += value
+            }}
+        });
+
+        data[2].forEach(e => {
+          let value = e.Items
+          ctx3++
+          if(value != null){
+          if(data[2].length != ctx3){
+            trama3 += value+"\n"
+          }else{
+            trama3 += value
+          }}
+      });
+
+      data[3].forEach(e => {
+        let value = e.Items
+        ctx4++
+        if(value != null){
+        if(data[3].length != ctx4){
+          trama4 += value+"\n"
+        }else{
+          trama4 += value
+        }}
+    });
+          
+            loader.style = "display:none;"
+            enableButtons()
+
+            const selectElement = document.getElementById('inputGroupSelectProductionMonth');
+            const selectedIndex = selectElement.selectedIndex;
+            const m = selectElement.options[selectedIndex].text;
+
+            downloadFile(trama1, 'trama1-'+m+'.txt');
+            downloadFile(trama2, 'trama2-'+m+'.txt');
+            downloadFile(trama3, 'trama3-'+m+'.txt');
+            downloadFile(trama4, 'trama4-'+m+'.txt');
+            
+          }).catch(err => {
+            
+            console.log(err)
+            enableButtons()
+          }); 
+
+}
+
+function downloadFile(content, fileName) {
+  const downloadLink = document.createElement('a');
+  downloadLink.href = URL.createObjectURL(new Blob([content], { type: 'text/plain' }));
+  downloadLink.download = fileName;
+  downloadLink.click();
+}
+
+
+$('#modalDelete').on('hidden.bs.modal', function (e) {
+  document.getElementById("tbodyAccount").innerHTML = ""
+  document.getElementById("nAccount").value = "";
+})

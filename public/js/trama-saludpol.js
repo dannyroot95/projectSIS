@@ -244,6 +244,8 @@ function insertDataTrama1(data){
           return `
 
           <tr style="cursor: pointer;background-color:${color};">
+          <td class="minText2"><input type="checkbox"></td>
+          <td class="minText2"><button class="btn btn-success"><i class="bi bi-eye-fill"></i></button></td>
           <td class="minText2">${d.CAMPO1}</td>
           <td class="minText2">${d.CAMPO2}</td>
           <td class="minText2">${d.CAMPO3}</td>

@@ -139,23 +139,7 @@
           <button class="btn btn-success" onclick="addToTableIn()" ><i class="bi bi-plus-circle"></i>&nbsp; Incluir</button>
           <button class="btn btn-danger" onclick="addToTable()" ><i class="bi bi-x-circle"></i>&nbsp; Excluir</button>
         </div>
-        
-        <label style="color: red;">Cuentas excluidas</label>
-        <div class="table-responsive">
-          <table class="table table-hover table-bordered display" id="tb-data-accounts">
-              <thead>
-                <tr>
-                  <th class="minText" scope="col"><center><b># de cuenta</b></center></th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody id="tbodyAccount">
-              </tbody>
-            </table>
-          </div>
-
-          <br>
-
+    
         <label style="color: green;">Cuentas incluidas</label>
         <div class="table-responsive">
           <table class="table table-hover table-bordered display" id="tb-data-accounts-in">
@@ -169,6 +153,22 @@
               </tbody>
             </table>
           </div>
+
+          <br>
+
+          <label style="color: red;">Cuentas excluidas</label>
+          <div class="table-responsive">
+            <table class="table table-hover table-bordered display" id="tb-data-accounts">
+                <thead>
+                  <tr>
+                    <th class="minText" scope="col"><center><b># de cuenta</b></center></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="tbodyAccount">
+                </tbody>
+              </table>
+            </div>
 
       </div>
       <div class="modal-footer">

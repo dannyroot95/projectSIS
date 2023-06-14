@@ -863,6 +863,21 @@ console.log("error :" + error);
     }
   }
 
+  async function setIncludes(values) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool
+        .request()
+        .query(`INSERT INTO BD_SIS_TOOLS..incluidos_saludpol (IdCuentaAtencion) 
+        VALUES ${values.map((value) => `(${value})`).join(", ")}`);
+      return res.recordsets;
+    } catch (error) {
+      console.log("error: " + error);
+    } finally {
+      sql.close();
+    }
+  }
+
   async function constructTramaSaludpol(f1,f2) {
     f1 = f1.replace(/-/g, "/");
     f2 = f2.replace(/-/g, "/");
@@ -893,11 +908,53 @@ console.log("error :" + error);
     }
   }
 
+  async function constructTramaSaludpolExcludesAndIncludes(f1,f2) {
+    f1 = f1.replace(/-/g, "/");
+    f2 = f2.replace(/-/g, "/");
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('F1',f1)
+      .input('F2',f2)
+      .execute(`REGISTRO_TRAMA_SALUDPOL_EXCLUIDOS_Y_INCLUIDOS`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
+  async function constructTramaSaludpolIncludes(f1,f2) {
+    f1 = f1.replace(/-/g, "/");
+    f2 = f2.replace(/-/g, "/");
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('F1',f1)
+      .input('F2',f2)
+      .execute(`REGISTRO_TRAMA_SALUDPOL_INCLUIDOS`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
   async function generateTramaSaludpol() {
     try {
       let pool = await sql.connect(config);
       let res = await pool.request()
       .execute(`BUILD_TRAMA_SALUDPOL`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
+  async function getAtentionSaludpol(x) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('idCuentaAtencion',x)
+      .execute(`CONSULTA_ATENCION_SALUDPOL_POR_CUENTA`) 
       return res.recordsets
     } catch (error) {
       console.log("error : " + error);
@@ -955,7 +1012,11 @@ module.exports = {
   setUser:setUser,
   getPackageTrama:getPackageTrama,
   setExcludes:setExcludes,
+  setIncludes:setIncludes,
   constructTramaSaludpol:constructTramaSaludpol,
   constructTramaSaludpolExcludes:constructTramaSaludpolExcludes,
-  generateTramaSaludpol:generateTramaSaludpol
+  constructTramaSaludpolIncludes:constructTramaSaludpolIncludes,
+  constructTramaSaludpolExcludesAndIncludes:constructTramaSaludpolExcludesAndIncludes,
+  generateTramaSaludpol:generateTramaSaludpol,
+  getAtentionSaludpol:getAtentionSaludpol
 };

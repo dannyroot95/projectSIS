@@ -705,6 +705,19 @@ router.post("/excludes", function (req, res, next) {
     });
 });
 
+router.post("/includes", function (req, res, next) {
+  const { values } = req.body;
+
+  sql.setIncludes(values)
+    .then(() => {
+      res.json({ success: "insertado" });
+    })
+    .catch((error) => {
+      console.error("Error al insertar los valores:", error);
+      res.status(500).json({ success: "error" });
+    });
+});
+
 router.get("/saludpol/:a/:b", function (req, res,next) {
   let f1 = req.params.a;
   let f2 = req.params.b;
@@ -735,9 +748,54 @@ router.get("/saludpol-excludes/:a/:b", function (req, res,next) {
   });
 });
 
+router.get("/saludpol-excludes-and-includes/:a/:b", function (req, res,next) {
+  let f1 = req.params.a;
+  let f2 = req.params.b;
+
+  sql.constructTramaSaludpolExcludesAndIncludes(f1,f2).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result);
+    }else{
+      res.json({error:"sin datos"})
+    }
+  
+  });
+});
+
+router.get("/saludpol-includes/:a/:b", function (req, res,next) {
+  let f1 = req.params.a;
+  let f2 = req.params.b;
+
+  sql.constructTramaSaludpolIncludes(f1,f2).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result);
+    }else{
+      res.json({error:"sin datos"})
+    }
+  
+  });
+});
+
 router.get("/trama-saludpol", function (req, res,next) {
 
   sql.generateTramaSaludpol().then((result) => {
+
+    if(result[0].length>0){
+      res.json(result);
+    }else{
+      res.json({error:"sin datos"})
+    }
+  
+  });
+});
+
+router.get("/get-atention-saludpol/:a", function (req, res,next) {
+
+  let account = req.params.a
+
+  sql.getAtentionSaludpol(account).then((result) => {
 
     if(result[0].length>0){
       res.json(result);

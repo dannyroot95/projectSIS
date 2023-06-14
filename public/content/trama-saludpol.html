@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="/bootstrap/icons/font/bootstrap-icons.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-
     
 </head>
 <body id="g-body">
@@ -46,7 +45,7 @@
 
       
       <button class="btn btn-primary" id="btn-query" onclick="query()" ><i class="bi bi-search"></i>&nbsp;Consultar atenciones</button>
-      <button class="btn btn-danger" id="btn-deleted" onclick="showModalDeleteAccount()" ><i class="bi bi-trash3-fill"></i>&nbsp;Quitar y consultar atenciones</button>
+      <button style="background-color: #004073;border-color: #004073;" class="btn btn-primary" id="btn-deleted" onclick="showModalDeleteAccount()" ><i class="bi bi-pencil-square"></i>&nbsp;Editar consulta de atenciones</button>
        <button style="display: none;" class="btn btn-dark" id="btn-trama" onclick="buildTrama()" ><i class="bi bi-bounding-box"></i>&nbsp;Generar trama</button>
       &nbsp; 
       <a><div class="loaderSmall" id="loader"></div></a>
@@ -137,9 +136,11 @@
         <div class="input-group mb-3">
           <span class="input-group-text" id="basic-addon1">N° de cuenta</span>
           <input type="number" id="nAccount" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
-          <button class="btn btn-primary" onclick="addToTable()" ><i class="bi bi-plus-circle"></i>&nbsp; Agregar a la tabla</button>
+          <button class="btn btn-success" onclick="addToTableIn()" ><i class="bi bi-plus-circle"></i>&nbsp; Incluir</button>
+          <button class="btn btn-danger" onclick="addToTable()" ><i class="bi bi-x-circle"></i>&nbsp; Excluir</button>
         </div>
         
+        <label style="color: red;">Cuentas excluidas</label>
         <div class="table-responsive">
           <table class="table table-hover table-bordered display" id="tb-data-accounts">
               <thead>
@@ -153,15 +154,213 @@
             </table>
           </div>
 
+          <br>
+
+        <label style="color: green;">Cuentas incluidas</label>
+        <div class="table-responsive">
+          <table class="table table-hover table-bordered display" id="tb-data-accounts-in">
+              <thead>
+                <tr>
+                  <th class="minText" scope="col"><center><b># de cuenta</b></center></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="tbodyAccountIn">
+              </tbody>
+            </table>
+          </div>
+
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button onclick="deleteAndConsult()" type="button" class="btn btn-success"><i class="bi bi-check-all"></i>&nbsp; Quitar y consultar</button>
+        <button onclick="consult()" type="button" class="btn btn-primary"><i class="bi bi-check-all"></i>&nbsp; Consultar</button>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Detail Modal -->
+<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="detailModalLabel">Detalle de atención</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <center id="loaderDetails"><a><div style="display: block;" class="loader"></div></a></center>
+        <div id="div-details" style="display: none;">
+          <label style="font-weight: bold;">Tipo de atención :</label>&nbsp;<label id="d-ate"></label>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <label style="font-weight: bold;">Doc. de Autorización :</label>&nbsp;<label id="d-auth"></label>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <label style="font-weight: bold;">N° de cuenta :</label>&nbsp;<label id="d-account"></label>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <label style="font-weight: bold;">FUA :</label>&nbsp;<label id="d-fua"></label>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <label style="font-weight: bold;">Historia :</label>&nbsp;<label id="d-history"></label>
+          <p></p>
+          <label style="font-weight: bold;">DNI :</label>&nbsp;<label id="d-dni"></label>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <label style="font-weight: bold;">Paciente :</label>&nbsp;<label id="d-fullname"></label>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <label style="font-weight: bold;">Sexo :</label>&nbsp;<label id="d-sex"></label>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <label style="font-weight: bold;">Edad :</label>&nbsp;<label id="d-age"></label>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <P></P>
+          <label style="font-weight: bold;">Servicio ingreso :</label>&nbsp;<label id="d-svi"></label>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <label style="font-weight: bold;">Fecha ingreso :</label>&nbsp;<label id="d-fi"></label><p></p>
+          <label style="font-weight: bold;">Servicio egreso :</label>&nbsp;<label id="d-sve"></label>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <label style="font-weight: bold;">Fecha egreso :</label>&nbsp;<label id="d-fe"></label><p></p>
+          <label style="font-weight: bold;">Digitador :</label>&nbsp;<label id="d-dig"></label>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <label style="font-weight: bold;">Fuente de financiamiento :</label>&nbsp;<label id="d-ff"></label>
+        </div>
+        
+        <br><br>
+
+        <label style="color:#0192ac; font-weight: bolder ;font-size: 20px;">Diagnosticos</label>
+        <div class="table-responsive">
+          <table class="table table-hover table-bordered display" id="tb-data-diag">
+            <thead>
+                <tr>
+                  <th>ID clasificación</th>
+                  <th>CIE 10</th>
+                  <th>Descrición</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="tbodyDiag">
+              </tbody>
+            </table>
+          </div>
+          
+        <br><br>
+
+        <label style="color:#d3a202; font-weight: bolder ;font-size: 20px;">Procedimientos</label>
+        <div class="table-responsive">
+          <table class="table table-hover table-bordered display" id="tb-data-pro">
+            <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Nombre</th>
+                  <th>Cantidad</th>
+                  <th>Precio Unit.</th>
+                  <th>Precio</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="tbodyPro">
+              </tbody>
+            </table>
+          </div>
+          <label style="font-weight: bold;">Total procedimientos :S/</label>
+          <label style="color: green;font-weight: bold;" id="t-pro"></label>
+
+          <br><br>
+
+          <label style="color:#d3a202; font-weight: bolder ;font-size: 20px;">Laboratorio</label>
+          <div class="table-responsive">
+            <table class="table table-hover table-bordered display" id="tb-data-lab">
+              <thead>
+                  <tr>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unit.</th>
+                    <th>Precio</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="tbodyLab">
+                </tbody>
+              </table>
+            </div>  
+            <label style="font-weight: bold;">Total laboratorio :S/</label>
+            <label style="color: green;font-weight: bold;" id="t-lab"></label>
+
+          <br><br>
+
+          <label style="color:#d3a202; font-weight: bolder ;font-size: 20px;">Imágenes</label>
+          <div class="table-responsive">
+            <table class="table table-hover table-bordered display" id="tb-data-img">
+              <thead>
+                  <tr>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unit.</th>
+                    <th>Precio</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="tbodyImg">
+                </tbody>
+              </table>
+            </div>
+            <label style="font-weight: bold;">Total imágenes :S/</label>
+            <label style="color: green;font-weight: bold;" id="t-img"></label>  
+
+          <br><br>
+
+          <label style="color:#ac0039; font-weight: bolder ;font-size: 20px;">Medicamentos</label>
+          <div class="table-responsive">
+            <table class="table table-hover table-bordered display" id="tb-data-med">
+              <thead>
+                  <tr>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Cantidad</th>
+                    <th>Diagnostico</th>
+                    <th>Precio Unit.</th>
+                    <th>Precio</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="tbodyMed">
+                </tbody>
+              </table>
+            </div>  
+            <label style="font-weight: bold;">Total medicamentos :S/</label>
+            <label style="color: green;font-weight: bold;" id="t-med"></label>
+
+            <br><br>
+
+            <label style="color:#ac0039; font-weight: bolder ;font-size: 20px;">Insumos</label>
+            <div class="table-responsive">
+              <table class="table table-hover table-bordered display" id="tb-data-ins">
+                <thead>
+                    <tr>
+                      <th>Código</th>
+                      <th>Nombre</th>
+                      <th>Cantidad</th>
+                      <th>Diagnostico</th>
+                      <th>Precio Unit.</th>
+                      <th>Precio</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbodyIns">
+                  </tbody>
+                </table>
+              </div>  
+              <label style="font-weight: bold;">Total insumos :S/</label>
+              <label style="color: green;font-weight: bold;" id="t-ins"></label><p></p>
+              <label style="font-weight: bold;">CONSUMO TOTAL :S/</label>
+              <label style="color: green;font-weight: bold;" id="t-ate"></label>
+    
+
+          <!---->
+
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
 
     
      <script>

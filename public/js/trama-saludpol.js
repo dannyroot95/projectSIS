@@ -206,6 +206,66 @@ function fetchTramaSaludpolEx(init,final){
 
 }
 
+function fetchTramaSaludpolExAndIn(init,final){
+
+  loader.style = "display:block;"
+  disableButtons()
+
+  $('#modalDelete').modal('hide')
+
+        fetch(`${url}/saludpol-excludes-and-includes/${init}/${final}`,{
+            method: 'get',
+            headers: {
+              'Accept': 'application/json'
+            }
+        })
+          .then(response => response.json())
+          .then(data => {
+            insertDataTrama1(data[0])
+            insertDataTrama2(data[1])
+            insertDataTrama3(data[2])
+            insertDataTrama4(data[3])
+            loader.style = "display:none;"
+            enableButtons()
+            document.getElementById("btn-trama").style = "display:block;"
+          }).catch(err => {
+            
+            console.log(err)
+            enableButtons()
+          }); 
+
+}
+
+function fetchTramaSaludpolIn(init,final){
+
+  loader.style = "display:block;"
+  disableButtons()
+
+  $('#modalDelete').modal('hide')
+
+        fetch(`${url}/saludpol-includes/${init}/${final}`,{
+            method: 'get',
+            headers: {
+              'Accept': 'application/json'
+            }
+        })
+          .then(response => response.json())
+          .then(data => {
+            insertDataTrama1(data[0])
+            insertDataTrama2(data[1])
+            insertDataTrama3(data[2])
+            insertDataTrama4(data[3])
+            loader.style = "display:none;"
+            enableButtons()
+            document.getElementById("btn-trama").style = "display:block;"
+          }).catch(err => {
+            
+            console.log(err)
+            enableButtons()
+          }); 
+
+}
+
 function fetchTrama1(){
 
   fetch(`${url}/saludpol-1`,{
@@ -245,7 +305,7 @@ function insertDataTrama1(data){
 
           <tr style="cursor: pointer;background-color:${color};">
           <td class="minText2"><input type="checkbox"></td>
-          <td class="minText2"><button class="btn btn-success"><i class="bi bi-eye-fill"></i></button></td>
+          <td class="minText2"><button onclick="showDetailModal('${encodeURIComponent(JSON.stringify(d))}')" class="btn btn-success"><i class="bi bi-eye-fill"></i></button></td>
           <td class="minText2">${d.CAMPO1}</td>
           <td class="minText2">${d.CAMPO2}</td>
           <td class="minText2">${d.CAMPO3}</td>
@@ -387,14 +447,29 @@ function addToTable(){
   let n = document.getElementById("nAccount").value;
 
   if (n != "") {
-    let table = document.getElementById('tb-data-accounts');
+    let table = document.getElementById('tb-data-accounts-in');
     let tbody = table.getElementsByTagName('tbody')[0];
     let rowS = tbody.getElementsByTagName('tr');
+
+    //---
+
+    let table2 = document.getElementById('tb-data-accounts');
+    let tbody2 = table2.getElementsByTagName('tbody')[0];
+    let rowS2 = tbody2.getElementsByTagName('tr');
 
     // Verificar si el valor ya existe en alguna fila
     let exist = false;
     for (let i = 0; i < rowS.length; i++) {
       let cell = rowS[i].getElementsByTagName('td')[0];
+      let valueCell = cell.innerText || cell.textContent;
+      if (valueCell.trim() === n.trim()) {
+        exist = true;
+        break;
+      }
+    }
+
+    for (let i = 0; i < rowS2.length; i++) {
+      let cell = rowS2[i].getElementsByTagName('td')[0];
       let valueCell = cell.innerText || cell.textContent;
       if (valueCell.trim() === n.trim()) {
         exist = true;
@@ -428,42 +503,165 @@ function addToTable(){
   }
 }
 
+function addToTableIn(){
+
+  let n = document.getElementById("nAccount").value;
+
+  if (n != "") {
+
+    let table = document.getElementById('tb-data-accounts');
+    let tbody = table.getElementsByTagName('tbody')[0];
+    let rowS = tbody.getElementsByTagName('tr');
+
+    //---
+
+    let table2 = document.getElementById('tb-data-accounts-in');
+    let tbody2 = table2.getElementsByTagName('tbody')[0];
+    let rowS2 = tbody2.getElementsByTagName('tr');
+
+    // Verificar si el valor ya existe en alguna fila
+    let exist = false;
+    for (let i = 0; i < rowS.length; i++) {
+      let cell = rowS[i].getElementsByTagName('td')[0];
+      let valueCell = cell.innerText || cell.textContent;
+      if (valueCell.trim() === n.trim()) {
+        exist = true;
+        break;
+      }
+    }
+
+    for (let i = 0; i < rowS2.length; i++) {
+      let cell = rowS2[i].getElementsByTagName('td')[0];
+      let valueCell = cell.innerText || cell.textContent;
+      if (valueCell.trim() === n.trim()) {
+        exist = true;
+        break;
+      }
+    }
+
+    if (exist) {
+      Swal.fire(
+        'Oops!',
+        'El número de cuenta ya existe en la tabla!',
+        'info'
+      );
+    } else {
+      let td =
+        `<tr>
+          <td> <center>${n}</center></td>
+          <td><center>
+          <button onclick="deleteItem(this)" class="btn btn-danger">Eliminar</button>
+          </center></td>
+        </tr>`;
+      $(td).appendTo('#tbodyAccountIn');
+      document.getElementById("nAccount").value = "";
+    }
+  } else {
+    Swal.fire(
+      'Oops!',
+      'Ingrese el número de cuenta!',
+      'info'
+    );
+  }
+}
+
 function deleteItem(button){
   var row = button.parentNode.parentNode.parentNode; // Obtener la fila que contiene el botón
   row.parentNode.removeChild(row);
 }
 
-function deleteAndConsult() {
+function consult() {
   var table = document.getElementById('tb-data-accounts');
   var tbody = table.getElementsByTagName('tbody')[0];
-  
-  var values = [];
-  
-  // Recorrer las filas de la tabla
-  for (var i = 0; i < tbody.rows.length; i++) {
-    var row = tbody.rows[i];
-    var cell = row.cells[0]; // Primera celda de la fila
-    
-    // Obtener el valor y agregarlo al arreglo
-    var val = cell.innerText || cell.textContent;
-    values.push(val.trim());
-    
-  }
-  
-  // Generar el objeto JSON de ejemplo
-  var json = {
-    "values": values
-  };
-  
 
-  if(isEmpty()){
+  var table2 = document.getElementById('tb-data-accounts-in');
+  var tbody2 = table2.getElementsByTagName('tbody')[0];
+  
+  if(isEmptyEx() && isEmptyIn()){
     Swal.fire(
       'Oops!',
       'La tabla está vacía!',
       'info'
     )
-  }else{
+  }else if (!isEmptyEx() && isEmptyIn()){
+
+    var values = [];
+  
+      // Recorrer las filas de la tabla
+      for (var i = 0; i < tbody.rows.length; i++) {
+        var row = tbody.rows[i];
+        var cell = row.cells[0]; // Primera celda de la fila
+        
+        // Obtener el valor y agregarlo al arreglo
+        var val = cell.innerText || cell.textContent;
+        values.push(val.trim());
+        
+      }
+      
+      // Generar el objeto JSON de ejemplo
+      var json = {
+        "values": values
+      };
+
     fetchTramaSaludpolExcludes(json)
+  }else if (isEmptyEx() && !isEmptyIn()){
+
+    var values = [];
+  
+      // Recorrer las filas de la tabla
+      for (var i = 0; i < tbody2.rows.length; i++) {
+        var row = tbody2.rows[i];
+        var cell = row.cells[0]; // Primera celda de la fila
+        
+        // Obtener el valor y agregarlo al arreglo
+        var val = cell.innerText || cell.textContent;
+        values.push(val.trim());
+        
+      }
+      
+      // Generar el objeto JSON de ejemplo
+      var json = {
+        "values": values
+      };
+
+    fetchTramaSaludpolIncludes(json)
+  }else{
+
+      var values = [];
+      var values2 = [];
+  
+      // Recorrer las filas de la tabla
+
+      for (var i = 0; i < tbody.rows.length; i++) {
+        var row = tbody.rows[i];
+        var cell = row.cells[0]; // Primera celda de la fila
+        
+        // Obtener el valor y agregarlo al arreglo
+        var val = cell.innerText || cell.textContent;
+        values.push(val.trim());
+        
+      }
+
+      for (var i = 0; i < tbody2.rows.length; i++) {
+        var row = tbody2.rows[i];
+        var cell = row.cells[0]; // Primera celda de la fila
+        
+        // Obtener el valor y agregarlo al arreglo
+        var val = cell.innerText || cell.textContent;
+        values2.push(val.trim());
+        
+      }
+      
+      // Generar el objeto JSON de ejemplo
+      var json = {
+        "values": values
+      };
+      var json2 = {
+        "values": values2
+      };
+
+    fetchTramaSaludpolExcludesAndIncludes(json,json2)
+
   }
 
 
@@ -511,8 +709,125 @@ function fetchTramaSaludpolExcludes(json){
 
 }
 
-function isEmpty() {
+function fetchTramaSaludpolExcludesAndIncludes(json,json2){
+
+
+  fetch(`${url}/excludes/`, {
+    method: 'POST', // o 'PUT', 'DELETE', etc.
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(json) // data es un objeto con los datos a enviar
+  })
+  .then(response => response.json())
+  .then(data => {
+     if(data.success == "insertado"){
+
+      fetch(`${url}/includes/`, {
+        method: 'POST', // o 'PUT', 'DELETE', etc.
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(json2) // data es un objeto con los datos a enviar
+      })
+      .then(response => response.json())
+      .then(data => {
+         if(data.success == "insertado"){
+    
+    
+          let month = document.getElementById("inputGroupSelectProductionMonth").value
+          const { primerDiaMes, ultimoDiaMes } = getDays(month);
+          let init = primerDiaMes
+          let final = ultimoDiaMes
+          fetchTramaSaludpolExAndIn(init,final)
+    
+         }else{
+          Swal.fire(
+            'Oops!',
+            'Se produjo un error',
+            'warning'
+          )
+         }
+      })
+      .catch(error => {
+        Swal.fire(
+            'Oops!',
+            'Se produjo un error',
+            'warning'
+          )
+        console.error(error)
+    
+    });
+
+     }else{
+      Swal.fire(
+        'Oops!',
+        'Se produjo un error',
+        'warning'
+      )
+     }
+  })
+  .catch(error => {
+    Swal.fire(
+        'Oops!',
+        'Se produjo un error',
+        'warning'
+      )
+    console.error(error)
+
+});
+
+}
+
+function fetchTramaSaludpolIncludes(json){
+
+
+  fetch(`${url}/includes/`, {
+    method: 'POST', // o 'PUT', 'DELETE', etc.
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(json) // data es un objeto con los datos a enviar
+  })
+  .then(response => response.json())
+  .then(data => {
+     if(data.success == "insertado"){
+      
+      let month = document.getElementById("inputGroupSelectProductionMonth").value
+      const { primerDiaMes, ultimoDiaMes } = getDays(month);
+      let init = primerDiaMes
+      let final = ultimoDiaMes
+      fetchTramaSaludpolIn(init,final)
+
+     }else{
+      Swal.fire(
+        'Oops!',
+        'Se produjo un error',
+        'warning'
+      )
+     }
+  })
+  .catch(error => {
+    Swal.fire(
+        'Oops!',
+        'Se produjo un error',
+        'warning'
+      )
+    console.error(error)
+
+});
+
+}
+
+function isEmptyEx() {
   var table = document.getElementById('tb-data-accounts');
+  var tbody = table.getElementsByTagName('tbody')[0];
+  
+  return tbody.rows.length === 0;
+}
+
+function isEmptyIn() {
+  var table = document.getElementById('tb-data-accounts-in');
   var tbody = table.getElementsByTagName('tbody')[0];
   
   return tbody.rows.length === 0;
@@ -615,5 +930,162 @@ function downloadFile(content, fileName) {
 
 $('#modalDelete').on('hidden.bs.modal', function (e) {
   document.getElementById("tbodyAccount").innerHTML = ""
+  document.getElementById("tbodyAccountIn").innerHTML = ""
   document.getElementById("nAccount").value = "";
 })
+
+function showDetailModal(d){
+  $('#detailModal').modal('show')
+  d = JSON.parse(decodeURIComponent(d))
+
+  fetch(`${url}/get-atention-saludpol/${d.CAMPO2}`)
+            .then(response => response.json())
+            .then(data => {
+
+              let t_pro = 0.0
+              let t_lab = 0.0
+              let t_img = 0.0
+              let t_med = 0.0
+              let t_ins = 0.0
+              let t_ate = 0.0
+
+              document.getElementById("d-ate").innerHTML = data[0][0].TipoServicio
+              document.getElementById("d-auth").innerHTML = data[0][0].Autorizacion
+              document.getElementById("d-account").innerHTML = data[0][0].idCuentaAtencion
+              document.getElementById("d-fua").innerHTML = d.CAMPO1
+              document.getElementById("d-history").innerHTML = data[0][0].NroHistoriaClinica
+              
+              document.getElementById("d-dni").innerHTML = data[0][0].NroDocumento
+              document.getElementById("d-fullname").innerHTML = data[0][0].Nombres
+              document.getElementById("d-sex").innerHTML = data[0][0].Sexo
+              document.getElementById("d-age").innerHTML = data[0][0].Edad
+
+              document.getElementById("d-svi").innerHTML = data[0][0].ServicioIngreso
+              document.getElementById("d-sve").innerHTML = data[0][0].ServicioEgreso
+              document.getElementById("d-fi").innerHTML = data[0][0].FechaIngreso
+              document.getElementById("d-fe").innerHTML = data[0][0].FechaEgreso
+
+              document.getElementById("d-dig").innerHTML = data[0][0].Empleado
+              document.getElementById("d-ff").innerHTML = data[0][0].FuenteFinanciamiento
+
+              document.getElementById("loaderDetails").style = "display:none;"
+              document.getElementById("div-details").style = "display:block;"
+              
+              $("#tbodyDiag").html(data[1].map((d) => {
+                
+                      return `
+                      <tr>
+                      <td>${d.IdClasificacionDx}</td>
+                      <td>${d.CodigoCIE2004}</td>
+                      <td>${d.Descripcion}</td>
+                      <td><button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button></td>
+                      </tr>`;
+    
+                  })
+                  .join("")
+              );
+
+              $("#tbodyPro").html(data[2].map((d) => {
+                
+                t_pro += parseFloat((d.Precio))
+
+                      return `
+                      <tr>
+                      <td>${d.Codigo}</td>
+                      <td>${d.Nombre}</td>
+                      <td>${d.Cantidad}</td>
+                      <td>${d.PrecioUnitario}</td>
+                      <td>${d.Precio}</td>
+                      <td><button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button></td>
+                      </tr>`;
+
+                  })
+                  .join("")
+              );
+              document.getElementById("t-pro").innerHTML = t_pro.toFixed(2).toString()
+
+              $("#tbodyLab").html(data[3].map((d) => {
+
+                t_lab += parseFloat((d.Precio))
+                
+                      return `
+                      <tr>
+                      <td>${d.Codigo}</td>
+                      <td>${d.Nombre}</td>
+                      <td>${d.Cantidad}</td>
+                      <td>${d.PrecioUnitario}</td>
+                      <td>${d.Precio}</td>
+                      <td><button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button></td>
+                      </tr>`;
+
+                  })
+                  .join("")
+              );
+              document.getElementById("t-lab").innerHTML = t_lab.toFixed(2).toString()
+
+              $("#tbodyImg").html(data[4].map((d) => {
+
+                t_img += parseFloat((d.Precio))
+                
+                      return `
+                      <tr>
+                      <td>${d.Codigo}</td>
+                      <td>${d.Nombre}</td>
+                      <td>${d.Cantidad}</td>
+                      <td>${d.PrecioUnitario}</td>
+                      <td>${d.Precio}</td>
+                      <td><button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button></td>
+                      </tr>`;
+
+                  })
+                  .join("")
+              );
+              document.getElementById("t-img").innerHTML = t_img.toFixed(2).toString()
+
+              $("#tbodyMed").html(data[5].map((d) => {
+                
+                t_med += parseFloat((d.Precio))
+
+                      return `
+                      <tr>
+                      <td>${d.Codigo}</td>
+                      <td>${d.Nombre}</td>
+                      <td>${d.Cantidad}</td>
+                      <td>${d.dx}</td>
+                      <td>${d.PrecioUnidad}</td>
+                      <td>${d.Precio}</td>
+                      <td><button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button></td>
+                      </tr>`;
+
+                  })
+                  .join("")
+              );
+              document.getElementById("t-med").innerHTML = t_med.toFixed(2).toString()
+
+              $("#tbodyIns").html(data[6].map((d) => {
+
+                t_ins += parseFloat((d.Precio))
+                
+                      return `
+                      <tr>
+                      <td>${d.Codigo}</td>
+                      <td>${d.Nombre}</td>
+                      <td>${d.Cantidad}</td>
+                      <td>${d.dx}</td>
+                      <td>${d.PrecioUnidad}</td>
+                      <td>${d.Precio}</td>
+                      <td><button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button></td>
+                      </tr>`;
+
+                  })
+                  .join("")
+              );
+              document.getElementById("t-ins").innerHTML = t_ins.toFixed(2).toString()
+              document.getElementById("t-ate").innerHTML = (t_pro+t_lab+t_img+t_med+t_ins).toFixed(2).toString()
+
+            }).catch(err =>{
+                console.log(err)
+            } );
+  
+
+}

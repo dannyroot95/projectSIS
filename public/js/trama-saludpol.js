@@ -955,15 +955,6 @@ function showDetailModal(d){
               let t_med = 0.0
               let t_ins = 0.0
 
-              var date = "2023-04-01 08:25:00.000";
-              var datePart = date.split(" "); // Dividir la fecha en fecha y hora
-              var datePart1 = datePart[0]; // Obtener la parte de la fecha (2023-04-01)
-              var date1Pats = datePart1.split("-");
-
-              var day = fechaParte1Partes[2];
-              var month = fechaParte1Partes[1];
-              var year = fechaParte1Partes[0];
-
               document.getElementById("d-ate").innerHTML = data[0][0].TipoServicio
               document.getElementById("d-auth").innerHTML = data[0][0].Autorizacion
               document.getElementById("d-account").innerHTML = data[0][0].idCuentaAtencion
@@ -982,6 +973,8 @@ function showDetailModal(d){
 
               document.getElementById("d-dig").innerHTML = data[0][0].Empleado
               document.getElementById("d-ff").innerHTML = data[0][0].FuenteFinanciamiento
+
+              document.getElementById("d-fur").innerHTML = dateNull(data[0][0].F_ultima_receta)
 
               document.getElementById("loaderDetails").style = "display:none;"
               document.getElementById("div-details").style = "display:block;"
@@ -1181,4 +1174,16 @@ function exportToExcel(){
 
   let xls = new XlsExport(allData, 'reporte');
   xls.exportToXLS('informe-de-observacion-saludpol.xls')
+}
+
+function dateNull(y){
+
+  let x = "Sin registro"
+
+  if(y != null){
+    x =  date(y)
+  }
+
+  return x
+
 }

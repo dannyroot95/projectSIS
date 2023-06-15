@@ -14,7 +14,8 @@
     <link rel="stylesheet" href="/bootstrap/icons/font/bootstrap-icons.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    
+    <script type="text/javascript" src="/libraries/xlsexport/xls-export.es5.js"></script>
+
 </head>
 <body id="g-body">
     
@@ -46,7 +47,8 @@
       
       <button class="btn btn-primary" id="btn-query" onclick="query()" ><i class="bi bi-search"></i>&nbsp;Consultar atenciones</button>
       <button style="background-color: #004073;border-color: #004073;" class="btn btn-primary" id="btn-deleted" onclick="showModalDeleteAccount()" ><i class="bi bi-pencil-square"></i>&nbsp;Editar consulta de atenciones</button>
-       <button style="display: none;" class="btn btn-dark" id="btn-trama" onclick="buildTrama()" ><i class="bi bi-bounding-box"></i>&nbsp;Generar trama</button>
+      <button style="display: none;" class="btn btn-dark" id="btn-trama" onclick="buildTrama()" ><i class="bi bi-bounding-box"></i>&nbsp;Generar trama</button>
+      <button style="display: none;" class="btn btn-success" id="btn-report" onclick="obtenerDatos()" ><i class="bi bi-file-earmark-spreadsheet-fill"></i>&nbsp;Generar informe</button>
       &nbsp; 
       <a><div class="loaderSmall" id="loader"></div></a>
 
@@ -257,8 +259,9 @@
               </tbody>
             </table>
           </div>
-          <label style="font-weight: bold;">Total procedimientos :S/</label>
-          <label style="color: green;font-weight: bold;" id="t-pro"></label>
+          
+          <label style="color: green;font-weight: bold;float: right;margin-right: 10px;" id="t-pro"></label>
+          <label style="font-weight: bold;float: right;">Total procedimientos :S/</label>
 
           <br><br>
 
@@ -279,8 +282,9 @@
                 </tbody>
               </table>
             </div>  
-            <label style="font-weight: bold;">Total laboratorio :S/</label>
-            <label style="color: green;font-weight: bold;" id="t-lab"></label>
+            
+            <label style="color: green;font-weight: bold;float: right;" id="t-lab"></label>
+            <label style="font-weight: bold;float: right;">Total laboratorio :S/</label>
 
           <br><br>
 
@@ -301,8 +305,9 @@
                 </tbody>
               </table>
             </div>
-            <label style="font-weight: bold;">Total imágenes :S/</label>
-            <label style="color: green;font-weight: bold;" id="t-img"></label>  
+            
+            <label style="color: green;font-weight: bold;float: right;" id="t-img"></label> 
+            <label style="font-weight: bold;float: right;">Total imágenes :S/</label> 
 
           <br><br>
 
@@ -324,8 +329,9 @@
                 </tbody>
               </table>
             </div>  
-            <label style="font-weight: bold;">Total medicamentos :S/</label>
-            <label style="color: green;font-weight: bold;" id="t-med"></label>
+        
+            <label style="color: green;font-weight: bold;float: right;" id="t-med"></label>
+            <label style="font-weight: bold;float: right;">Total medicamentos :S/</label>
 
             <br><br>
 
@@ -347,10 +353,14 @@
                   </tbody>
                 </table>
               </div>  
-              <label style="font-weight: bold;">Total insumos :S/</label>
-              <label style="color: green;font-weight: bold;" id="t-ins"></label><p></p>
-              <label style="font-weight: bold;">CONSUMO TOTAL :S/</label>
-              <label style="color: green;font-weight: bold;" id="t-ate"></label>
+
+              <label style="color: green;font-weight: bold;float: right;" id="t-ate"></label>
+              <label style="font-weight: bold;float: right;">CONSUMO TOTAL :S/</label>
+
+              <label style="visibility: hidden;float: right;">.........</label>
+              
+              <label style="color: green;font-weight: bold;float: right;" id="t-ins"></label>
+              <label style="font-weight: bold;float: right;">Total insumos :S/</label>
     
 
           <!---->

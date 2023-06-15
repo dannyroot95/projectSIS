@@ -4,6 +4,7 @@ var trama1 = ``
 var trama2 = ``
 var trama3 = ``
 var trama4 = ``
+let allData = []
 
 
 createDatatable()
@@ -168,6 +169,7 @@ function fetchTramaSaludpol(init,final){
             loader.style = "display:none;"
             enableButtons()
             document.getElementById("btn-trama").style = "display:block;"
+            document.getElementById("btn-report").style = "display:block;"
           }).catch(err => {
             
             console.log(err)
@@ -198,6 +200,7 @@ function fetchTramaSaludpolEx(init,final){
             loader.style = "display:none;"
             enableButtons()
             document.getElementById("btn-trama").style = "display:block;"
+            document.getElementById("btn-report").style = "display:block;"
           }).catch(err => {
             
             console.log(err)
@@ -228,6 +231,7 @@ function fetchTramaSaludpolExAndIn(init,final){
             loader.style = "display:none;"
             enableButtons()
             document.getElementById("btn-trama").style = "display:block;"
+            document.getElementById("btn-report").style = "display:block;"
           }).catch(err => {
             
             console.log(err)
@@ -258,6 +262,7 @@ function fetchTramaSaludpolIn(init,final){
             loader.style = "display:none;"
             enableButtons()
             document.getElementById("btn-trama").style = "display:block;"
+            document.getElementById("btn-report").style = "display:block;"
           }).catch(err => {
             
             console.log(err)
@@ -429,6 +434,7 @@ function disableButtons(){
 document.getElementById("btn-query").disabled = true
 document.getElementById("btn-deleted").disabled = true
 document.getElementById("btn-trama").disabled = true
+document.getElementById("btn-report").disabled = true
 }
 
 
@@ -436,6 +442,7 @@ function enableButtons(){
   document.getElementById("btn-query").disabled = false
   document.getElementById("btn-deleted").disabled = false
   document.getElementById("btn-trama").disabled = false
+  document.getElementById("btn-report").disabled = false
 }
 
 function showModalDeleteAccount(){
@@ -947,7 +954,15 @@ function showDetailModal(d){
               let t_img = 0.0
               let t_med = 0.0
               let t_ins = 0.0
-              let t_ate = 0.0
+
+              var date = "2023-04-01 08:25:00.000";
+              var datePart = date.split(" "); // Dividir la fecha en fecha y hora
+              var datePart1 = datePart[0]; // Obtener la parte de la fecha (2023-04-01)
+              var date1Pats = datePart1.split("-");
+
+              var day = fechaParte1Partes[2];
+              var month = fechaParte1Partes[1];
+              var year = fechaParte1Partes[0];
 
               document.getElementById("d-ate").innerHTML = data[0][0].TipoServicio
               document.getElementById("d-auth").innerHTML = data[0][0].Autorizacion
@@ -1088,4 +1103,82 @@ function showDetailModal(d){
             } );
   
 
+}
+
+function obtenerDatos() {
+  var table = $('#tb-data-1').DataTable();
+  allData = []
+
+
+  var checkboxes = table.column(0).nodes().to$().find('input[type="checkbox"]');
+  var isChecked = false;
+
+  checkboxes.each(function() {
+    if (this.checked) {
+      isChecked = true;
+      return false; // Sale del bucle cuando encuentra un checkbox marcado
+    }
+  });
+
+  if (!isChecked) {
+    Swal.fire(
+      'Oops!',
+      'Debe seleccionar al menos un item!',
+      'info'
+    )
+    return;
+  }
+
+
+  table.rows({selected: true}).every(function() {
+    var rowData = this.data();
+    var checkbox = $(this.node()).find("input[type='checkbox']");
+    
+    if (checkbox.prop("checked")) {
+      var celda3 = rowData[2];
+      var celda4 = rowData[3];
+      var celda7 = rowData[6];
+      var celda8 = rowData[7];
+      var celda9 = rowData[8];
+      var celda10 = rowData[9];
+      var celda15 = rowData[14];
+      var celda16 = rowData[15];
+      var celda19 = rowData[18];
+      var celda20 = rowData[19];
+      var celda21 = rowData[20];
+
+      allData.push({
+        "FUA": celda3,
+        "Cuenta": celda4,
+        "Paciente": celda8 + " " + celda9 + " " + celda10,
+        "DNI": celda7,
+        "Fecha de ingreso": celda15,
+        "Fecha de egreso": celda16,
+        "Médico": celda19 + " " + celda20 + " " + celda21,
+        "Observacion": "",
+        "Digitador": ""
+      });
+    }
+  });
+
+ 
+  exportToExcel()
+  
+  
+}
+
+function exportToExcel(){
+
+  Swal.fire({
+      title: 'En breves se descargará el archivo!',
+      timer: 2000,
+      timerProgressBar: true,
+      didOpen: () => {
+        Swal.showLoading()
+      },
+    })
+
+
+  let xls = new XlsExport(allData, 'reporte');
+  xls.exportToXLS('informe-de-observacion-saludpol.xls')
 }

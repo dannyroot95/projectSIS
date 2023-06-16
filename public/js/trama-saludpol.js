@@ -313,7 +313,7 @@ function insertDataTrama1(data){
           <td class="minText2"><button onclick="showDetailModal('${encodeURIComponent(JSON.stringify(d))}')" class="btn btn-success"><i class="bi bi-eye-fill"></i></button></td>
           <td class="minText2">${d.CAMPO1}</td>
           <td class="minText2">${d.CAMPO2}</td>
-          <td class="minText2">${d.CAMPO3}</td>
+          <td class="minText2">${isDataNull(d.CAMPO3)}</td>
           <td class="minText2">${d.CAMPO4}</td>
           <td class="minText2">${d.CAMPO5}</td>
           <td class="minText2">${d.CAMPO6}</td>
@@ -971,7 +971,7 @@ function showDetailModal(d){
               document.getElementById("d-fi").innerHTML = data[0][0].FechaIngreso
               document.getElementById("d-fe").innerHTML = data[0][0].FechaEgreso
 
-              document.getElementById("d-dig").innerHTML = data[0][0].Empleado
+              document.getElementById("d-dig").innerHTML = isDataNull(data[0][0].Empleado)
               document.getElementById("d-ff").innerHTML = data[0][0].FuenteFinanciamiento
 
               document.getElementById("d-fur").innerHTML = dateNull(data[0][0].F_ultima_receta)
@@ -1052,6 +1052,8 @@ function showDetailModal(d){
 
               $("#tbodyMed").html(data[5].map((d) => {
                 
+                let diag_med = isDataNull(d.dx)
+
                 t_med += parseFloat((d.Precio))
 
                       return `
@@ -1059,7 +1061,7 @@ function showDetailModal(d){
                       <td>${d.Codigo}</td>
                       <td>${d.Nombre}</td>
                       <td>${d.Cantidad}</td>
-                      <td>${d.dx}</td>
+                      <td>${diag_med}</td>
                       <td>${d.PrecioUnidad}</td>
                       <td>${d.Precio}</td>
                       <td><button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button></td>
@@ -1072,6 +1074,8 @@ function showDetailModal(d){
 
               $("#tbodyIns").html(data[6].map((d) => {
 
+                let diag_med = isDataNull(d.dx)
+
                 t_ins += parseFloat((d.Precio))
                 
                       return `
@@ -1079,7 +1083,7 @@ function showDetailModal(d){
                       <td>${d.Codigo}</td>
                       <td>${d.Nombre}</td>
                       <td>${d.Cantidad}</td>
-                      <td>${d.dx}</td>
+                      <td>${diag_med}</td>
                       <td>${d.PrecioUnidad}</td>
                       <td>${d.Precio}</td>
                       <td><button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button></td>
@@ -1178,7 +1182,7 @@ function exportToExcel(){
 
 function dateNull(y){
 
-  let x = "Sin registro"
+  let x = `<b style="color:red;">Sin registro</b>`
 
   if(y != null){
     x =  date(y)
@@ -1186,4 +1190,14 @@ function dateNull(y){
 
   return x
 
+}
+
+function isDataNull(data){
+  let x = `<b style="color:red;">Sin registro</b>`
+
+  if(data != null){
+    x = data
+  }
+
+  return x
 }

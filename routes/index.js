@@ -538,6 +538,20 @@ router.post("/send-resum", function (req, res,next) {
   });
 });
 
+router.post("/update-sis-afiliation", function (req, res,next) {
+
+  const data = req.body
+  sql.updateSisFiliacion(data)
+  .then(() => {
+    res.json({ success: "insertado" });
+  })
+  .catch((error) => {
+    console.error("Error al insertar los valores:", error);
+    res.status(500).json({ success: "error" });
+  });
+
+});
+
 router.post("/send-resum-debug", function (req, res,next) {
 
   const data = req.body

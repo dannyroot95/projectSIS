@@ -961,6 +961,23 @@ console.log("error :" + error);
     }
   }
 
+  async function updateSisFiliacion(data) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('AFI_DISA',data.AfiliacionDisa)
+      .input('AFI_TIPO_FORMATO',data.AfiliacionTipoFormato)
+      .input('AFI_NRO_FORMATO',data.AfiliacionNroFormato)
+      .input('ID_SIASIS',data.idSiasis)
+      .input('LOTE',data.FuaLote)
+      .input('CUENTA',data.idCuentaAtencion)
+      .execute(`UPDATE_AFILIADO_FUA`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
 module.exports = {
   getdata: getdata,
   sendTrama:sendTrama,
@@ -1018,5 +1035,6 @@ module.exports = {
   constructTramaSaludpolIncludes:constructTramaSaludpolIncludes,
   constructTramaSaludpolExcludesAndIncludes:constructTramaSaludpolExcludesAndIncludes,
   generateTramaSaludpol:generateTramaSaludpol,
-  getAtentionSaludpol:getAtentionSaludpol
+  getAtentionSaludpol:getAtentionSaludpol,
+  updateSisFiliacion:updateSisFiliacion
 };

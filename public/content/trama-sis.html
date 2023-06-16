@@ -321,6 +321,63 @@
   </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="modalDetail" tabindex="-1" aria-labelledby="modalDetailLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modalDetailLabel">Detalle de atención</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <label>Lote :</label><label id="d-lote"></label><p></p>
+        <label>Cuenta :</label><label id="d-account"></label>
+
+        <table class="table table-hover table-bordered display" id="tb-data-d">
+          <thead>
+            <tr>
+              <th>AfiliacionDisa</th>
+              <th>AfiliacionTipoFormato</th>
+              <th>AlifialcionNroFormato</th>
+              <th>ID Siasis</th>
+              <th>Fecha de afliacion</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyD">
+          </tbody>
+        </table>
+        <br>
+        
+        <!--inputs-->
+
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">Afiliacion Disa</span>
+          <input type="text" class="form-control" id="afi-disa">
+          <span class="input-group-text" id="basic-addon1">Afiliacion Tipo</span>
+          <input type="text" class="form-control" id="afi-type">
+        </div>
+
+        <p></p>
+
+        <div class="input-group mb-3">
+        <span class="input-group-text" id="basic-addon1">Afiliacion Numero</span>
+        <input type="text" class="form-control" id="afi-num">
+        <span class="input-group-text" id="basic-addon1">ID Siasis</span>
+        <input type="text" class="form-control" id="afi-siasis">
+      </div>
+        
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" onclick="updateAfiliation()" class="btn btn-primary">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!---->
 
     

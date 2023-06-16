@@ -824,10 +824,15 @@ function validateDataATE(d){
       c++
       let warning = `${c}.- EL CAMPO ATE#40 (IPRESS DE REFERENCIA) DEBE SER VACÍO DEACUERDO AL CAMPO ATE#34 (TIPO DE ATENCION 1: AMBULATORIO , 2 :REFERENCIA 3:EMERGENCIA) Y AL CAMPO ATE#43 (ORIGEN DE PERSONAL DEL ESTABLECIMIENTO) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
       log = log+warning+"\n\n"
+    }if(d["A21"] == ""){
+      ctx++
+      c++
+      let warning = `${c}.- ID SIASIS VACÍO -> N° DE CUENTA : ${d["A1"]}`
+      log = log+warning+"\n\n"
     }
 
 
-   return counter(ctx)
+   return counter(ctx,d)
 
 }
 
@@ -842,14 +847,14 @@ function validateDataOnlyValue(v){
    return counter(ctx)
 }
 
-function counter(ctx){
+function counter(ctx,d){
 
     let value = ""
 
     if(ctx > 0){
-        value = `<td class="minText2"><button class="btn btn-danger" onclick="alert('Errores encontrados!')"><i class="bi bi-eye-fill"></i></button></td>`
+        value = `<td class="minText2"><button class="btn btn-danger" onclick="showDetailModal('${encodeURIComponent(JSON.stringify(d))}')"><i class="bi bi-eye-fill"></i></button></td>`
     }else{
-        value = `<td class="minText2"><button class="btn btn-success" onclick="alert('0 Errores')"><i class="bi bi-file-check"></i></button></td>`
+        value = `<td class="minText2"><button class="btn btn-success" onclick="showDetailModal('${encodeURIComponent(JSON.stringify(d))}')"><i class="bi bi-file-check"></i></button></td>`
     }
 
     return value
@@ -1567,4 +1572,109 @@ function closeModalPackage(){
   document.getElementById("ateCon").innerHTML = "Ninguno"
   document.getElementById("ateObs").innerHTML = "Ninguno"
   document.getElementById("ateProd").innerHTML = "Ninguno"
+}
+
+function showDetailModal(d){
+  d = JSON.parse(decodeURIComponent(d))
+  $('#modalDetail').modal('show')
+
+  document.getElementById("d-lote").innerHTML = d.A3
+  document.getElementById("d-account").innerHTML = d.A1
+
+  fetch(`${url}/affiliate-by-name/${d.A26}/${d.A27}/${d.A28}`,{
+    method: 'get',
+    headers: {
+      'Accept': 'application/json'
+    }
+})
+  .then(response => response.json())
+  .then(data => {
+    
+    $("#tbodyD").html(data.map((V) => {
+                
+      return `
+      <tr>
+      <td>${V.AfiliacionDisa}</td>
+      <td>${V.AfiliacionTipoFormato}</td>
+      <td>${V.AfiliacionNroFormato}</td>
+      <td>${V.idSiasis}</td>
+      <td>${V.AfiliacionFecha}</td>
+      <td></td>
+      </tr>`;
+
+  })
+  .join("")
+);
+
+  }).catch(err => {
+    console.log(err)
+  }); 
+
+}
+
+function updateAfiliation(){
+
+  let lote = document.getElementById("d-lote").innerHTML 
+  let account =  document.getElementById("d-account").innerHTML 
+  let disa =  document.getElementById("afi-disa").value 
+  let type =  document.getElementById("afi-type").value
+  let num =  document.getElementById("afi-num").value
+  let siasis =  document.getElementById("afi-siasis").value
+
+  if(disa != "" && type != "" && num != "" && siasis != ""){
+
+    let data = {
+      AfiliacionDisa:disa,
+      AfiliacionTipoFormato:type,
+      AfiliacionNroFormato:num,
+      idSiasis:siasis,
+      FuaLote:lote,
+      idCuentaAtencion:account
+    }
+
+
+    fetch(`${url}/update-sis-afiliation/`, {
+      method: 'POST', // o 'PUT', 'DELETE', etc.
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data) // data es un objeto con los datos a enviar
+    })
+    .then(response => response.json())
+    .then(data => {
+       if(data.success == "insertado"){
+        
+        Swal.fire(
+          'Muy bien!',
+          'Cuenta actualizada',
+          'success'
+        )
+  
+       }else{
+        Swal.fire(
+          'Oops!',
+          'Se produjo un error',
+          'warning'
+        )
+       }
+    })
+    .catch(error => {
+      Swal.fire(
+          'Oops!',
+          'Se produjo un error',
+          'warning'
+        )
+      console.error(error)
+  
+  });
+
+
+  }else{
+    Swal.fire(
+      'Oops!',
+      'Complete los campos',
+      'info'
+    )
+  }
+
 }

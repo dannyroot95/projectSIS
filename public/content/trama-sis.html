@@ -323,7 +323,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="modalDetail" tabindex="-1" aria-labelledby="modalDetailLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="modalDetailLabel">Detalle de atención</h1>
@@ -331,10 +331,14 @@
       </div>
       <div class="modal-body">
 
-        <label>Lote :</label><label id="d-lote"></label><p></p>
-        <label>Cuenta :</label><label id="d-account"></label>
+        <label>Lote :</label>&nbsp;<label id="d-lote"></label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <label>Cuenta :</label>&nbsp;<label id="d-account"></label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <label>Nombres :</label>&nbsp;<label id="d-name"></label><p></p>
+        <label>Cod.Atención :</label>&nbsp;<label id="d-atention"></label>
 
-        <table class="table table-hover table-bordered display" id="tb-data-d">
+        <table class="table table-responsive table-hover table-bordered display" id="tb-data-d">
           <thead>
             <tr>
               <th>AfiliacionDisa</th>
@@ -342,6 +346,7 @@
               <th>AlifialcionNroFormato</th>
               <th>ID Siasis</th>
               <th>Fecha de afliacion</th>
+              <th>Nombres</th>
             </tr>
           </thead>
           <tbody id="tbodyD">

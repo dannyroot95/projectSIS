@@ -813,7 +813,7 @@ function validateDataATE(d){
 
     let ctx = 0
   
-    if(d["A17"] == "" || d["A17"] == null){
+    if(d["A17"] == "" && d["A42"] == '056'){
         ctx++
         c++
         let warning = `${c}.- SIN REGISTRO EN LOS CAMPOS DE AFILIACIÓN -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]} `
@@ -824,13 +824,7 @@ function validateDataATE(d){
       c++
       let warning = `${c}.- EL CAMPO ATE#40 (IPRESS DE REFERENCIA) DEBE SER VACÍO DEACUERDO AL CAMPO ATE#34 (TIPO DE ATENCION 1: AMBULATORIO , 2 :REFERENCIA 3:EMERGENCIA) Y AL CAMPO ATE#43 (ORIGEN DE PERSONAL DEL ESTABLECIMIENTO) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
       log = log+warning+"\n\n"
-    }if(d["A21"] == ""){
-      ctx++
-      c++
-      let warning = `${c}.- ID SIASIS VACÍO -> N° DE CUENTA : ${d["A1"]}`
-      log = log+warning+"\n\n"
     }
-
 
    return counter(ctx,d)
 
@@ -1578,8 +1572,16 @@ function showDetailModal(d){
   d = JSON.parse(decodeURIComponent(d))
   $('#modalDetail').modal('show')
 
+  document.getElementById("afi-disa").value = ''
+  document.getElementById("afi-type").value = ''
+  document.getElementById("afi-num").value = ''
+  document.getElementById("afi-siasis").value = ''
+
+  document.getElementById("tbodyD").innerHTML = ""
   document.getElementById("d-lote").innerHTML = d.A3
   document.getElementById("d-account").innerHTML = d.A1
+  document.getElementById("d-name").innerHTML = d.A26+" "+d.A27+" "+d.A28
+  document.getElementById("d-atention").innerHTML = d.A42
 
   fetch(`${url}/affiliate-by-name/${d.A26}/${d.A27}/${d.A28}`,{
     method: 'get',
@@ -1589,6 +1591,16 @@ function showDetailModal(d){
 })
   .then(response => response.json())
   .then(data => {
+
+    let size = (data.length)-1
+
+  if(size >= 0){
+    document.getElementById("afi-disa").value = data[size].AfiliacionDisa
+    document.getElementById("afi-type").value = data[size].AfiliacionTipoFormato
+    document.getElementById("afi-num").value = data[size].AfiliacionNroFormato
+    document.getElementById("afi-siasis").value = data[size].idSiasis
+  }
+
     
     $("#tbodyD").html(data.map((V) => {
                 
@@ -1599,7 +1611,7 @@ function showDetailModal(d){
       <td>${V.AfiliacionNroFormato}</td>
       <td>${V.idSiasis}</td>
       <td>${V.AfiliacionFecha}</td>
-      <td></td>
+      <td>${V.nombres}</td>
       </tr>`;
 
   })

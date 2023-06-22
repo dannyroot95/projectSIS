@@ -978,6 +978,18 @@ console.log("error :" + error);
     }
   }
 
+  async function production_saludpol(account) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('idCuentaAtencion',account)
+      .execute(`PRODUCCION_SALUDPOL`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
 module.exports = {
   getdata: getdata,
   sendTrama:sendTrama,
@@ -1036,5 +1048,6 @@ module.exports = {
   constructTramaSaludpolExcludesAndIncludes:constructTramaSaludpolExcludesAndIncludes,
   generateTramaSaludpol:generateTramaSaludpol,
   getAtentionSaludpol:getAtentionSaludpol,
-  updateSisFiliacion:updateSisFiliacion
+  updateSisFiliacion:updateSisFiliacion,
+  production_saludpol:production_saludpol
 };

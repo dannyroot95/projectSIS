@@ -1262,6 +1262,19 @@ router.post("/get-package-trama/:a/:b/:c", function (req, res,next) {
   });
 });
 
+router.get("/report-saludpol/:a", function (req, res,next) {
+  let account = req.params.a;
+
+  sql.production_saludpol(account).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+  });
+});
+
 
 module.exports = router;
 

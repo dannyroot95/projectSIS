@@ -5,6 +5,7 @@ var trama2 = ``
 var trama3 = ``
 var trama4 = ``
 let allData = []
+let report = []
 
 
 createDatatable()
@@ -169,6 +170,7 @@ function fetchTramaSaludpol(init,final){
             loader.style = "display:none;"
             enableButtons()
             document.getElementById("btn-trama").style = "display:block;"
+            document.getElementById("btn-obs").style = "display:block;"
             document.getElementById("btn-report").style = "display:block;"
           }).catch(err => {
             
@@ -200,6 +202,7 @@ function fetchTramaSaludpolEx(init,final){
             loader.style = "display:none;"
             enableButtons()
             document.getElementById("btn-trama").style = "display:block;"
+            document.getElementById("btn-obs").style = "display:block;"
             document.getElementById("btn-report").style = "display:block;"
           }).catch(err => {
             
@@ -231,6 +234,7 @@ function fetchTramaSaludpolExAndIn(init,final){
             loader.style = "display:none;"
             enableButtons()
             document.getElementById("btn-trama").style = "display:block;"
+            document.getElementById("btn-obs").style = "display:block;"
             document.getElementById("btn-report").style = "display:block;"
           }).catch(err => {
             
@@ -262,6 +266,7 @@ function fetchTramaSaludpolIn(init,final){
             loader.style = "display:none;"
             enableButtons()
             document.getElementById("btn-trama").style = "display:block;"
+            document.getElementById("btn-obs").style = "display:block;"
             document.getElementById("btn-report").style = "display:block;"
           }).catch(err => {
             
@@ -295,6 +300,7 @@ function fetchTrama1(){
 function insertDataTrama1(data){
 
   let ctx = 0
+  report = []
 
   $('#tb-data-1').DataTable().destroy()
   $("#tbody").html(data.map((d) => {
@@ -306,10 +312,12 @@ function insertDataTrama1(data){
       color = "#FFDFE7"
     }
 
+    fetchReportSaludpol(d.CAMPO2)
+
           return `
 
           <tr style="cursor: pointer;background-color:${color};">
-          <td class="minText2"><input type="checkbox"></td>
+          <td class="minText2"><input type="checkbox" style="width:30px;height:30px;"></td>
           <td class="minText2"><button onclick="showDetailModal('${encodeURIComponent(JSON.stringify(d))}')" class="btn btn-success"><i class="bi bi-eye-fill"></i></button></td>
           <td class="minText2">${d.CAMPO1}</td>
           <td class="minText2">${d.CAMPO2}</td>
@@ -340,7 +348,10 @@ function insertDataTrama1(data){
       .join("")
   );
   createDatatable()
+
 }
+
+
 
 function insertDataTrama2(data){
 
@@ -434,6 +445,7 @@ function disableButtons(){
 document.getElementById("btn-query").disabled = true
 document.getElementById("btn-deleted").disabled = true
 document.getElementById("btn-trama").disabled = true
+document.getElementById("btn-obs").disabled = true
 document.getElementById("btn-report").disabled = true
 }
 
@@ -442,6 +454,7 @@ function enableButtons(){
   document.getElementById("btn-query").disabled = false
   document.getElementById("btn-deleted").disabled = false
   document.getElementById("btn-trama").disabled = false
+  document.getElementById("btn-obs").disabled = false
   document.getElementById("btn-report").disabled = false
 }
 
@@ -1000,7 +1013,7 @@ function showDetailModal(d){
                       return `
                       <tr>
                       <td>${d.Codigo}</td>
-                      <td>${d.Nombre}</td>
+                      <td>${(d.Nombre).trimEnd()}</td>
                       <td>${d.Cantidad}</td>
                       <td>${d.PrecioUnitario}</td>
                       <td>${d.Precio}</td>
@@ -1019,7 +1032,7 @@ function showDetailModal(d){
                       return `
                       <tr>
                       <td>${d.Codigo}</td>
-                      <td>${d.Nombre}</td>
+                      <td>${(d.Nombre).trimEnd()}</td>
                       <td>${d.Cantidad}</td>
                       <td>${d.PrecioUnitario}</td>
                       <td>${d.Precio}</td>
@@ -1038,7 +1051,7 @@ function showDetailModal(d){
                       return `
                       <tr>
                       <td>${d.Codigo}</td>
-                      <td>${d.Nombre}</td>
+                      <td>${(d.Nombre).trimEnd()}</td>
                       <td>${d.Cantidad}</td>
                       <td>${d.PrecioUnitario}</td>
                       <td>${d.Precio}</td>
@@ -1059,7 +1072,7 @@ function showDetailModal(d){
                       return `
                       <tr>
                       <td>${d.Codigo}</td>
-                      <td>${d.Nombre}</td>
+                      <td>${(d.Nombre).trimEnd()}</td>
                       <td>${d.Cantidad}</td>
                       <td>${diag_med}</td>
                       <td>${d.PrecioUnidad}</td>
@@ -1081,7 +1094,7 @@ function showDetailModal(d){
                       return `
                       <tr>
                       <td>${d.Codigo}</td>
-                      <td>${d.Nombre}</td>
+                      <td>${(d.Nombre).trimEnd()}</td>
                       <td>${d.Cantidad}</td>
                       <td>${diag_med}</td>
                       <td>${d.PrecioUnidad}</td>
@@ -1200,4 +1213,80 @@ function isDataNull(data){
   }
 
   return x
+}
+
+function fetchReportSaludpol(n){
+
+  fetch(`${url}/report-saludpol/${n}`)
+            .then(response => response.json())
+            .then(data => {
+               
+              for (var i = 0; i < data.length; i++) {
+                var item = data[i];
+                var newItem = {
+                  "prestacion": convertBlank(item.prestacion),
+                  "N°_Autorizacion": convertBlank(item.Autorizacion),
+                  "Cuenta": convertBlank(item.idCuentaAtencion),
+                  "Nombres": convertBlank(item.Nombres),
+                  "dias_hosp": convertBlank(item.dias_hosp),
+                  "Codigo": convertBlank(item.Codigo),
+                  "Consumo": convertBlank(item.Nombre),
+                  "Cantidad": convertBlank(item.Cantidad),
+                  "Precio_Unitario": convertBlank('S/'+item.PrecioUnitario),
+                  "Precio_Total": convertBlank('S/'+item.Precio),
+                  'Verificacion_convenios':""
+              }
+              
+              report.push(newItem);
+            }
+
+            }).catch(err =>{
+                console.log(err)
+            } );
+          
+}
+
+function convertBlank(value){
+  x = value
+  if(value == null || value == "S/null"){
+    x = '-'
+  }else if(value == 0){
+    x = '0'
+  }
+
+
+  return x
+
+}
+
+function exportToExcel2(){
+
+  Swal.fire({
+      title: 'En breves se descargará el archivo!',
+      timer: 5000,
+      timerProgressBar: true,
+      didOpen: () => {
+        Swal.showLoading()
+      },
+    })
+
+var fechaActual = new Date();
+
+var dia = fechaActual.getDate();
+var mes = fechaActual.getMonth() + 1; // Los meses comienzan desde 0 (enero es 0)
+var anio = fechaActual.getFullYear();
+
+// Agrega un cero inicial si el día o el mes son menores a 10
+if (dia < 10) {
+    dia = '0' + dia;
+}
+
+if (mes < 10) {
+    mes = '0' + mes;
+}
+
+var actual = +dia + '/' + mes + '/' + anio;
+
+  let xls = new XlsExport(report, 'reporte');
+  xls.exportToXLS(`reporte_saludpol_${actual}.xls`)
 }

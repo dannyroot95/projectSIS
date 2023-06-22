@@ -63,7 +63,7 @@ function searchByFua(){
     })
       .then(response => response.json())
       .then(data => {
-    
+    console.log(data)
         let x = data[0]
         document.getElementById("fuaNum").innerHTML = x.FuaDisa+"-"+x.FuaLote+"-"+x.FuaNumero
         document.getElementById("name").innerHTML = x.NombrePaciente
@@ -146,6 +146,7 @@ function searchByFua(){
       .then(data => {
   
         let ctx = 0
+        console.log(data)
         //let x = data[0]
         $("#tbody").html(data.map((d) => {
           ctx++

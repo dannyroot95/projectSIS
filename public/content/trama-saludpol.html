@@ -17,6 +17,7 @@
     <script type="text/javascript" src="/libraries/xlsexport/xls-export.es5.js"></script>
 
 </head>
+
 <body id="g-body">
     
   <h2>Trama Saludpol</h2>
@@ -47,8 +48,6 @@
       
       <button class="btn btn-primary" id="btn-query" onclick="query()" ><i class="bi bi-search"></i>&nbsp;Consultar atenciones</button>
       <button style="background-color: #004073;border-color: #004073;" class="btn btn-primary" id="btn-deleted" onclick="showModalDeleteAccount()" ><i class="bi bi-pencil-square"></i>&nbsp;Editar consulta de atenciones</button>
-      <button style="display: none;" class="btn btn-dark" id="btn-trama" onclick="buildTrama()" ><i class="bi bi-bounding-box"></i>&nbsp;Generar trama</button>
-      <button style="display: none;" class="btn btn-success" id="btn-report" onclick="obtenerDatos()" ><i class="bi bi-file-earmark-spreadsheet-fill"></i>&nbsp;Generar informe</button>
       &nbsp; 
       <a><div class="loaderSmall" id="loader"></div></a>
 
@@ -57,11 +56,15 @@
     
     </div>
 
-
-
- 
-
     <p></p>
+
+    <div class="input-group mb-3">
+      <H2 style="margin-top: 5x;">OPCIONES : </H2>&nbsp;&nbsp;
+      <button style="display: none;" class="btn btn-dark" id="btn-trama" onclick="buildTrama()" ><i class="bi bi-bounding-box"></i>&nbsp;Generar trama</button>
+      <button style="display: none;" class="btn btn-danger" id="btn-obs" onclick="obtenerDatos()" ><i class="bi bi-exclamation-triangle"></i>&nbsp;Observar atenciones</button>
+      <button style="display: none;" class="btn btn-success" id="btn-report" onclick="exportToExcel2()" ><i class="bi bi-file-earmark-spreadsheet-fill"></i>&nbsp;Generar reporte</button>
+  
+    </div>
 
       
   <div id="body">
@@ -194,11 +197,11 @@
         <div id="div-details" style="display: none;">
           <label style="font-weight: bold;">Tipo de atención :</label>&nbsp;<label id="d-ate"></label>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <label style="font-weight: bold;">Doc. de Autorización :</label>&nbsp;<label id="d-auth"></label>
+          <label style="font-weight: bold;">Carta :</label>&nbsp;<label id="d-auth"></label>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <label style="font-weight: bold;">N° de cuenta :</label>&nbsp;<label id="d-account"></label>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <label style="font-weight: bold;">FUA :</label>&nbsp;<label id="d-fua"></label>
+          <label style="font-weight: bold;">Código :</label>&nbsp;<label id="d-fua"></label>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <label style="font-weight: bold;">Historia :</label>&nbsp;<label id="d-history"></label>
           <p></p>
@@ -262,8 +265,8 @@
             </table>
           </div>
           
-          <label style="color: green;font-weight: bold;float: right;margin-right: 10px;" id="t-pro"></label>
-          <label style="font-weight: bold;float: right;">Total procedimientos :S/</label>
+          <label style="font-size: 18px;color: green;font-weight: bold;float: right;margin-right: 10px;" id="t-pro"></label>
+          <label style="font-size: 18px;font-weight: bold;float: right;">Total procedimientos :S/</label>
 
           <br><br>
 
@@ -285,8 +288,8 @@
               </table>
             </div>  
             
-            <label style="color: green;font-weight: bold;float: right;" id="t-lab"></label>
-            <label style="font-weight: bold;float: right;">Total laboratorio :S/</label>
+            <label style="font-size: 18px;color: green;font-weight: bold;float: right;" id="t-lab"></label>
+            <label style="font-size: 18px;font-weight: bold;float: right;">Total laboratorio :S/</label>
 
           <br><br>
 
@@ -308,8 +311,8 @@
               </table>
             </div>
             
-            <label style="color: green;font-weight: bold;float: right;" id="t-img"></label> 
-            <label style="font-weight: bold;float: right;">Total imágenes :S/</label> 
+            <label style="font-size: 18px;color: green;font-weight: bold;float: right;" id="t-img"></label> 
+            <label style="font-size: 18px;font-weight: bold;float: right;">Total imágenes :S/</label> 
 
           <br><br>
 
@@ -332,8 +335,8 @@
               </table>
             </div>  
         
-            <label style="color: green;font-weight: bold;float: right;" id="t-med"></label>
-            <label style="font-weight: bold;float: right;">Total medicamentos :S/</label>
+            <label style="font-size: 18px;color: green;font-weight: bold;float: right;" id="t-med"></label>
+            <label style="font-size: 18px;font-weight: bold;float: right;">Total medicamentos :S/</label>
 
             <br><br>
 
@@ -356,13 +359,13 @@
                 </table>
               </div>  
 
-              <label style="color: green;font-weight: bold;float: right;" id="t-ate"></label>
-              <label style="font-weight: bold;float: right;">CONSUMO TOTAL :S/</label>
+              <label style="font-size: 18px; color: green;font-weight: bold;float: right;" id="t-ate"></label>
+              <label style="font-size: 18px;font-weight: bold;float: right;">CONSUMO TOTAL :S/</label>
 
               <label style="visibility: hidden;float: right;">.........</label>
               
-              <label style="color: green;font-weight: bold;float: right;" id="t-ins"></label>
-              <label style="font-weight: bold;float: right;">Total insumos :S/</label>
+              <label style="font-size: 18px;color: green;font-weight: bold;float: right;" id="t-ins"></label>
+              <label style="font-size: 18px;font-weight: bold;float: right;">Total insumos :S/</label>
     
 
           <!---->

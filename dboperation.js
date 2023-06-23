@@ -990,6 +990,35 @@ console.log("error :" + error);
     }
   }
 
+  async function id_procedure(account,procedure) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('idCuentaAtencion',account)
+      .input('procedimiento',procedure)
+      .execute(`OBTENER_ID_PROCEDIMIENTO`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
+  async function update_quantity_procedure(quantity,idProduct,idOrder) {
+    const q = quantity
+    const id_product = idProduct
+    const id_order = idOrder
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request().query(`UPDATE SIGH..FacturacionServicioDespacho SET Cantidad = ${q}
+      WHERE IdProducto = ${id_product} AND idOrden = ${id_order}`);
+      return [[{success:"actualizado"}]]
+    } catch (error) {
+      return [[{success:"error"}]]
+    }finally {
+      sql.close();
+    }
+  }
+
 module.exports = {
   getdata: getdata,
   sendTrama:sendTrama,
@@ -1049,5 +1078,7 @@ module.exports = {
   generateTramaSaludpol:generateTramaSaludpol,
   getAtentionSaludpol:getAtentionSaludpol,
   updateSisFiliacion:updateSisFiliacion,
-  production_saludpol:production_saludpol
+  production_saludpol:production_saludpol,
+  id_procedure:id_procedure,
+  update_quantity_procedure:update_quantity_procedure
 };

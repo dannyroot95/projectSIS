@@ -958,6 +958,8 @@ function showDetailModal(d){
   $('#detailModal').modal('show')
   d = JSON.parse(decodeURIComponent(d))
 
+  let ctxPro = 0
+
   fetch(`${url}/get-atention-saludpol/${d.CAMPO2}`)
             .then(response => response.json())
             .then(data => {
@@ -999,7 +1001,6 @@ function showDetailModal(d){
                       <td>${d.IdClasificacionDx}</td>
                       <td>${d.CodigoCIE2004}</td>
                       <td>${d.Descripcion}</td>
-                      <td><button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button></td>
                       </tr>`;
     
                   })
@@ -1008,6 +1009,8 @@ function showDetailModal(d){
 
               $("#tbodyPro").html(data[2].map((d) => {
                 
+                ctxPro++
+
                 t_pro += parseFloat((d.Precio))
 
                       return `
@@ -1017,7 +1020,7 @@ function showDetailModal(d){
                       <td>${d.Cantidad}</td>
                       <td>${d.PrecioUnitario}</td>
                       <td>${d.Precio}</td>
-                      <td><button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button></td>
+                      <td><button onclick="showModalDetailProcedure('${encodeURIComponent(JSON.stringify(d))}','${ctxPro}')" class="btn btn-dark"><i class="bi bi-pencil-square"></i></button></td>
                       </tr>`;
 
                   })
@@ -1289,4 +1292,117 @@ var actual = +dia + '/' + mes + '/' + anio;
 
   let xls = new XlsExport(report, 'reporte');
   xls.exportToXLS(`reporte_saludpol_${actual}.xls`)
+}
+
+function showModalDetailProcedure(data,index){
+  data = JSON.parse(decodeURIComponent(data))
+  $('#detailProcedure').modal('show')
+  let account =  document.getElementById("d-account").innerHTML
+
+  let code = data.Codigo  
+  let procedure = data.Nombre
+
+  var tabla = document.getElementById("tb-data-pro");
+  var filaIndex = index; // Índice de la fila a actualizar (por ejemplo, la primera fila)
+  var columnaIndex = 2; 
+  let quantity = tabla.rows[filaIndex].cells[columnaIndex].textContent;
+
+  document.getElementById("loader-procedure-detail").style = "display:block;"
+
+  fetch(`${url}/get-id-procedure/${account}/${data.Nombre}`)
+            .then(response => response.json())
+            .then(data => {
+             
+
+              document.getElementById("loader-procedure-detail").style = "display:none;"
+
+              document.getElementById("id-detail-procedure").innerHTML = procedure
+              document.getElementById("id-detail-code").innerHTML = code
+              document.getElementById("detail-procedure-quantity").value = quantity
+
+              document.getElementById("id-order").innerHTML = data[0].idOrden
+              document.getElementById("id-product").innerHTML = data[0].IdProducto
+
+              document.getElementById("index-pro").innerHTML = index
+
+            }).catch(err =>{
+                console.log(err)
+            } );
+
+
+}
+
+function updateQuantityProcedure(){
+
+  let quantity = document.getElementById("detail-procedure-quantity").value
+  let idProduct = document.getElementById("id-product").innerHTML
+  let idOrder = document.getElementById("id-order").innerHTML
+
+  if(quantity != "" && quantity != 0){
+    fetch(`${url}/update-quantity-procedure/${quantity}/${idProduct}/${idOrder}`)
+    .then(response => response.json())
+    .then(data => {
+     
+      if(data[0].success = "actualizado"){
+        Swal.fire(
+          'Muy bien!',
+          'Cantidad de procedimiento actualizada!',
+          'success'
+        )
+
+        let index = document.getElementById("index-pro").innerHTML
+        var tabla = document.getElementById("tb-data-pro");
+        var filaIndex = index; // Índice de la fila a actualizar (por ejemplo, la primera fila)
+        var columnaIndex = 2; // Índice de la columna a actualizar (por ejemplo, la tercera columna)
+        var celda = tabla.rows[filaIndex].cells[columnaIndex];
+        
+        // Actualizar el valor de la celda
+        var nuevoValor = quantity; // El valor que deseas asignar a la celda
+        celda.innerHTML = nuevoValor;
+
+        let pUnit = tabla.rows[filaIndex].cells[3].textContent;
+        let newSum = (parseInt(quantity)*parseFloat(pUnit))
+        var newTotalCell = tabla.rows[filaIndex].cells[4];
+        var nuevoValorTotal = newSum; // El valor que deseas asignar a la celda
+        newTotalCell.innerHTML = nuevoValorTotal;
+
+        var suma = 0;
+          // Recorrer las filas de la tabla
+          for (var i = 0; i < tabla.rows.length; i++) {
+            // Obtener el valor de la celda en la posición deseada (tercera columna)
+            var celda = tabla.rows[i].cells[4]; // Cambia el índice (2) según la posición de la columna que deseas sumar
+
+            // Obtener el valor numérico de la celda y sumarlo a la variable suma
+            var valor = parseFloat(celda.innerHTML);
+            if (!isNaN(valor)) {
+              suma += valor;
+            }
+          }
+          document.getElementById("t-pro").innerHTML = suma.toFixed(2)
+          let t_lab = parseFloat((document.getElementById("t-lab").innerHTML)).toFixed(2)
+          let t_img = parseFloat((document.getElementById("t-img").innerHTML)).toFixed(2)
+          let t_med = parseFloat((document.getElementById("t-med").innerHTML)).toFixed(2)
+          let t_ins = parseFloat((document.getElementById("t-img").innerHTML)).toFixed(2)
+          let consumo_total = (parseFloat((suma.toFixed(2)+t_lab+t_img+t_med+t_ins)).toFixed(2)).toString()
+          document.getElementById("t-ate").innerHTML = consumo_total
+
+      }else{
+        Swal.fire(
+          'Oops!',
+          'Ocurrió un error!',
+          'error'
+        )
+      }
+      
+    }).catch(err =>{
+        console.log(err)
+    } );
+  }else{
+    Swal.fire(
+      'Oops!',
+      'Ingrese una cantidad!',
+      'info'
+    )
+  }
+
 }

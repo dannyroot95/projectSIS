@@ -1275,6 +1275,34 @@ router.get("/report-saludpol/:a", function (req, res,next) {
   });
 });
 
+router.get("/get-id-procedure/:a/:b", function (req, res,next) {
+  let account = req.params.a;
+  let procedure = req.params.b;
+
+  sql.id_procedure(account,procedure).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+  });
+});
+
+router.get("/update-quantity-procedure/:a/:b/:c", function (req, res,next) {
+  let quantity = req.params.a;
+  let id_product = req.params.b;
+  let id_order = req.params.c;
+
+  sql.update_quantity_procedure(quantity,id_product,id_order).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+  });
+});
+
 
 module.exports = router;
 

@@ -184,7 +184,7 @@
 </div>
 
 <!-- Detail Modal -->
-<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-fullscreen">
     <div class="modal-content">
       <div class="modal-header">
@@ -237,7 +237,6 @@
                   <th>ID clasificación</th>
                   <th>CIE 10</th>
                   <th>Descrición</th>
-                  <th></th>
                 </tr>
               </thead>
               <tbody id="tbodyDiag">
@@ -367,6 +366,39 @@
               <label style="font-size: 18px;color: green;font-weight: bold;float: right;" id="t-ins"></label>
               <label style="font-size: 18px;font-weight: bold;float: right;">Total insumos :S/</label>
     
+
+          <!---->
+
+          <!-- Modal -->
+          <div class="modal fade" style="background-color: #ffffff7a;" data-bs-backdrop="static" data-bs-keyboard="false" id="detailProcedure" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content" 
+              style="background-color: #fffcf3; border-color: black 6px solid;;">
+                  <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="staticBackdropLabel">Detalle de procedimiento</h1>
+                      <label style="visibility: hidden;" id="index-pro"></label>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <center><div id="loader-procedure-detail" class="loaderSmall"></div><p></p></center>
+                      <label><b>Procedimiento :</b></label>&nbsp;<label id="id-detail-procedure"></label>
+                      <p></p>
+                      <label><b>Código :</b></label>&nbsp;<label id="id-detail-code"></label>
+                      <p></p>
+                      <label><b>ID orden :</b></label>&nbsp;<label id="id-order"></label>
+                      <p></p>
+                      <label><b>ID producto :</b></label>&nbsp;<label id="id-product"></label>
+                      <p></p>
+                      <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">Cantidad</span>
+                        <input type="number" id="detail-procedure-quantity" class="form-control" placeholder="..." aria-label="Username" aria-describedby="basic-addon1">
+                        <button class="btn btn-outline-success" onclick="updateQuantityProcedure()" type="button">Actualizar</button>
+                      </div>
+                    </div>
+                
+                  </div>
+                </div>
+              </div>
 
           <!---->
 

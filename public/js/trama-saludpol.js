@@ -314,6 +314,16 @@ function insertDataTrama1(data){
 
     fetchReportSaludpol(d.CAMPO2)
 
+    let female = `<center><i style="color: #ff2f41;font-size: 20px;font-weight: bolder;" class="bi bi-gender-female"></i>&nbsp;${d.CAMPO8}</center>`
+    let male = `<center><i style="color: #001173;font-size: 20px;font-weight: bolder;" class="bi bi-gender-male"></i>&nbsp;${d.CAMPO8}</center>`
+
+    let gender = ''
+
+    if(d.CAMPO11 == 1){
+      gender = male
+    }else{gender = female}
+
+
           return `
 
           <tr style="cursor: pointer;background-color:${color};">
@@ -326,7 +336,7 @@ function insertDataTrama1(data){
           <td class="minText2">${d.CAMPO5}</td>
           <td class="minText2">${d.CAMPO6}</td>
           <td class="minText2">${d.CAMPO7}</td>
-          <td class="minText2">${d.CAMPO8}</td>
+          <td class="minText2">${gender}</td>
           <td class="minText2">${d.CAMPO9}</td>
           <td class="minText2">${d.CAMPO10}</td>
           <td class="minText2">${d.CAMPO11}</td>
@@ -959,6 +969,11 @@ function showDetailModal(d){
   d = JSON.parse(decodeURIComponent(d))
 
   let ctxPro = 0
+  let gender = ``
+
+  if(d.CAMPO11 == 1){
+    gender = `<i style="color: #001173;font-size: 30px;font-weight: bolder;" class="bi bi-gender-male"></i>&nbsp;`
+  }else{ gender = `<i style="color: #ff2f41;font-size: 30px;font-weight: bolder;" class="bi bi-gender-female"></i>&nbsp;`}
 
   fetch(`${url}/get-atention-saludpol/${d.CAMPO2}`)
             .then(response => response.json())
@@ -978,8 +993,9 @@ function showDetailModal(d){
               
               document.getElementById("d-dni").innerHTML = data[0][0].NroDocumento
               document.getElementById("d-fullname").innerHTML = data[0][0].Nombres
-              document.getElementById("d-sex").innerHTML = data[0][0].Sexo
+              document.getElementById("d-sex").innerHTML = gender+data[0][0].Sexo
               document.getElementById("d-age").innerHTML = data[0][0].Edad
+              document.getElementById("d-id-patient").innerHTML = data[0][0].IdPaciente
 
               document.getElementById("d-svi").innerHTML = data[0][0].ServicioIngreso
               document.getElementById("d-sve").innerHTML = data[0][0].ServicioEgreso
@@ -1161,7 +1177,7 @@ function obtenerDatos() {
       var celda21 = rowData[20];
 
       allData.push({
-        "FUA": celda3,
+        "Prestacion": celda3,
         "Cuenta": celda4,
         "Paciente": celda8 + " " + celda9 + " " + celda10,
         "DNI": celda7,
@@ -1405,4 +1421,64 @@ function updateQuantityProcedure(){
     )
   }
 
+}
+
+function showModalEditAccount(){
+  $('#editAccount').modal('show')
+  getAndUpdateGender()
+
+  let account = document.getElementById("d-account").innerHTML
+  let doc_auth = document.getElementById("d-auth").innerHTML
+  let dni = document.getElementById("d-dni").innerHTML
+  let gender = document.getElementById("d-sex")
+  let d_in = (document.getElementById("d-fi").innerHTML).toString()
+  let d_out = (document.getElementById("d-fe").innerHTML).toString()
+
+  let date1ISO = d_in.split("/").reverse().join("-")
+  let date2ISO = d_out.split("/").reverse().join("-")
+
+  document.getElementById("et-f-in").value = date1ISO
+  document.getElementById("et-f-out").value = date2ISO
+
+  document.getElementById("ed-account").innerHTML = account
+
+  if(doc_auth != ""){
+    document.getElementById("ed-doc_auth").value = doc_auth
+  }
+
+  if(dni != ""){
+    document.getElementById("ed-dni").value = dni
+  }
+
+  if(gender.textContent.includes("Femenino")){
+    document.getElementById("femaleCheckbox").checked = true
+    document.getElementById("maleCheckbox").checked = false
+
+  }else{
+    document.getElementById("femaleCheckbox").checked = false
+    document.getElementById("maleCheckbox").checked = true
+}
+
+}
+
+function getAndUpdateGender() {
+ 
+  var masculinoCheckbox = document.getElementById("maleCheckbox");
+  var femeninoCheckbox = document.getElementById("femaleCheckbox");
+
+  masculinoCheckbox.addEventListener("change", function() {
+    if (masculinoCheckbox.checked) {
+      femeninoCheckbox.checked = false
+      
+    }
+  });
+
+  femeninoCheckbox.addEventListener("change", function() {
+    if (femeninoCheckbox.checked) {
+      masculinoCheckbox.checked = false
+      
+     
+    }
+  });
+  
 }

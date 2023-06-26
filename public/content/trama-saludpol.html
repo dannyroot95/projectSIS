@@ -189,6 +189,8 @@
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="detailModalLabel">Detalle de atención</h1>
+        &nbsp;
+        <button onclick="showModalEditAccount()" class="btn btn-secondary"><i class="bi bi-gear-fill"></i></button>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -197,11 +199,11 @@
         <div id="div-details" style="display: none;">
           <label style="font-weight: bold;">Tipo de atención :</label>&nbsp;<label id="d-ate"></label>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <label style="font-weight: bold;">Carta :</label>&nbsp;<label id="d-auth"></label>
+          <label style="font-weight: bold;">Doc.Autorización :</label>&nbsp;<label id="d-auth"></label>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <label style="font-weight: bold;">N° de cuenta :</label>&nbsp;<label id="d-account"></label>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <label style="font-weight: bold;">Código :</label>&nbsp;<label id="d-fua"></label>
+          <label style="font-weight: bold;">ID prestación :</label>&nbsp;<label id="d-fua"></label>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <label style="font-weight: bold;">Historia :</label>&nbsp;<label id="d-history"></label>
           <p></p>
@@ -212,6 +214,8 @@
           <label style="font-weight: bold;">Sexo :</label>&nbsp;<label id="d-sex"></label>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <label style="font-weight: bold;">Edad :</label>&nbsp;<label id="d-age"></label>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <label style="font-weight: bold;">ID paciente :</label>&nbsp;<label id="d-id-patient"></label>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <P></P>
           <label style="font-weight: bold;">Servicio ingreso :</label>&nbsp;<label id="d-svi"></label>
@@ -370,10 +374,10 @@
           <!---->
 
           <!-- Modal -->
-          <div class="modal fade" style="background-color: #ffffff7a;" data-bs-backdrop="static" data-bs-keyboard="false" id="detailProcedure" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+          <div class="modal fade" style="background-color: #ffffff8f;" data-bs-backdrop="static" data-bs-keyboard="false" id="detailProcedure" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
             <div class="modal-dialog">
-              <div class="modal-content" 
-              style="background-color: #fffcf3; border-color: black 6px solid;;">
+              <div class="modal-content border border-dark rounded" 
+              style="background-color: #fffcf3;">
                   <div class="modal-header">
                       <h1 class="modal-title fs-5" id="staticBackdropLabel">Detalle de procedimiento</h1>
                       <label style="visibility: hidden;" id="index-pro"></label>
@@ -392,7 +396,7 @@
                       <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">Cantidad</span>
                         <input type="number" id="detail-procedure-quantity" class="form-control" placeholder="..." aria-label="Username" aria-describedby="basic-addon1">
-                        <button class="btn btn-outline-success" onclick="updateQuantityProcedure()" type="button">Actualizar</button>
+                        <button class="btn btn-success" onclick="updateQuantityProcedure()" type="button">Actualizar</button>
                       </div>
                     </div>
                 
@@ -401,6 +405,68 @@
               </div>
 
           <!---->
+
+
+         <!-- Modal -->
+         <div class="modal fade" style="background-color: #ffffff8f;" data-bs-backdrop="static" data-bs-keyboard="false" id="editAccount" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content border border-dark rounded">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Editar cuenta N°</h1>
+                <h1 class="modal-title fs-5" id="ed-account"></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <h5>Atención</h5>
+                <p></p>
+                <div class="input-group mb-3">
+                  <span class="input-group-text" id="basic-addon1">Doc.de autorización</span>
+                  <input type="text" id="ed-doc_auth" class="form-control" aria-describedby="basic-addon1">
+                  <button class="btn btn-success">Actualizar</button>
+                </div>
+                <p></p>
+                <div class="input-group mb-3">
+                  <span class="input-group-text" id="basic-addon1">Fecha de ingreso</span>
+                  <input id="et-f-in" type="date" class="form-control" aria-describedby="basic-addon1">
+                  <span class="input-group-text" id="basic-addon1">Fecha de egreso</span>
+                  <input id="et-f-out" type="date" class="form-control" aria-describedby="basic-addon1">
+                  <button class="btn btn-success">Actualizar</button>
+                </div>
+             
+                <h5>Paciente</h5>
+                <p></p>
+                <div class="input-group mb-3">
+                  <span class="input-group-text" id="basic-addon1">DNI</span>
+                  <input type="number" id="ed-dni" maxlength="8" class="form-control" aria-describedby="basic-addon1">
+                  <button class="btn btn-success">Actualizar</button>
+                </div>
+                <p></p>
+                
+                <div class="input-group mb-3">
+                  <div class="input-group-text">
+                    <input class="form-check-input mt-0" style="width: 30PX;height: 30px;" id="maleCheckbox" type="checkbox" value="1" >
+                    &nbsp;<i style="color: #001173;font-size: 30px;font-weight: bolder;" class="bi bi-gender-male"></i>&nbsp;
+                    <label>Masculino</label>
+                    &nbsp;&nbsp;
+                    <input class="form-check-input mt-0" style="width: 30PX;height: 30px;" id="femaleCheckbox" type="checkbox" value="2" aria-label="Checkbox for following text input">
+                    &nbsp;<i style="color: #ff2f41;font-size: 30px;font-weight: bolder;" class="bi bi-gender-female"></i>&nbsp;
+                    <label>Femenino</label>
+                  </div>
+                  
+                  <button class="btn btn-success">Actualizar</button>
+
+                </div>
+
+              </div>
+
+              <div class="modal-footer">
+                
+              </div>
+            </div>
+          </div>
+        </div>
+          
+       <!---->
 
       </div>
       <div class="modal-footer">

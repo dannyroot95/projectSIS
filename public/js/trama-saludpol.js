@@ -971,6 +971,17 @@ function showDetailModal(d){
   let ctxPro = 0
   let gender = ``
 
+  document.getElementById("loaderDetails").style = "display:block;"
+  document.getElementById("tbodyDiag").innerHTML = ''
+  document.getElementById("tbodyPro").innerHTML = ''
+  document.getElementById("tbodyLab").innerHTML = ''
+  document.getElementById("tbodyImg").innerHTML = ''
+  document.getElementById("tbodyMed").innerHTML = ''
+  document.getElementById("tbodyIns").innerHTML = ''
+  document.getElementById("div-details").style="display: none;"
+  document.getElementById("btn-edit-account").style="display: none;"
+
+
   if(d.CAMPO11 == 1){
     gender = `<i style="color: #001173;font-size: 30px;font-weight: bolder;" class="bi bi-gender-male"></i>&nbsp;`
   }else{ gender = `<i style="color: #ff2f41;font-size: 30px;font-weight: bolder;" class="bi bi-gender-female"></i>&nbsp;`}
@@ -996,6 +1007,7 @@ function showDetailModal(d){
               document.getElementById("d-sex").innerHTML = gender+data[0][0].Sexo
               document.getElementById("d-age").innerHTML = data[0][0].Edad
               document.getElementById("d-id-patient").innerHTML = data[0][0].IdPaciente
+              document.getElementById("d-id-atention").innerHTML = data[0][0].IdAtencion
 
               document.getElementById("d-svi").innerHTML = data[0][0].ServicioIngreso
               document.getElementById("d-sve").innerHTML = data[0][0].ServicioEgreso
@@ -1009,6 +1021,7 @@ function showDetailModal(d){
 
               document.getElementById("loaderDetails").style = "display:none;"
               document.getElementById("div-details").style = "display:block;"
+              document.getElementById("btn-edit-account").style="display: block;"
               
               $("#tbodyDiag").html(data[1].map((d) => {
                 
@@ -1482,3 +1495,227 @@ function getAndUpdateGender() {
   });
   
 }
+
+function updateDniPatient(){
+   let id_patient = (document.getElementById("d-id-patient").innerHTML).toString()
+   let dni = document.getElementById("ed-dni").value
+
+   if(dni != "" && dni.length == 8){
+
+    fetch(`${url}/update-dni-patient/${dni}/${id_patient}`)
+            .then(response => response.json())
+            .then(data => {
+
+              let response = data
+
+              if(response.success == "actualizado"){
+                Swal.fire(
+                  'Muy bien!',
+                  'DNI actualizado!',
+                  'success'
+                )
+                document.getElementById("d-dni").innerHTML = dni
+              }else{
+                Swal.fire(
+                  'Oops!',
+                  'Ocurrió un error!',
+                  'error'
+                )
+              }
+            
+            }).catch(err =>{
+                console.log(err)
+                Swal.fire(
+                  'Oops!',
+                  'Ocurrió un error!',
+                  'error'
+                )
+            } );
+
+
+   }else{
+    Swal.fire(
+      'Oops!',
+      'Ingrese un DNI válido!',
+      'info'
+    )
+   }
+
+}
+
+function updateGenderPatient(){
+
+  let id_patient = (document.getElementById("d-id-patient").innerHTML).toString()
+  let chkMale = document.getElementById("maleCheckbox").checked
+  let chkFamale = document.getElementById("femaleCheckbox").checked
+  let value = 0
+
+   if(chkMale == false && chkFamale == false){
+    Swal.fire(
+      'Oops!',
+      'Seleccione un género!',
+      'info'
+    )
+   }else if(chkMale == true && chkFamale == false){
+    value = 1
+    fetchUpdateGenderPatient(id_patient,value)
+   }else if(chkMale == false && chkFamale == true){
+    value = 2
+    fetchUpdateGenderPatient(id_patient,value)
+   }
+
+
+}
+
+function fetchUpdateGenderPatient(id_patient,gender){
+
+  let change = ``
+
+  fetch(`${url}/update-gender-patient/${gender}/${id_patient}`)
+            .then(response => response.json())
+            .then(data => {
+
+              let response = data
+
+              if(response.success == "actualizado"){
+                Swal.fire(
+                  'Muy bien!',
+                  'Género actualizado!',
+                  'success'
+                )
+                
+                if(gender == 1){
+                  change = `<i style="color: #001173;font-size: 30px;font-weight: bolder;" class="bi bi-gender-male"></i>&nbsp;`
+                }else{ change = `<i style="color: #ff2f41;font-size: 30px;font-weight: bolder;" class="bi bi-gender-female"></i>&nbsp;`}
+              
+                document.getElementById("d-sex").innerHTML = change
+
+              }else{
+                Swal.fire(
+                  'Oops!',
+                  'Ocurrió un error!',
+                  'error'
+                )
+              }
+            
+            }).catch(err =>{
+                console.log(err)
+                Swal.fire(
+                  'Oops!',
+                  'Ocurrió un error!',
+                  'error'
+                )
+            } );
+          }
+
+
+ function updateDate(){
+
+  let id_account = (document.getElementById("d-account").innerHTML).toString()
+
+  let date1 = document.getElementById("et-f-in").value
+  let date2 = document.getElementById("et-f-out").value
+
+  if(date1 != "" && date2 != ""){
+    date1 = date1+" 00:00:00.000"
+    date2 = date2+" 00:00:00.000"
+    fetchUpdateDateAtention(id_account,date1,date2)
+  }else{
+    Swal.fire(
+      'Oops!',
+      'Seleccione las fechas!',
+      'info'
+    )
+  }
+
+ }         
+
+
+ function fetchUpdateDateAtention(account,date1,date2){
+
+  fetch(`${url}/update-date-atention/${account}/${date1}/${date2}`)
+            .then(response => response.json())
+            .then(data => {
+
+              let response = data
+
+              if(response.success == "actualizado"){
+                Swal.fire(
+                  'Muy bien!',
+                  'Fecha actualizada!',
+                  'success'
+                )
+                
+               document.getElementById("d-fi").innerHTML = date(date1)
+               document.getElementById("d-fe").innerHTML = date(date2)
+
+              }else{
+                Swal.fire(
+                  'Oops!',
+                  'Ocurrió un error!',
+                  'error'
+                )
+              }
+            
+            }).catch(err =>{
+                console.log(err)
+                Swal.fire(
+                  'Oops!',
+                  'Ocurrió un error!',
+                  'error'
+                )
+            } );
+
+ }
+
+ function updateNroCodeOrigin(){
+
+  let id_atention = (document.getElementById("d-id-atention").innerHTML).toString()
+  let code = document.getElementById("ed-doc-auth").value
+  let year = new Date()
+  year = year.getFullYear()
+
+  if(code != ""){
+
+    fetch(`${url}/update-nro-ref-origin/${id_atention}/${code}`)
+    .then(response => response.json())
+    .then(data => {
+
+      let response = data
+
+      if(response.success == "actualizado"){
+        Swal.fire(
+          'Muy bien!',
+          'Doc. de autorización actualizado!',
+          'success'
+        )
+        
+        document.getElementById("d-auth").innerHTML = 'CV003-1601-'+year+'0000000'+code
+
+      }else{
+        Swal.fire(
+          'Oops!',
+          'Ocurrió un error!',
+          'error'
+        )
+      }
+    
+    }).catch(err =>{
+        console.log(err)
+        Swal.fire(
+          'Oops!',
+          'Ocurrió un error!',
+          'error'
+        )
+    } );
+
+  }else{
+    Swal.fire(
+      'Oops!',
+      'Ingrese de número!',
+      'info'
+    )
+  }
+
+}
+

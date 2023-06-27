@@ -1303,6 +1303,61 @@ router.get("/update-quantity-procedure/:a/:b/:c", function (req, res,next) {
   });
 });
 
+router.get("/update-dni-patient/:a/:b", function (req, res,next) {
+  let dni = req.params.a;
+  let id_patient = req.params.b;
+  
+  sql.update_dni_patient(dni,id_patient).then((result) => {
+    if(result[0].length>0){
+      res.json({success:"actualizado"})
+    }else{
+      res.json({success:"error"})
+    }
+  });
+});
+
+router.get("/update-gender-patient/:a/:b", function (req, res,next) {
+  let gender = req.params.a;
+  let id_patient = req.params.b;
+  
+  sql.update_gender_patient(gender,id_patient).then((result) => {
+    if(result[0].length>0){
+      res.json({success:"actualizado"})
+    }else{
+      res.json({success:"error"})
+    }
+  });
+});
+
+router.get("/update-date-atention/:a/:b/:c", function (req, res,next) {
+  
+  let account = req.params.a;
+  let date1 = req.params.b;
+  let date2 = req.params.c;
+  
+  sql.update_date_atention(account,date1,date2).then((result) => {
+    if(result[0].length>0){
+      res.json({success:"actualizado"})
+    }else{
+      res.json({success:"error"})
+    }
+  });
+});
+
+router.get("/update-nro-ref-origin/:a/:b", function (req, res,next) {
+  
+  let atencion = req.params.a;
+  let nro = req.params.b;
+  
+  sql.update_date_atention(atencion,nro).then((result) => {
+    if(result[0].length>0){
+      res.json({success:"actualizado"})
+    }else{
+      res.json({success:"error"})
+    }
+  });
+});
+
 
 module.exports = router;
 

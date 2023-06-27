@@ -1019,6 +1019,62 @@ console.log("error :" + error);
     }
   }
 
+  async function update_dni_patient(dni,id_patient) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('DNI',dni)
+      .input('ID_PACIENTE',id_patient)
+      .execute(`ACTUALIZAR_DNI_PACIENTE`) 
+      return [[{success:"actualizado"}]]
+    } catch (error) {
+       return [[{success:"error"}]]
+    }
+  }
+
+  async function update_gender_patient(gender,id_patient) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('GENERO',gender)
+      .input('ID_PACIENTE',id_patient)
+      .execute(`ACTUALIZAR_GENERO_PACIENTE`) 
+      return [[{success:"actualizado"}]]
+    } catch (error) {
+       return [[{success:"error"}]]
+    }
+  }
+
+  async function update_date_atention(account,date1,date2) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('CUENTA',account)
+      .input('FECHA1',date1)
+      .input('FECHA2',date2)
+      .execute(`ACTUALIZAR_FECHA_PACIENTE_SALUDPOL`) 
+      return [[{success:"actualizado"}]]
+    } catch (error) {
+       return [[{success:"error"}]]
+    }
+  }
+
+  async function update_nro_ref_origin(id_atention,nro) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('ID',id_atention)
+      .input('NRO',nro)
+      .execute(`ACTUALIZAR_NRO_REF_ORIGEN`) 
+      return [[{success:"actualizado"}]]
+    } catch (error) {
+       return [[{success:"error"}]]
+    }
+  }
+
+
+
+
 module.exports = {
   getdata: getdata,
   sendTrama:sendTrama,
@@ -1080,5 +1136,9 @@ module.exports = {
   updateSisFiliacion:updateSisFiliacion,
   production_saludpol:production_saludpol,
   id_procedure:id_procedure,
-  update_quantity_procedure:update_quantity_procedure
+  update_quantity_procedure:update_quantity_procedure,
+  update_dni_patient:update_dni_patient,
+  update_gender_patient:update_gender_patient,
+  update_date_atention:update_date_atention,
+  update_nro_ref_origin:update_nro_ref_origin
 };

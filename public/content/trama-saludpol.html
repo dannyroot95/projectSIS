@@ -190,13 +190,14 @@
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="detailModalLabel">Detalle de atención</h1>
         &nbsp;
-        <button onclick="showModalEditAccount()" class="btn btn-secondary"><i class="bi bi-gear-fill"></i></button>
+        <button id="btn-edit-account" onclick="showModalEditAccount()" class="btn btn-secondary"><i class="bi bi-gear-fill"></i></button>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
 
         <center id="loaderDetails"><a><div style="display: block;" class="loader"></div></a></center>
-        <div id="div-details" style="display: none;">
+        
+        <div id="div-details">
           <label style="font-weight: bold;">Tipo de atención :</label>&nbsp;<label id="d-ate"></label>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <label style="font-weight: bold;">Doc.Autorización :</label>&nbsp;<label id="d-auth"></label>
@@ -216,6 +217,8 @@
           <label style="font-weight: bold;">Edad :</label>&nbsp;<label id="d-age"></label>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <label style="font-weight: bold;">ID paciente :</label>&nbsp;<label id="d-id-patient"></label>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <label style="font-weight: bold;">ID atención :</label>&nbsp;<label id="d-id-atention"></label>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <P></P>
           <label style="font-weight: bold;">Servicio ingreso :</label>&nbsp;<label id="d-svi"></label>
@@ -421,8 +424,8 @@
                 <p></p>
                 <div class="input-group mb-3">
                   <span class="input-group-text" id="basic-addon1">Doc.de autorización</span>
-                  <input type="text" id="ed-doc_auth" class="form-control" aria-describedby="basic-addon1">
-                  <button class="btn btn-success">Actualizar</button>
+                  <input type="text" id="ed-doc-auth" class="form-control" aria-describedby="basic-addon1">
+                  <button onclick="updateNroCodeOrigin()" class="btn btn-success">Actualizar</button>
                 </div>
                 <p></p>
                 <div class="input-group mb-3">
@@ -430,7 +433,7 @@
                   <input id="et-f-in" type="date" class="form-control" aria-describedby="basic-addon1">
                   <span class="input-group-text" id="basic-addon1">Fecha de egreso</span>
                   <input id="et-f-out" type="date" class="form-control" aria-describedby="basic-addon1">
-                  <button class="btn btn-success">Actualizar</button>
+                  <button onclick="updateDate()" class="btn btn-success">Actualizar</button>
                 </div>
              
                 <h5>Paciente</h5>
@@ -438,7 +441,7 @@
                 <div class="input-group mb-3">
                   <span class="input-group-text" id="basic-addon1">DNI</span>
                   <input type="number" id="ed-dni" maxlength="8" class="form-control" aria-describedby="basic-addon1">
-                  <button class="btn btn-success">Actualizar</button>
+                  <button onclick="updateDniPatient()" class="btn btn-success">Actualizar</button>
                 </div>
                 <p></p>
                 
@@ -453,7 +456,7 @@
                     <label>Femenino</label>
                   </div>
                   
-                  <button class="btn btn-success">Actualizar</button>
+                  <button onclick="updateGenderPatient()" class="btn btn-success">Actualizar</button>
 
                 </div>
 

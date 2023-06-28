@@ -1309,7 +1309,7 @@ router.get("/update-dni-patient/:a/:b", function (req, res,next) {
   
   sql.update_dni_patient(dni,id_patient).then((result) => {
     if(result[0].length>0){
-      res.json({success:"actualizado"})
+      res.json(result[0]);
     }else{
       res.json({success:"error"})
     }
@@ -1322,7 +1322,7 @@ router.get("/update-gender-patient/:a/:b", function (req, res,next) {
   
   sql.update_gender_patient(gender,id_patient).then((result) => {
     if(result[0].length>0){
-      res.json({success:"actualizado"})
+      res.json(result[0]);
     }else{
       res.json({success:"error"})
     }
@@ -1337,7 +1337,7 @@ router.get("/update-date-atention/:a/:b/:c", function (req, res,next) {
   
   sql.update_date_atention(account,date1,date2).then((result) => {
     if(result[0].length>0){
-      res.json({success:"actualizado"})
+      res.json(result[0]);
     }else{
       res.json({success:"error"})
     }
@@ -1349,9 +1349,9 @@ router.get("/update-nro-ref-origin/:a/:b", function (req, res,next) {
   let atencion = req.params.a;
   let nro = req.params.b;
   
-  sql.update_date_atention(atencion,nro).then((result) => {
+  sql.update_nro_ref_origin(atencion,nro).then((result) => {
     if(result[0].length>0){
-      res.json({success:"actualizado"})
+      res.json(result[0]);
     }else{
       res.json({success:"error"})
     }

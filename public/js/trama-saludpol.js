@@ -412,13 +412,19 @@ function insertDataTrama4(data){
   $('#tb-data-4').DataTable().destroy()
   $("#tbody4").html(data.map((d) => {
 
+    let color = "white"
+
+    if(d.CAMPO4 == null || d.CAMPO4 == ""){
+      color = "#FFDFE7"
+    }
+
     ctx++
           return `
-          <tr style="cursor: pointer;">
+          <tr style="cursor: pointer;background-color:${color}">
           <td class="minText2">${d.CAMPO1}</td>
           <td class="minText2">${d.CAMPO2}</td>
           <td class="minText2">${d.CAMPO3}</td>
-          <td class="minText2">${d.CAMPO4}</td>
+          <td class="minText2">${isDataNull(d.CAMPO4)}</td>
           <td class="minText2">${d.CAMPO5}</td>
           </tr>`;
       })
@@ -959,8 +965,8 @@ function downloadFile(content, fileName) {
 
 
 $('#modalDelete').on('hidden.bs.modal', function (e) {
-  document.getElementById("tbodyAccount").innerHTML = ""
-  document.getElementById("tbodyAccountIn").innerHTML = ""
+  //document.getElementById("tbodyAccount").innerHTML = ""
+  //document.getElementById("tbodyAccountIn").innerHTML = ""
   document.getElementById("nAccount").value = "";
 })
 
@@ -1238,10 +1244,10 @@ function dateNull(y){
 }
 
 function isDataNull(data){
-  let x = `<b style="color:red;">Sin registro</b>`
+  let x = data
 
-  if(data != null){
-    x = data
+  if(x == null || x == ""){
+    x = `<b style="color:red;">Sin registro</b>`
   }
 
   return x
@@ -1260,6 +1266,7 @@ function fetchReportSaludpol(n){
                   "N°_Autorizacion": convertBlank(item.Autorizacion),
                   "Cuenta": convertBlank(item.idCuentaAtencion),
                   "Nombres": convertBlank(item.Nombres),
+                  "Servicio": convertBlank(item.Nombres),
                   "dias_hosp": convertBlank(item.dias_hosp),
                   "Codigo": convertBlank(item.Codigo),
                   "Consumo": convertBlank(item.Nombre),
@@ -1437,11 +1444,17 @@ function updateQuantityProcedure(){
 }
 
 function showModalEditAccount(){
+
   $('#editAccount').modal('show')
   getAndUpdateGender()
 
+  document.getElementById("ed-doc-auth").value = ""
+  document.getElementById("et-f-in").value = ""
+  document.getElementById("et-f-out").value = ""
+  document.getElementById("ed-dni").value = ""
+
   let account = document.getElementById("d-account").innerHTML
-  let doc_auth = document.getElementById("d-auth").innerHTML
+  let doc_auth = (document.getElementById("d-auth").innerHTML).toString()
   let dni = document.getElementById("d-dni").innerHTML
   let gender = document.getElementById("d-sex")
   let d_in = (document.getElementById("d-fi").innerHTML).toString()
@@ -1456,7 +1469,7 @@ function showModalEditAccount(){
   document.getElementById("ed-account").innerHTML = account
 
   if(doc_auth != ""){
-    document.getElementById("ed-doc_auth").value = doc_auth
+    document.getElementById("ed-doc-auth").value = doc_auth
   }
 
   if(dni != ""){
@@ -1506,7 +1519,7 @@ function updateDniPatient(){
             .then(response => response.json())
             .then(data => {
 
-              let response = data
+              let response = data[0]
 
               if(response.success == "actualizado"){
                 Swal.fire(
@@ -1575,7 +1588,7 @@ function fetchUpdateGenderPatient(id_patient,gender){
             .then(response => response.json())
             .then(data => {
 
-              let response = data
+              let response = data[0]
 
               if(response.success == "actualizado"){
                 Swal.fire(
@@ -1585,8 +1598,8 @@ function fetchUpdateGenderPatient(id_patient,gender){
                 )
                 
                 if(gender == 1){
-                  change = `<i style="color: #001173;font-size: 30px;font-weight: bolder;" class="bi bi-gender-male"></i>&nbsp;`
-                }else{ change = `<i style="color: #ff2f41;font-size: 30px;font-weight: bolder;" class="bi bi-gender-female"></i>&nbsp;`}
+                  change = `<i style="color: #001173;font-size: 30px;font-weight: bolder;" class="bi bi-gender-male"></i>&nbsp;<label>Masculino</label>`
+                }else{ change = `<i style="color: #ff2f41;font-size: 30px;font-weight: bolder;" class="bi bi-gender-female"></i>&nbsp;<label>Femenino</label>`}
               
                 document.getElementById("d-sex").innerHTML = change
 
@@ -1611,7 +1624,7 @@ function fetchUpdateGenderPatient(id_patient,gender){
 
  function updateDate(){
 
-  let id_account = (document.getElementById("d-account").innerHTML).toString()
+  let id_account = (document.getElementById("d-id-atention").innerHTML).toString()
 
   let date1 = document.getElementById("et-f-in").value
   let date2 = document.getElementById("et-f-out").value
@@ -1637,7 +1650,7 @@ function fetchUpdateGenderPatient(id_patient,gender){
             .then(response => response.json())
             .then(data => {
 
-              let response = data
+              let response = data[0]
 
               if(response.success == "actualizado"){
                 Swal.fire(
@@ -1677,11 +1690,13 @@ function fetchUpdateGenderPatient(id_patient,gender){
 
   if(code != ""){
 
+    alert(id_atention+" "+code)
+
     fetch(`${url}/update-nro-ref-origin/${id_atention}/${code}`)
     .then(response => response.json())
     .then(data => {
 
-      let response = data
+      let response = data[0]
 
       if(response.success == "actualizado"){
         Swal.fire(

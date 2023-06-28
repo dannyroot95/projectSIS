@@ -7,6 +7,7 @@ archiver.registerFormat('zip-encrypted', require("archiver-zip-encrypted"));
 const password = '7017FuaE47121'; 
 const passwordTest = 'PilotoFUAE123'
 const bcrypt = require('bcrypt');
+const { Console } = require("console");
 const password2 = '1234578'
 const storedHash = 'Q86wc5quJnvrW6a31ZDQiw=='
 
@@ -1047,6 +1048,7 @@ console.log("error :" + error);
 
   async function update_date_atention(account,date1,date2) {
     try {
+      console.log(date1)
       let pool = await sql.connect(config);
       let res = await pool.request()
       .input('CUENTA',account)

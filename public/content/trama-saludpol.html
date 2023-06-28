@@ -388,6 +388,9 @@
                     </div>
                     <div class="modal-body">
                       <center><div id="loader-procedure-detail" class="loaderSmall"></div><p></p></center>
+                      <p></p>
+                      <center><h5>Datos del procedimiento</h5></center>
+                      <p></p>
                       <label><b>Procedimiento :</b></label>&nbsp;<label id="id-detail-procedure"></label>
                       <p></p>
                       <label><b>Código :</b></label>&nbsp;<label id="id-detail-code"></label>
@@ -396,11 +399,18 @@
                       <p></p>
                       <label><b>ID producto :</b></label>&nbsp;<label id="id-product"></label>
                       <p></p>
+                      <center><h5>Actualización</h5></center>
+                      <p></p>
                       <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">Cantidad</span>
                         <input type="number" id="detail-procedure-quantity" class="form-control" placeholder="..." aria-label="Username" aria-describedby="basic-addon1">
                         <button class="btn btn-success" onclick="updateQuantityProcedure()" type="button">Actualizar</button>
                       </div>
+                      <p></p>
+                      <center><h5>Reemplazar</h5></center>
+                      <p></p>
+                      <center><h5>Eliminar</h5></center>
+                      <center><button class="btn btn-danger">Eliminar procedimiento</button></center>
                     </div>
                 
                   </div>
@@ -482,7 +492,13 @@
      <script>
 
      for(let i = 1 ; i<= 24 ; i++ ){
-      let item = `<th class="minText" scope="col"><center>CAMPO ${i}</center></th>`
+      
+      let values = ["","Prestacion","Cuenta","Doc.autorizacion","Tipo de documento","N° documento","A.Paterno","A.Materno",
+      "Nombres","Historia","F.nacimiento","Sexo","T.atencion","F.ingreso","F.alta","T.Doc.Responsable","N°.Doc.Responsable",
+      "AP.Resonpable","AM.Resonpable","N.Resonpable","Profesion resonpable","N° colegiatura","Especialidad","N° registro","Condicion de alta"]
+      
+      let item = `<th class="minText" scope="col"><center>${values[i]}</center></th>`
+      
       if(i == 1){
         let x = `
         <th class="minText" scope="col"><center></center></th>
@@ -494,17 +510,22 @@
      }
 
      for(let i = 1 ; i<= 4 ; i++ ){
-      let item = `<th class="minText" scope="col"><center>CAMPO ${i}</center></th>`
+
+      let values = ["","Prestacion","Tipo diagnostico","Codigo diagnostico","Descripcion de diagnostico"]
+
+      let item = `<th class="minText" scope="col"><center>${values[i]}</center></th>`
       $(item).appendTo('#tr-table-2')
      }
 
      for(let i = 1 ; i<= 4 ; i++ ){
-      let item = `<th class="minText" scope="col"><center>CAMPO ${i}</center></th>`
+      let values = ["","Prestacion","Codigo CPT","cantidad","Valorizado"]
+      let item = `<th class="minText" scope="col"><center>${values[i]}</center></th>`
       $(item).appendTo('#tr-table-3')
      }
 
      for(let i = 1 ; i<= 5 ; i++ ){
-      let item = `<th class="minText" scope="col"><center>CAMPO ${i}</center></th>`
+      let values = ["","Prestacion","Codigo SISMED","Cantidad","Diagnostico CIE-10","Valorizado"]
+      let item = `<th class="minText" scope="col"><center>${values[i]}</center></th>`
       $(item).appendTo('#tr-table-4')
      }
 

@@ -1410,7 +1410,7 @@ function getAtencionResumenDebug(anio,mes,nEnvio,n){
     res += data[0].VersEnvio+"\n"
     res += data[0].IdResp+"\n"
     res += data[0].NroDoc+"\n"
-    
+ 
     sendTrama(atencion,diagnostico,medicamentos,insumos,procedimientos,smi,ser,rn,res,data[0].NomPaquete,n)
 
     

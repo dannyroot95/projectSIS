@@ -708,7 +708,7 @@ console.log("error :" + error);
       </soapenv:Header>
       <soapenv:Body>
         <v2:registrarFuaRequest>
-          <v2:nombreZip>0000269820230600001.zip</v2:nombreZip>
+          <v2:nombreZip>${data.nameTrama}</v2:nombreZip>
           <v2:dataZip>${fileContent}</v2:dataZip>
         </v2:registrarFuaRequest>
       </soapenv:Body>

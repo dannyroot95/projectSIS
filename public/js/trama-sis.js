@@ -825,6 +825,18 @@ function validateDataATE(d){
       let warning = `${c}.- EL CAMPO ATE#40 (IPRESS DE REFERENCIA) DEBE SER VACÍO DEACUERDO AL CAMPO ATE#34 (TIPO DE ATENCION 1: AMBULATORIO , 2 :REFERENCIA 3:EMERGENCIA) Y AL CAMPO ATE#43 (ORIGEN DE PERSONAL DEL ESTABLECIMIENTO) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
       log = log+warning+"\n\n"
     }
+    if(d["A20"] == ""){
+      ctx++
+      c++
+      let warning = `${c}.- EL CAMPO ATE#20 (CONTRATO DEL ASEGURADO) NO DEBE SER VACÍO -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
+      log = log+warning+"\n\n"
+    }
+    if(d["A81"] == "1" && d["A82"] == "" || d["A81"] == "1" && d["A82"].length != 8){
+      ctx++
+      c++
+      let warning = `${c}.- EL CAMPO ATE#82 (N° DOC DEL DIGITADOR) DEBE TENER 8 DIGITOS DE ACUERDO AL CAMPO ATE#81 (TIPO DE DOCUMENTO DIGITADOR) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
+      log = log+warning+"\n\n"
+    }
 
    return counter(ctx,d)
 
@@ -1221,8 +1233,7 @@ function getTramaRn(anio,mes,n){
       });
       
       }
- 
-    
+
     getLastCorrelative(anio,mes,n)
       
     }).catch(err => {
@@ -1247,12 +1258,13 @@ function getLastCorrelative(anio,mes,n){
     .then(data => {
   
       let x = data[0].correlativo
+      let monthOfSend = document.getElementById("inputGroupSelectProductionMonth2").value
   
       if(x != null){
         correlative = x
-        setResum(correlative,anio,mes,n)
+        setResum(correlative,anio,monthOfSend,n)
       }else{
-        setResum(correlative,anio,mes,n)
+        setResum(correlative,anio,monthOfSend,n)
       }
       
       
@@ -1599,6 +1611,7 @@ function showDetailModal(d){
     document.getElementById("afi-type").value = data[size].AfiliacionTipoFormato
     document.getElementById("afi-num").value = data[size].AfiliacionNroFormato
     document.getElementById("afi-siasis").value = data[size].idSiasis
+    document.getElementById("afi-code").value = data[size].Codigo
   }
 
     
@@ -1612,6 +1625,7 @@ function showDetailModal(d){
       <td>${V.idSiasis}</td>
       <td>${V.AfiliacionFecha}</td>
       <td>${V.nombres}</td>
+      <td>${V.Codigo}</td>
       </tr>`;
 
   })
@@ -1632,8 +1646,9 @@ function updateAfiliation(){
   let type =  document.getElementById("afi-type").value
   let num =  document.getElementById("afi-num").value
   let siasis =  document.getElementById("afi-siasis").value
+  let code =  document.getElementById("afi-code").value
 
-  if(disa != "" && type != "" && num != "" && siasis != ""){
+  if(disa != "" && type != "" && num != "" && siasis != "" && code != ""){
 
     let data = {
       AfiliacionDisa:disa,
@@ -1641,7 +1656,8 @@ function updateAfiliation(){
       AfiliacionNroFormato:num,
       idSiasis:siasis,
       FuaLote:lote,
-      idCuentaAtencion:account
+      idCuentaAtencion:account,
+      Codigo:code
     }
 
 

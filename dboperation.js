@@ -971,6 +971,7 @@ console.log("error :" + error);
       .input('AFI_NRO_FORMATO',data.AfiliacionNroFormato)
       .input('ID_SIASIS',data.idSiasis)
       .input('LOTE',data.FuaLote)
+      .input('CODIGO',data.Codigo)
       .input('CUENTA',data.idCuentaAtencion)
       .execute(`UPDATE_AFILIADO_FUA`) 
       return res.recordsets

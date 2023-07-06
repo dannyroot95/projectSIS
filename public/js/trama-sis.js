@@ -837,6 +837,12 @@ function validateDataATE(d){
       let warning = `${c}.- EL CAMPO ATE#82 (N° DOC DEL DIGITADOR) DEBE TENER 8 DIGITOS DE ACUERDO AL CAMPO ATE#81 (TIPO DE DOCUMENTO DIGITADOR) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
       log = log+warning+"\n\n"
     }
+    if(d["A24"] == ""){
+      ctx++
+      c++
+      let warning = `${c}.- EL CAMPO ATE#24 TIPO DE DOCUMENTO DEL ASEGURADO TIENE UN VALOR NO PERMITIDO -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
+      log = log+warning+"\n\n"
+    }
 
    return counter(ctx,d)
 
@@ -1636,6 +1642,30 @@ function showDetailModal(d){
     console.log(err)
   }); 
 
+
+  fetch(`${url}/get-data-medic/${d.A1}`,{
+    method: 'get',
+    headers: {
+      'Accept': 'application/json'
+    }
+})
+  .then(response => response.json())
+  .then(data => {
+
+   let value = data[0]
+
+   document.getElementById("afi-type-dig").value = d.A81
+
+   if(d.A82 == ""){
+    document.getElementById("afi-num-dig").value = (value.dni_medico).trim()
+   }else{
+    document.getElementById("afi-num-dig").value = d.A82
+   }
+
+  }).catch(err => {
+    console.log(err)
+  }); 
+
 }
 
 function updateAfiliation(){
@@ -1671,6 +1701,66 @@ function updateAfiliation(){
     .then(response => response.json())
     .then(data => {
        if(data.success == "insertado"){
+        
+        Swal.fire(
+          'Muy bien!',
+          'Cuenta actualizada',
+          'success'
+        )
+  
+       }else{
+        Swal.fire(
+          'Oops!',
+          'Se produjo un error',
+          'warning'
+        )
+       }
+    })
+    .catch(error => {
+      Swal.fire(
+          'Oops!',
+          'Se produjo un error',
+          'warning'
+        )
+      console.error(error)
+  
+  });
+
+
+  }else{
+    Swal.fire(
+      'Oops!',
+      'Complete los campos',
+      'info'
+    )
+  }
+
+}
+
+function updateDNIDigitador(){
+
+  let dni = document.getElementById("afi-num-dig").value 
+  let account = document.getElementById("d-account").innerHTML
+
+  if(dni != ""){
+
+    let data = {
+      dni:dni,
+      account:account,
+    }
+
+
+    fetch(`${url}/update-dni-digitador`, {
+      method: 'POST', // o 'PUT', 'DELETE', etc.
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data) // data es un objeto con los datos a enviar
+    })
+    .then(response => response.json())
+    .then(data => {
+
+       if(data[0].success == "actualizado"){
         
         Swal.fire(
           'Muy bien!',

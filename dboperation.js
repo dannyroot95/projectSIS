@@ -640,6 +640,7 @@ console.log("error :" + error);
       const output = fs.createWriteStream('C:/users/USUARIO/desktop/tramas/'+data.nameTrama);
       archive.pipe(output);
       archive.finalize();
+
       return [[{success:"Enviado!"}]]
     }catch (error) {
       console.log("error : " + error);
@@ -693,6 +694,7 @@ console.log("error :" + error);
       archive.pipe(output);
       archive.finalize();
       
+
       const fileContent = readFileAsBase64('C:/users/USUARIO/desktop/tramas/'+data.nameTrama); // Ruta al archivo que deseas adjuntar
       const url = 'http://pruebaws01.sis.gob.pe/cxf/esb/negocio/registroFuaBatch/v2/'; // URL del servicio SOAP
 
@@ -721,6 +723,16 @@ console.log("error :" + error);
    
   const response = await axios.post(url, xmlBody, { headers });
   //console.log(response.data);
+
+  fs.unlinkSync('ATENCION.TXT');
+  fs.unlinkSync('ATENCIONDIA.TXT');
+  fs.unlinkSync('ATENCIONMED.TXT');
+  fs.unlinkSync('ATENCIONINS.TXT');
+  fs.unlinkSync('ATENCIONPRO.TXT');
+  fs.unlinkSync('ATENCIONSMI.TXT');
+  fs.unlinkSync('ATENCIONSER.TXT');
+  fs.unlinkSync('ATENCIONRN.TXT');
+  fs.unlinkSync('RESUMEN.TXT');
 
   return [[
     {
@@ -1075,7 +1087,31 @@ console.log("error :" + error);
     }
   }
 
+  async function get_data_medic(id_atention) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('CUENTA',id_atention)
+      .execute(`OBTENER_DATOS_MEDICO_POR_CUENTA`) 
+      return res.recordsets
+    } catch (error) {
+       return [[{success:"error"}]]
+    }
+  }
 
+
+  async function update_dni_digitador(id_atention,dni) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('CUENTA',id_atention)
+      .input('DNI',dni)
+      .execute(`ACTUALIZAR_DNI_DIGITADOR_FUA`) 
+      return [[{success:"actualizado"}]]
+    } catch (error) {
+       return [[{success:"error"}]]
+    }
+  }
 
 
 module.exports = {
@@ -1143,5 +1179,7 @@ module.exports = {
   update_dni_patient:update_dni_patient,
   update_gender_patient:update_gender_patient,
   update_date_atention:update_date_atention,
-  update_nro_ref_origin:update_nro_ref_origin
+  update_nro_ref_origin:update_nro_ref_origin,
+  get_data_medic:get_data_medic,
+  update_dni_digitador:update_dni_digitador
 };

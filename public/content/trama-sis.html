@@ -375,12 +375,25 @@
         <input type="text" class="form-control" id="afi-code">
       </div>
         
+       <p></p>
 
+       <button style="float: right;margin-bottom: 20px;" type="button" onclick="updateAfiliation()" class="btn btn-primary">Actualizar</button>
+
+      
+       <div class="input-group mb-3">
+        <span class="input-group-text" id="basic-addon1">Tipo de documento digitador</span>
+        <input type="text" class="form-control" id="afi-type-dig">
+        <span class="input-group-text" id="basic-addon1">N° de documento digitador</span>
+        <input type="text" class="form-control" id="afi-num-dig">
+      </div>
+
+      <p></p>
+
+      <button style="float: right;" type="button" onclick="updateDNIDigitador()" class="btn btn-primary">Actualizar</button>
 
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" onclick="updateAfiliation()" class="btn btn-primary">Guardar</button>
       </div>
     </div>
   </div>

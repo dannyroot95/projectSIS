@@ -1358,6 +1358,34 @@ router.get("/update-nro-ref-origin/:a/:b", function (req, res,next) {
   });
 });
 
+router.get("/get-data-medic/:a", function (req, res,next) {
+  
+  let account = req.params.a;
+ 
+  sql.get_data_medic(account).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({success:"error"})
+    }
+  });
+});
+
+router.post("/update-dni-digitador", function (req, res,next) {
+  
+  let account = req.body.account;
+  let dni = req.body.dni;
+  
+  console.log(account+" "+dni)
+
+  sql.update_dni_digitador(account,dni).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({success:"error"})
+    }
+  });
+});
 
 module.exports = router;
 

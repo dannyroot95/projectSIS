@@ -819,12 +819,14 @@ function validateDataATE(d){
         let warning = `${c}.- SIN REGISTRO EN LOS CAMPOS DE AFILIACIÓN -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]} `
         log = log+warning+"\n\n"
         searchAndUpdateAtentionFromAfiliate(d["A26"],d["A27"],d["A28"])
-    }if(d["A42"] == '056' && d["A34"] != 2){
+    }
+    /*
+    if(d["A42"] == '056' && d["A43"] != 2){
       ctx++
       c++
       let warning = `${c}.- EL CAMPO ATE#40 (IPRESS DE REFERENCIA) DEBE SER VACÍO DEACUERDO AL CAMPO ATE#34 (TIPO DE ATENCION 1: AMBULATORIO , 2 :REFERENCIA 3:EMERGENCIA) Y AL CAMPO ATE#43 (ORIGEN DE PERSONAL DEL ESTABLECIMIENTO) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
       log = log+warning+"\n\n"
-    }
+    }*/
     if(d["A20"] == ""){
       ctx++
       c++
@@ -841,6 +843,25 @@ function validateDataATE(d){
       ctx++
       c++
       let warning = `${c}.- EL CAMPO ATE#24 TIPO DE DOCUMENTO DEL ASEGURADO TIENE UN VALOR NO PERMITIDO -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
+      log = log+warning+"\n\n"
+    }
+    if(d["A42"].length != 3){
+      ctx++
+      c++
+      let warning = `${c}.- EL CAMPO ATE#42 DEBE SER UN CAMPO ALFANUMÉRICO DE 3 DIGITOS -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
+      log = log+warning+"\n\n"
+    }
+    if(d["A42"] == '054' && d["A47"] == ''){
+      ctx++
+      c++
+      let warning = `${c}.- SE REQUIERE UNA FECHA DE ALTA DE HOSPITALIZACIÓN -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
+      log = log+warning+"\n\n"
+    }
+
+    if(d["A34"] == '2' && d["A43"] != '3' && d["A40"] == ''){
+      ctx++
+      c++
+      let warning = `${c}.- EL CAMPO ATE#40 (IPRESS DE REFERENCIA) ES REQUERIDO -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
       log = log+warning+"\n\n"
     }
 

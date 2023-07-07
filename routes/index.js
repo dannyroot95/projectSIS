@@ -1217,7 +1217,85 @@ function getTypeUser(value){
     </section>
 
     `
-  }else{
+  }else if(value == 41){
+    x = `
+    
+    <div class="sidebar">
+      <div class="logo-details">
+        <i class='bx bxs-ambulance' ></i>
+        <span style="font-size: 18px;margin-left: -12px;" class="logo_name">Herramientas SIS</span>
+      </div>
+  
+      <ul class="nav-links" id="links">
+  
+        <li>
+          <a href="#inicio">
+            <i class='bx bx-grid-alt' ></i>
+            <span class="link_name">Inicio</span>
+          </a>
+          <ul class="sub-menu blank">
+            <li><a class="link_name" href="#inicio">Inicio</a></li>
+          </ul>
+        </li>
+  
+        <li>
+          <div class="iocn-link">
+            <a>
+              <i class='bx bx-file'></i>
+              <span class="link_name">Digitación</span>
+            </a>
+            <i class='bx bxs-chevron-down arrow' ></i>
+          </div>
+          <ul class="sub-menu">
+            <li><a class="link_name" href="#">Digitación</a></li>
+            <li><a href="#fua_analysis">Análisis de FUA</a></li>
+          </ul>
+        </li>
+
+
+      <li>
+        <div class="iocn-link">
+          <a>
+            <i class='bx bx-label'></i>
+            <span class="link_name">Tramas</span>
+          </a>
+          <i class='bx bxs-chevron-down arrow' ></i>
+        </div>
+        <ul class="sub-menu">
+          <li><a class="link_name">Tramas</a></li>
+          <li><a href="#trama_sis">Trama SIS</a></li>
+          <li><a href="#trama_saludpol">Trama Saludpol</a></li>
+        </ul>
+      </li>
+  
+       <li>
+      <div class="profile-details">
+        <div class="profile-content">
+        <i onclick="logout()" class='bx bx-log-out'></i>
+          <img src="/image/profile.jpg" alt="profileImg">
+        </div>
+        <div class="name-job">
+        <div id="nameuser" class="profile_name">Nombre de usuario</div>
+        <div id="typeuser" class="job">Tipo de usuario</div>
+        </div>
+    </li>
+  </ul>
+  
+  
+    </div>
+    <section class="home-section">
+      <div class="home-content">
+        <i class='bx bx-menu' ></i>
+      </div>
+  
+      <div class="myContent">
+      </div>
+    </section>
+
+    `
+  }
+  
+  else{
     x = `
    
     <div class="sidebar">

@@ -864,6 +864,12 @@ function validateDataATE(d){
       let warning = `${c}.- EL CAMPO ATE#40 (IPRESS DE REFERENCIA) ES REQUERIDO -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
       log = log+warning+"\n\n"
     }
+    if(d["A18"] == ""){
+      ctx++
+      c++
+      let warning = `${c}.- EL CAMPO ATE#18 (NUMERO DEL CODIGO DE ASEGURADO) DEBE DE SER UN CAMPO ALFANUMERICO DE 8 O 9 DIGITOS -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
+      log = log+warning+"\n\n"
+    }
 
    return counter(ctx,d)
 

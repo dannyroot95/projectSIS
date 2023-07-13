@@ -4,12 +4,19 @@ const fs = require('fs');
 const axios = require('axios');
 const archiver = require('archiver');
 archiver.registerFormat('zip-encrypted', require("archiver-zip-encrypted"));
-const password = '7017FuaE47121'; 
+const passwordProduction = '7017FuaE47121'; 
 const passwordTest = 'PilotoFUAE123'
+//const passwordTest = 'PilotoFUAE123'
 const bcrypt = require('bcrypt');
 const { Console } = require("console");
 const password2 = '1234578'
 const storedHash = 'Q86wc5quJnvrW6a31ZDQiw=='
+
+const urlTesting = 'http://ws01.sis.gob.pe/cxf/esb/negocio/registroFuaBatch/v2'; // URL del servicio web SOAP
+const urlProduction = 'http://ws01.sis.gob.pe/cxf/esb/negocio/registroFuaBatch/v2'; // URL del servicio web SOAP
+
+const authTesting = '123456'
+const authProduction = 'DsutgQ3U'
 
 //requestSeachPackageTramaSOAP()
 
@@ -25,7 +32,7 @@ bcrypt.compare(password2, storedHash, (err, result) => {
 
 async function getPackageTrama(anio,month,n_send) {
   try {
-    const url = 'http://ws01.sis.gob.pe/cxf/esb/negocio/registroFuaBatch/v2'; // URL del servicio web SOAP
+   
     const xmlRequest = `
       <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v2="http://sis.gob.pe/esb/negocio/registroFuaBatch/v2/">
          <soapenv:Header>
@@ -47,7 +54,7 @@ async function getPackageTrama(anio,month,n_send) {
       'Content-Type': 'text/xml',
     };
 
-    const response = await axios.post(url, xmlRequest, { headers });
+    const response = await axios.post(urlProduction, xmlRequest, { headers });
     const responseData = {data:response.data};
 
     // Procesar la respuesta SOAP aquí
@@ -599,7 +606,7 @@ console.log("error :" + error);
     try{
    
       // create archive and specify method of encryption and password
-      let archive = archiver.create('zip-encrypted', {zlib: {level: 8}, encryptionMethod: 'zip20', password: passwordTest});
+      let archive = archiver.create('zip-encrypted', {zlib: {level: 8}, encryptionMethod: 'zip20', password: passwordProduction});
       
       function writeFileWithUTF8(fileName, content) {
         fs.writeFileSync(fileName, content, 'utf8');
@@ -652,7 +659,7 @@ console.log("error :" + error);
 
     try{
       // create archive and specify method of encryption and password
-      let archive = archiver.create('zip-encrypted', {zlib: {level: 8}, encryptionMethod: 'zip20', password: passwordTest});
+      let archive = archiver.create('zip-encrypted', {zlib: {level: 8}, encryptionMethod: 'zip20', password: passwordProduction});
       
       function writeFileWithUTF8(fileName, content) {
         fs.writeFileSync(fileName, content, 'utf8');
@@ -696,8 +703,7 @@ console.log("error :" + error);
       
 
       const fileContent = readFileAsBase64('C:/users/USUARIO/desktop/tramas/'+data.nameTrama); // Ruta al archivo que deseas adjuntar
-      const url = 'http://pruebaws01.sis.gob.pe/cxf/esb/negocio/registroFuaBatch/v2/'; // URL del servicio SOAP
-
+     
       const xmlBody = `
       <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v2="http://sis.gob.pe/esb/negocio/registroFuaBatch/v2/">
       <soapenv:Header>
@@ -705,7 +711,7 @@ console.log("error :" + error);
           <!--Optional:-->
           <v2:canal>SOAPUI</v2:canal>
           <v2:usuario>HSRPM</v2:usuario>
-          <v2:autorizacion>123456</v2:autorizacion>
+          <v2:autorizacion>${authProduction}</v2:autorizacion>
         </v2:requestHeader>
       </soapenv:Header>
       <soapenv:Body>
@@ -721,7 +727,7 @@ console.log("error :" + error);
     'Content-Type': 'text/xml',
   };
    
-  const response = await axios.post(url, xmlBody, { headers });
+  const response = await axios.post(urlProduction, xmlBody, { headers });
   //console.log(response.data);
 
   fs.unlinkSync('ATENCION.TXT');

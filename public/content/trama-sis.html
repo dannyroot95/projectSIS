@@ -94,6 +94,7 @@
         &nbsp;Consultar paquete de trama</button>&nbsp;
        <button class="btn btn-secondary" onclick="postTrama(0)" id="btn-send-debug" ><i class="bi bi-bug-fill"></i>&nbsp;Enviar trama a pruebas</button>&nbsp;
        <button class="btn btn-success" onclick="postTrama(1)" id="btn-send" ><i class="bi bi-send-fill"></i>&nbsp;Enviar trama a produccion</button>&nbsp;
+       <button class="btn btn-light" style="background-color: #607300;color: white;" onclick="validateCatalog()" id="btn-validate" ><i class="bi bi-file-earmark-post-fill"></i>&nbsp;Validación de catálogo</button>&nbsp;
        <a><div class="loaderSmall" id="loader"></div></a>
 
     </div>
@@ -321,6 +322,43 @@
   </div>
 </div>
 
+<div class="modal fade" data-bs-backdrop="static" id="validateCatalogModal" tabindex="-1" aria-labelledby="modalTramaResponse" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <center style="margin-top: 20px;"><h2><b>Validación de catálogo</b></h2></center>
+        
+        <input type="file" id="excelFile" accept=".xlsx, .xls">
+        <br><br>
+        
+        <table id="tableValidateCatalog" class="table table-responsive table-hover table-bordered display">
+          <thead>
+            <tr>
+              <th>Usuario</th>
+              <th>Fecha</th>
+              <th>Descripción</th>
+              <th>Cuenta</th>
+              <th>FUA</th>
+              <th>Fecha de atencion</th>
+              <th>Digitador</th>
+              <th>Servicio</th>
+              <!-- Añade aquí más columnas si es necesario -->
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+    
+
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Modal -->
 <div class="modal fade" id="modalDetail" tabindex="-1" aria-labelledby="modalDetailLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">
@@ -492,6 +530,7 @@
 
     <script src="/bootstrap/js/bootstrap.min.js"></script>
     <script src="/bootstrap/datatables.min.js"></script>
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
     <script src="/js/utils/constants.js"></script>
     <script src="/js/debugTrama.js"></script>
     <script src="/js/trama-sis.js"></script>

@@ -7,12 +7,8 @@ archiver.registerFormat('zip-encrypted', require("archiver-zip-encrypted"));
 const passwordProduction = '7017FuaE47121'; 
 const passwordTest = 'PilotoFUAE123'
 //const passwordTest = 'PilotoFUAE123'
-const bcrypt = require('bcrypt');
-const { Console } = require("console");
-const password2 = '1234578'
-const storedHash = 'Q86wc5quJnvrW6a31ZDQiw=='
 
-const urlTesting = 'http://ws01.sis.gob.pe/cxf/esb/negocio/registroFuaBatch/v2'; // URL del servicio web SOAP
+const urlTesting = 'http://pruebaws01.sis.gob.pe/cxf/esb/negocio/registroFuaBatch/v2'; // URL del servicio web SOAP
 const urlProduction = 'http://ws01.sis.gob.pe/cxf/esb/negocio/registroFuaBatch/v2'; // URL del servicio web SOAP
 
 const authTesting = '123456'
@@ -20,15 +16,7 @@ const authProduction = 'DsutgQ3U'
 
 //requestSeachPackageTramaSOAP()
 
-bcrypt.compare(password2, storedHash, (err, result) => {
-  if (err) {
-    console.log(err)
-  } else if (result) {
-    console.log("Correcto!")
-  } else {
-    console.log("Incorrecto!")
-  }
-});
+
 
 async function getPackageTrama(anio,month,n_send) {
   try {
@@ -644,7 +632,7 @@ console.log("error :" + error);
       archive.file('RESUMEN.TXT', { name: 'RESUMEN.TXT' });
 
       // Crea el archivo ZIP
-      const output = fs.createWriteStream('C:/users/USUARIO/desktop/tramas/'+data.nameTrama);
+      const output = fs.createWriteStream('C:/users/Administrador/desktop/tramas/'+data.nameTrama);
       archive.pipe(output);
       archive.finalize();
 
@@ -655,11 +643,13 @@ console.log("error :" + error);
 
   }
 
+  
   async function sendTramaDebug(data) {
+
 
     try{
       // create archive and specify method of encryption and password
-      let archive = archiver.create('zip-encrypted', {zlib: {level: 8}, encryptionMethod: 'zip20', password: passwordProduction});
+      let archive = archiver.create('zip-encrypted', {zlib: {level: 8}, encryptionMethod: 'zip20', password: passwordTest});
       
       function writeFileWithUTF8(fileName, content) {
         fs.writeFileSync(fileName, content, 'utf8');
@@ -697,12 +687,20 @@ console.log("error :" + error);
       archive.file('RESUMEN.TXT', { name: 'RESUMEN.TXT' });
 
       // Crea el archivo ZIP
-      const output = fs.createWriteStream('C:/users/USUARIO/desktop/tramas/'+data.nameTrama);
+      const output = fs.createWriteStream('C:/users/Administrador/desktop/tramas/'+data.nameTrama);
       archive.pipe(output);
       archive.finalize();
-      
 
-      const fileContent = readFileAsBase64('C:/users/USUARIO/desktop/tramas/'+data.nameTrama); // Ruta al archivo que deseas adjuntar
+      archive.on('close', function() {
+        console.log('El archivo ZIP se ha creado exitosamente.');
+        // Aquí puedes agregar el código que deseas ejecutar después de que el archivo se haya creado exitosamente
+      });
+      
+      archive.on('error', function(err) {
+        console.error('Error al crear el archivo ZIP:', err);
+      });
+      
+      const fileContent = readFileAsBase64('C:/users/Administrador/desktop/tramas/'+data.nameTrama); // Ruta al archivo que deseas adjuntar
      
       const xmlBody = `
       <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v2="http://sis.gob.pe/esb/negocio/registroFuaBatch/v2/">
@@ -711,7 +709,7 @@ console.log("error :" + error);
           <!--Optional:-->
           <v2:canal>SOAPUI</v2:canal>
           <v2:usuario>HSRPM</v2:usuario>
-          <v2:autorizacion>${authProduction}</v2:autorizacion>
+          <v2:autorizacion>${authTesting}</v2:autorizacion>
         </v2:requestHeader>
       </soapenv:Header>
       <soapenv:Body>
@@ -727,18 +725,7 @@ console.log("error :" + error);
     'Content-Type': 'text/xml',
   };
    
-  const response = await axios.post(urlProduction, xmlBody, { headers });
-  //console.log(response.data);
-
-  fs.unlinkSync('ATENCION.TXT');
-  fs.unlinkSync('ATENCIONDIA.TXT');
-  fs.unlinkSync('ATENCIONMED.TXT');
-  fs.unlinkSync('ATENCIONINS.TXT');
-  fs.unlinkSync('ATENCIONPRO.TXT');
-  fs.unlinkSync('ATENCIONSMI.TXT');
-  fs.unlinkSync('ATENCIONSER.TXT');
-  fs.unlinkSync('ATENCIONRN.TXT');
-  fs.unlinkSync('RESUMEN.TXT');
+  const response = await axios.post(urlTesting, xmlBody, { headers });
 
   return [[
     {
@@ -751,8 +738,9 @@ console.log("error :" + error);
     }catch (error) {
       console.log("error : " + error);
     }
-
   }
+
+ 
 
   function readFileAsBase64(filePath) {
     const fileData = fs.readFileSync(filePath);
@@ -1105,7 +1093,6 @@ console.log("error :" + error);
     }
   }
 
-
   async function update_dni_digitador(id_atention,dni) {
     try {
       let pool = await sql.connect(config);
@@ -1119,6 +1106,96 @@ console.log("error :" + error);
     }
   }
 
+  async function get_data_validate_catalog(lote,fua) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('LOTE',lote)
+      .input('FUA',fua)
+      .execute(`BUSCAR_CATALOGO_PARAMETROS`) 
+      return res.recordsets
+    } catch (error) {
+       return [[{success:"error"}]]
+    }
+  }
+
+  async function delete_procedure_saludpol(order,idProducto,cuenta) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('ORDEN',order)
+      .input('PRODUCTO',idProducto)
+      .input('CUENTA',cuenta)
+      .execute(`BORRAR_PROCEDIMIENTO_SALUDPOL`) 
+      return [[{success:"eliminado"}]]
+    } catch (error) {
+       return [[{success:"error"}]]
+    }
+  }
+
+  async function search_procedure(name) {
+    const n = name
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request().query(`SELECT FC.IdProducto,FC.Codigo,FC.Nombre, FCS.PrecioUnitario FROM SIGH..FactCatalogoServicios  FC
+      INNER JOIN SIGH..FactCatalogoServiciosHosp FCS ON FCS.IdProducto = FC.IdProducto 
+      where Nombre like '${n}%' AND FCS.IdTipoFinanciamiento = 7 AND FCS.Activo = 1`);
+      return res.recordsets;
+    } catch (error) {
+      return [[{success:"error"}]]
+    }finally {
+      sql.close();
+    }
+  }
+
+  async function search_procedure_by_code(code) {
+    const n = (code).toString()
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request().query(`SELECT FC.IdProducto,FC.Codigo,FC.Nombre, FCS.PrecioUnitario FROM SIGH..FactCatalogoServicios  FC
+      INNER JOIN SIGH..FactCatalogoServiciosHosp FCS ON FCS.IdProducto = FC.IdProducto 
+      where Codigo = '${n}' AND FCS.IdTipoFinanciamiento = 7 AND FCS.Activo = 1`);
+      return res.recordsets;
+    } catch (error) {
+      return [[{success:"error"}]]
+    }finally {
+      sql.close();
+    }
+  }
+
+  
+  async function add_procedure_saludpol(d) {
+    try {
+
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('PUNTOCARGA',d.puntoCarga)
+      .input('PACIENTE',d.idPaciente)
+      .input('CUENTA',d.idCuentaAtencion)
+      .input('SERVICIO',d.idServicioPaciente)
+      .input('TIPOFINANCIAMIENTO',d.idTipoFinanciamiento)
+      .input('FUENTEFINANCIAMIENTO',d.fuenteFinanciamiento)
+      .input('FECHACREA',d.fechaCrea)
+      .input('USUARIO',d.usuario)
+      .input('FECHADESPACHO',d.fechaDespacho)
+      .input('USUARIODESPACHO',d.usuarioDespacho)
+      .input('ESTADO',d.estado)
+      .input('FECHACPT',d.fechaCpt)
+      .input('PRODUCTO',d.idProducto)
+      .input('CANTIDAD',d.cantidad)
+      .input('PRECIO',d.precio)
+      .input('TOTAL',d.precioTotal)
+      .input('LABHIS',d.labHis)
+      .input('GRUPO',d.grupo)
+      .input('SUBGRUPO',d.subGrupo)
+      .input('LABHISCODIGO',d.labHisCodigo)
+  
+      .execute(`INSERTAR_PROCEDIMIENTO_SALUDPOL`) 
+      return [[{success:"insertado"}]]
+    } catch (error) {
+       return [[{success:"error"}]]
+    }
+  }
 
 module.exports = {
   getdata: getdata,
@@ -1187,5 +1264,10 @@ module.exports = {
   update_date_atention:update_date_atention,
   update_nro_ref_origin:update_nro_ref_origin,
   get_data_medic:get_data_medic,
-  update_dni_digitador:update_dni_digitador
+  update_dni_digitador:update_dni_digitador,
+  get_data_validate_catalog:get_data_validate_catalog,
+  delete_procedure_saludpol:delete_procedure_saludpol,
+  search_procedure:search_procedure,
+  search_procedure_by_code:search_procedure_by_code,
+  add_procedure_saludpol:add_procedure_saludpol
 };

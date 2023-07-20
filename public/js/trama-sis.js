@@ -23,6 +23,7 @@ createDatatable6()
 createDatatable4()
 createDatatable7()
 createDatatable8()
+createDatatableValidateCatalog()
 arrayParams()
 
 function arrayParams(){
@@ -320,6 +321,38 @@ function createDatatable8(){
       table.columns.adjust().draw();
 }
 
+function createDatatableValidateCatalog(){
+
+  $('#tableValidateCatalog').DataTable({
+      language: {
+            "decimal": "",
+            "emptyTable": "No hay información",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ datos",
+            "infoEmpty": "Mostrando 0 to 0 of 0 datos",
+            "infoFiltered": "(Filtrado de _MAX_ total datos)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar _MENU_ datos",
+            "loadingRecords": "Cargando...",
+            "processing": "Procesando...",
+            "search": "Buscar en la lista:",
+            "zeroRecords": "Sin resultados encontrados",
+            "paginate": {
+                "first": "Primero",
+                "last": "Ultimo",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            }
+     },scrollY: '55vh',scrollX: true, sScrollXInner: "100%",
+     scrollCollapse: true,
+    });
+
+    var table = $('#tableValidateCatalog').DataTable();
+    $('#container').css( 'display', 'block' );
+    table.columns.adjust().draw();
+
+}
+
 function query(){
 
     c = 0
@@ -330,6 +363,7 @@ function query(){
     let mes_SEND= document.getElementById("inputGroupSelectProductionMonth2").value
     let anio_SEND = document.getElementById("inputGroupSelectYearSend2").value
    
+
 
     fetchTramaAtencion(mes_ATENCION,anio_ATENCION,mes_SEND,anio_SEND)
     fetchTramaDiagnostico(mes_ATENCION,anio_ATENCION)
@@ -1000,8 +1034,21 @@ function postTrama(n){
     rn = ``
     res = ``
 
-    disabledButtons()
-    sendAllTramas(anio_ATENCION,mes_ATENCION,mes_SEND,anio_SEND,n)
+    var tablaATE = $('#tb-data-3').DataTable();
+    var filaATE = tablaATE.rows().count();
+
+    if(filaATE > 0){
+      disabledButtons()
+      sendAllTramas(anio_ATENCION,mes_ATENCION,mes_SEND,anio_SEND,n)
+    }else{
+      Swal.fire(
+        'Oops!',
+        'Consulte la trama antes de enviar',
+        'warning'
+      )
+    }
+
+  
 
 }
 
@@ -1313,15 +1360,18 @@ function setResum(correlative,anio,mes,n){
 
   let codReanes = '00002698'
   let nZip = codReanes+anio+padNumber(mes)+nSend(correlative)+'.zip'
+  let month = document.getElementById("inputGroupSelectProductionMonth").value 
 
   let data = {
     anio: anio,
-    mes : mes,
+    mes : month,
     nroEnvio:nSend(correlative),
     nZip : nZip,
     dni:dniResp,
     mesP:mes
   }
+
+  console.log(data)
 
   if(n != 0){
     fetch(`${url}/send-resum/`, {
@@ -1365,7 +1415,7 @@ function setResum(correlative,anio,mes,n){
        if(data.length > 0){
         
         //GET RESUMEN
-        getAtencionResumenDebug(anio,mes,nSend(correlative),n)
+        getAtencionResumenDebug(anio,month,nSend(correlative),n)
   
        }
     })
@@ -1428,6 +1478,8 @@ function getAtencionResumen(anio,mes,nEnvio,n){
 
 function getAtencionResumenDebug(anio,mes,nEnvio,n){
 
+  let month = document.getElementById("inputGroupSelectProductionMonth2").value 
+
   fetch(`${url}/get-trama-res-debug/${anio}/${mes}/${nEnvio}`,{
     method: 'get',
     headers: {
@@ -1437,17 +1489,29 @@ function getAtencionResumenDebug(anio,mes,nEnvio,n){
   .then(response => response.json())
   .then(data => {
 
+    var tablaSMI = $('#tb-data-4').DataTable();
+    var filaSMI = tablaSMI.rows().count();
+
+    var tablaMED = $('#tb-data-5').DataTable();
+    var filaMED = tablaMED.rows().count();
+
+    var tablaINS = $('#tb-data-3').DataTable();
+    var filaINS = tablaINS.rows().count();
+
+    var tablaPRO = $('#tb-data-6').DataTable();
+    var filaPRO = tablaPRO.rows().count();
+
     res += data[0].Anio.toString()+"\n"
-    res += padNumber(data[0].Mes)+"\n"
+    res += padNumber(month)+"\n"
     res += data[0].NroEnvio+"\n"
     res += data[0].NomPaquete+"\n"
     res += data[0].VersionGTI+"\n"
     res += data[0].CantFilATE.toString()+"\n"
-    res += data[0].CantFilSMI.toString()+"\n"
+    res += filaSMI.toString()+"\n"
     res += data[0].CantFilDIA.toString()+"\n"
-    res += data[0].CantFilMED.toString()+"\n"
-    res += data[0].CantFilINS.toString()+"\n"
-    res += data[0].CantFilPRO.toString()+"\n"
+    res += filaMED.toString()+"\n"
+    res += filaINS.toString()+"\n"
+    res += filaPRO.toString()+"\n"
     res += data[0].CantFilSER.toString()+"\n"
     res += data[0].CantFilRN.toString()+"\n"
     res += data[0].NomApp+"\n"
@@ -1558,30 +1622,47 @@ function showDataPackage(data){
 
 }
 
-function showDataResponse(data){
+function showDataResponse(data) {
+  
   var xmlString = data;
 
   var parser = new DOMParser();
   var xmlDoc = parser.parseFromString(xmlString, "text/xml");
-  
+
   // Obtener la respuesta SOAP
   var response = xmlDoc.getElementsByTagName("registrarFuaResponse")[0];
-  
-  // Obtener los elementos de la respuesta
+
+  // Obtener el código y el paqueteNombre
   var cod = response.getElementsByTagName("codigo")[0].textContent;
-  var res = response.getElementsByTagName("respuesta")[0].textContent;
   var status = response.getElementsByTagName("paqueteNombre")[0].textContent;
 
-  document.getElementById("cod-resp").innerHTML = cod
-  document.getElementById("mes-resp").innerHTML = res
-  document.getElementById("pack-resp").innerHTML = status+'.zip'
+  if(cod == "0"){
+    document.getElementById("cod-resp").innerHTML = cod;
+    document.getElementById("mes-resp").innerHTML = "TRAMA ENVIADA CORRECTAMENTE!";
+    document.getElementById("pack-resp").innerHTML = status + '.zip';
 
-  $('#modalTramaResponse').modal('show')
+    $('#modalTramaResponse').modal('show');
+  }else{
+// Verificar si el elemento "respuesta" existe en la respuesta SOAP
+    var resElement = response.getElementsByTagName("respuesta")[0];
+    var res = resElement ? resElement.textContent : "";
 
+    document.getElementById("cod-resp").innerHTML = cod;
+    document.getElementById("mes-resp").innerHTML = res;
+    document.getElementById("pack-resp").innerHTML = status + '.zip';
+
+    $('#modalTramaResponse').modal('show');
+  }
+
+  
 }
 
 function openModalPackage(){
   $('#packageModal').modal('show')
+}
+
+function validateCatalog(){
+  $('#validateCatalogModal').modal('show')
 }
 
 function numSend(num){
@@ -1821,5 +1902,73 @@ function updateDNIDigitador(){
       'info'
     )
   }
+
+}
+
+$(document).ready(function() {
+  $('#excelFile').on('change', function(evt) {
+    var file = evt.target.files[0];
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var data = new Uint8Array(e.target.result);
+      var workbook = XLSX.read(data, {type: 'array'});
+      var sheetName = workbook.SheetNames[0];
+      var worksheet = workbook.Sheets[sheetName];
+      var jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+
+      var table = $('#tableValidateCatalog').DataTable();
+      table.clear();
+
+      for (var i = 1; i < jsonData.length; i++) { // Ignorar la primera fila (encabezados)
+        
+        fetchValidateCatalog(jsonData[i])
+      }
+
+      table.draw();
+      table.columns.adjust().draw();
+
+    };
+    reader.readAsArrayBuffer(file);
+  });
+});
+
+function fetchValidateCatalog(jsonData){
+
+  const [usuario, fecha, descripcion] = jsonData
+
+  var table = $('#tableValidateCatalog').DataTable();
+  
+  var fuaData = descripcion.split("FUA: ")[1]
+  var lote = fuaData.split("-")[1]
+  var fua = fuaData.split("-")[2]
+
+  fetch(`${url}/get-data-validate-catalog/${lote}/${fua}`,{
+    method: 'get',
+    headers: {
+      'Accept': 'application/json'
+    }
+})
+  .then(response => response.json())
+  .then(data => {
+
+    var cuenta = data[0].idCuentaAtencion
+    var f_ate = data[0].FuaAtencionFecha
+    var digitador = (data[0].nombres).toUpperCase()
+    var servicio = (data[0].Nombre).toUpperCase()
+   
+    table.row.add([usuario, fecha, descripcion,cuenta,fuaData,f_ate,digitador,servicio]);
+    table.draw();
+    table.columns.adjust().draw();
+   
+
+  }).catch(error => {
+    Swal.fire(
+        'Oops!',
+        'Se produjo un error',
+        'warning'
+      )
+    console.error(error)
+});
+
 
 }

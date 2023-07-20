@@ -1449,6 +1449,21 @@ router.get("/get-data-medic/:a", function (req, res,next) {
   });
 });
 
+router.get("/get-data-validate-catalog/:a/:b", function (req, res,next) {
+  
+  let lote = req.params.a;
+  let fua = req.params.b;
+ 
+  sql.get_data_validate_catalog(lote,fua).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({success:"error"})
+    }
+  });
+});
+
+
 router.post("/update-dni-digitador", function (req, res,next) {
   
   let account = req.body.account;
@@ -1464,6 +1479,53 @@ router.post("/update-dni-digitador", function (req, res,next) {
     }
   });
 });
+
+router.get("/delete-procedure-saludpol/:a/:b/:c", function (req, res,next) {
+  
+  let orden = req.params.a;
+  let idProducto = req.params.b;
+  let account = req.params.c;
+ 
+  sql.delete_procedure_saludpol(orden,idProducto,account).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
+router.get("/search-procedure/:a", function (req, res, next) {
+  let name = req.params.a 
+  sql.search_procedure(name).then((result) => {
+    res.json(result[0]);
+  });
+});
+
+router.get("/search-procedure-by-code/:a", function (req, res, next) {
+  let code = req.params.a 
+  sql.search_procedure_by_code(code).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
+router.post("/insert-procedure-saludpol", function (req, res,next) {
+  
+  let data = req.body
+
+  sql.add_procedure_saludpol(data).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({success:"error"})
+    }
+  });
+});
+
 
 module.exports = router;
 

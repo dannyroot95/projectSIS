@@ -12,6 +12,7 @@ createDatatable()
 createDatatable2()
 createDatatable3()
 createDatatable4()
+createDatatableSearchProcedure()
 
 function createDatatable(){
 
@@ -35,13 +36,9 @@ function createDatatable(){
                   "next": "Siguiente",
                   "previous": "Anterior"
               }
-       },scrollY: '35vh',scrollX: true, sScrollXInner: "100%",
+       },scrollY: '30vh',scrollX: true, sScrollXInner: "100%",
        scrollCollapse: true,
       });
-  
-      var table = $('#tb-data-1').DataTable();
-      $('#container').css( 'display', 'block' );
-      table.columns.adjust().draw();
 
 }
 
@@ -133,6 +130,36 @@ function createDatatable4(){
       var table = $('#tb-data-4').DataTable();
       $('#container').css( 'display', 'block' );
       table.columns.adjust().draw();
+}
+
+function createDatatableSearchProcedure(){
+  $('#tb-data-search-procedure').DataTable({
+      language: {
+            "decimal": "",
+            "emptyTable": "No hay información",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ datos",
+            "infoEmpty": "Mostrando 0 to 0 of 0 datos",
+            "infoFiltered": "(Filtrado de _MAX_ total datos)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar _MENU_ datos",
+            "loadingRecords": "Cargando...",
+            "processing": "Procesando...",
+            "search": "Buscar en la lista:",
+            "zeroRecords": "Sin resultados encontrados",
+            "paginate": {
+                "first": "Primero",
+                "last": "Ultimo",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            }
+     },scrollY: '28vh',scrollX: true, sScrollXInner: "100%",
+     scrollCollapse: true,
+    });
+
+    var table = $('#tb-data-search-procedure').DataTable();
+    $('#container').css( 'display', 'block' );
+    table.columns.adjust().draw();
 }
 
 
@@ -974,9 +1001,6 @@ function showDetailModal(d){
   $('#detailModal').modal('show')
   d = JSON.parse(decodeURIComponent(d))
 
-  let ctxPro = 0
-  let gender = ``
-
   document.getElementById("loaderDetails").style = "display:block;"
   document.getElementById("tbodyDiag").innerHTML = ''
   document.getElementById("tbodyPro").innerHTML = ''
@@ -988,168 +1012,9 @@ function showDetailModal(d){
   document.getElementById("btn-edit-account").style="display: none;"
 
 
-  if(d.CAMPO11 == 1){
-    gender = `<i style="color: #001173;font-size: 30px;font-weight: bolder;" class="bi bi-gender-male"></i>&nbsp;`
-  }else{ gender = `<i style="color: #ff2f41;font-size: 30px;font-weight: bolder;" class="bi bi-gender-female"></i>&nbsp;`}
-
-  fetch(`${url}/get-atention-saludpol/${d.CAMPO2}`)
-            .then(response => response.json())
-            .then(data => {
-
-              let t_pro = 0.0
-              let t_lab = 0.0
-              let t_img = 0.0
-              let t_med = 0.0
-              let t_ins = 0.0
-
-              document.getElementById("d-ate").innerHTML = data[0][0].TipoServicio
-              document.getElementById("d-auth").innerHTML = data[0][0].Autorizacion
-              document.getElementById("d-account").innerHTML = data[0][0].idCuentaAtencion
-              document.getElementById("d-fua").innerHTML = d.CAMPO1
-              document.getElementById("d-history").innerHTML = data[0][0].NroHistoriaClinica
-              
-              document.getElementById("d-dni").innerHTML = data[0][0].NroDocumento
-              document.getElementById("d-fullname").innerHTML = data[0][0].Nombres
-              document.getElementById("d-sex").innerHTML = gender+data[0][0].Sexo
-              document.getElementById("d-age").innerHTML = data[0][0].Edad
-              document.getElementById("d-id-patient").innerHTML = data[0][0].IdPaciente
-              document.getElementById("d-id-atention").innerHTML = data[0][0].IdAtencion
-
-              document.getElementById("d-svi").innerHTML = data[0][0].ServicioIngreso
-              document.getElementById("d-sve").innerHTML = data[0][0].ServicioEgreso
-              document.getElementById("d-fi").innerHTML = data[0][0].FechaIngreso
-              document.getElementById("d-fe").innerHTML = data[0][0].FechaEgreso
-
-              document.getElementById("d-dig").innerHTML = isDataNull(data[0][0].Empleado)
-              document.getElementById("d-ff").innerHTML = data[0][0].FuenteFinanciamiento
-
-              document.getElementById("d-fur").innerHTML = dateNull(data[0][0].F_ultima_receta)
-
-              document.getElementById("loaderDetails").style = "display:none;"
-              document.getElementById("div-details").style = "display:block;"
-              document.getElementById("btn-edit-account").style="display: block;"
-              
-              $("#tbodyDiag").html(data[1].map((d) => {
-                
-                      return `
-                      <tr>
-                      <td>${d.IdClasificacionDx}</td>
-                      <td>${d.CodigoCIE2004}</td>
-                      <td>${d.Descripcion}</td>
-                      </tr>`;
-    
-                  })
-                  .join("")
-              );
-
-              $("#tbodyPro").html(data[2].map((d) => {
-                
-                ctxPro++
-
-                t_pro += parseFloat((d.Precio))
-
-                      return `
-                      <tr>
-                      <td>${d.Codigo}</td>
-                      <td>${(d.Nombre).trimEnd()}</td>
-                      <td>${d.Cantidad}</td>
-                      <td>${d.PrecioUnitario}</td>
-                      <td>${d.Precio}</td>
-                      <td><button onclick="showModalDetailProcedure('${encodeURIComponent(JSON.stringify(d))}','${ctxPro}')" class="btn btn-dark"><i class="bi bi-pencil-square"></i></button></td>
-                      </tr>`;
-
-                  })
-                  .join("")
-              );
-              document.getElementById("t-pro").innerHTML = t_pro.toFixed(2).toString()
-
-              $("#tbodyLab").html(data[3].map((d) => {
-
-                t_lab += parseFloat((d.Precio))
-                
-                      return `
-                      <tr>
-                      <td>${d.Codigo}</td>
-                      <td>${(d.Nombre).trimEnd()}</td>
-                      <td>${d.Cantidad}</td>
-                      <td>${d.PrecioUnitario}</td>
-                      <td>${d.Precio}</td>
-                      <td><button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button></td>
-                      </tr>`;
-
-                  })
-                  .join("")
-              );
-              document.getElementById("t-lab").innerHTML = t_lab.toFixed(2).toString()
-
-              $("#tbodyImg").html(data[4].map((d) => {
-
-                t_img += parseFloat((d.Precio))
-                
-                      return `
-                      <tr>
-                      <td>${d.Codigo}</td>
-                      <td>${(d.Nombre).trimEnd()}</td>
-                      <td>${d.Cantidad}</td>
-                      <td>${d.PrecioUnitario}</td>
-                      <td>${d.Precio}</td>
-                      <td><button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button></td>
-                      </tr>`;
-
-                  })
-                  .join("")
-              );
-              document.getElementById("t-img").innerHTML = t_img.toFixed(2).toString()
-
-              $("#tbodyMed").html(data[5].map((d) => {
-                
-                let diag_med = isDataNull(d.dx)
-
-                t_med += parseFloat((d.Precio))
-
-                      return `
-                      <tr>
-                      <td>${d.Codigo}</td>
-                      <td>${(d.Nombre).trimEnd()}</td>
-                      <td>${d.Cantidad}</td>
-                      <td>${diag_med}</td>
-                      <td>${d.PrecioUnidad}</td>
-                      <td>${d.Precio}</td>
-                      <td><button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button></td>
-                      </tr>`;
-
-                  })
-                  .join("")
-              );
-              document.getElementById("t-med").innerHTML = t_med.toFixed(2).toString()
-
-              $("#tbodyIns").html(data[6].map((d) => {
-
-                let diag_med = isDataNull(d.dx)
-
-                t_ins += parseFloat((d.Precio))
-                
-                      return `
-                      <tr>
-                      <td>${d.Codigo}</td>
-                      <td>${(d.Nombre).trimEnd()}</td>
-                      <td>${d.Cantidad}</td>
-                      <td>${diag_med}</td>
-                      <td>${d.PrecioUnidad}</td>
-                      <td>${d.Precio}</td>
-                      <td><button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button></td>
-                      </tr>`;
-
-                  })
-                  .join("")
-              );
-              document.getElementById("t-ins").innerHTML = t_ins.toFixed(2).toString()
-              document.getElementById("t-ate").innerHTML = (t_pro+t_lab+t_img+t_med+t_ins).toFixed(2).toString()
-
-            }).catch(err =>{
-                console.log(err)
-            } );
+  getDataClientSaludpol(d)
   
+  //xdddd
 
 }
 
@@ -1333,6 +1198,14 @@ var actual = +dia + '/' + mes + '/' + anio;
 function showModalDetailProcedure(data,index){
   data = JSON.parse(decodeURIComponent(data))
   $('#detailProcedure').modal('show')
+
+  document.getElementById("id-detail-procedure").innerHTML = ''
+  document.getElementById("id-detail-code").innerHTML = ''
+  document.getElementById("detail-procedure-quantity").value = ''
+  document.getElementById("id-order").innerHTML = ''
+  document.getElementById("id-product").innerHTML = ''
+  document.getElementById("index-pro").innerHTML = ''
+
   let account =  document.getElementById("d-account").innerHTML
 
   let code = data.Codigo  
@@ -1402,7 +1275,7 @@ function updateQuantityProcedure(){
         var nuevoValorTotal = newSum; // El valor que deseas asignar a la celda
         newTotalCell.innerHTML = nuevoValorTotal;
 
-        var suma = 0;
+        let suma = 0;
           // Recorrer las filas de la tabla
           for (var i = 0; i < tabla.rows.length; i++) {
             // Obtener el valor de la celda en la posición deseada (tercera columna)
@@ -1418,7 +1291,7 @@ function updateQuantityProcedure(){
           let t_lab = parseFloat((document.getElementById("t-lab").innerHTML)).toFixed(2)
           let t_img = parseFloat((document.getElementById("t-img").innerHTML)).toFixed(2)
           let t_med = parseFloat((document.getElementById("t-med").innerHTML)).toFixed(2)
-          let t_ins = parseFloat((document.getElementById("t-img").innerHTML)).toFixed(2)
+          let t_ins = parseFloat((document.getElementById("t-ins").innerHTML)).toFixed(2)
           let consumo_total = (parseFloat((suma.toFixed(2)+t_lab+t_img+t_med+t_ins)).toFixed(2)).toString()
           document.getElementById("t-ate").innerHTML = consumo_total
 
@@ -1734,3 +1607,569 @@ function fetchUpdateGenderPatient(id_patient,gender){
 
 }
 
+function modalDeleteProcedure(){
+  Swal.fire({
+    title: 'Estas seguro de eliminar este procedimiento?',
+    showCancelButton: true,
+    confirmButtonText: 'Si',
+    cancelButtonText : 'Cancelar'
+  }).then((result) => {
+    /* Read more about isConfirmed, isDenied below */
+    if (result.isConfirmed) {
+      Swal.fire('Eliminado!', '', 'success')
+      deleteProcedure()
+    }
+  })
+}
+
+function deleteProcedure(){
+
+  let account = document.getElementById("d-account").innerHTML 
+  let sex = document.getElementById("d-sex").innerHTML 
+  let valueSex = 2
+  let order = document.getElementById("id-order").innerHTML 
+  let id_product = document.getElementById("id-product").innerHTML
+  let index = document.getElementById("index-pro").innerHTML
+  let table = document.getElementById("tb-data-pro")
+  const numReg = table.rows.length;
+
+  if(sex.includes("Masculino")){
+    valueSex = 1
+  }
+
+  let d = {
+      CAMPO2:account,
+      CAMPO11:valueSex
+    }
+
+    if(numReg > 2){
+
+  fetch(`${url}/delete-procedure-saludpol/${order}/${id_product}/${account}`)
+    .then(response => response.json())
+    .then(data => {
+
+      let response = data[0]
+
+      if(response.success == "eliminado"){
+
+      getDataClientSaludpol(d)
+      table.deleteRow(index)
+      $('#detailProcedure').modal('hide')
+
+        Swal.fire(
+          'Muy bien!',
+          'El procedimiento ha sido eliminado!',
+          'success'
+        )
+
+      }else{
+        Swal.fire(
+          'Oops!',
+          'Ocurrió un error!',
+          'error'
+        )
+      }
+    
+    }).catch(err =>{
+        console.log(err)
+        Swal.fire(
+          'Oops!',
+          'Ocurrió un error!',
+          'error'
+        )
+    } );
+  
+
+    }else{
+      Swal.fire(
+        'Oops!',
+        'Debe tener al menos un procedimiento!',
+        'info'
+      )
+    }
+
+
+
+
+}
+
+function getDataClientSaludpol(d){
+
+  let ctxPro = 0
+  let gender = ``
+
+
+  fetch(`${url}/get-atention-saludpol/${d.CAMPO2}`)
+            .then(response => response.json())
+            .then(data => {
+
+              let t_pro = 0.0
+              let t_lab = 0.0
+              let t_img = 0.0
+              let t_med = 0.0
+              let t_ins = 0.0
+
+              if(d.CAMPO11 == 1){
+                gender = `<i style="color: #001173;font-size: 30px;font-weight: bolder;" class="bi bi-gender-male"></i>&nbsp;`
+              }else{ gender = `<i style="color: #ff2f41;font-size: 30px;font-weight: bolder;" class="bi bi-gender-female"></i>&nbsp;`}
+            
+
+              document.getElementById("d-ate").innerHTML = data[0][0].TipoServicio
+              document.getElementById("d-auth").innerHTML = data[0][0].Autorizacion
+              document.getElementById("d-account").innerHTML = data[0][0].idCuentaAtencion
+              document.getElementById("d-fua").innerHTML = d.CAMPO1
+              document.getElementById("d-history").innerHTML = data[0][0].NroHistoriaClinica
+              
+              document.getElementById("d-dni").innerHTML = data[0][0].NroDocumento
+              document.getElementById("d-fullname").innerHTML = data[0][0].Nombres
+              document.getElementById("d-sex").innerHTML = gender+data[0][0].Sexo
+              document.getElementById("d-age").innerHTML = data[0][0].Edad
+              document.getElementById("d-id-patient").innerHTML = data[0][0].IdPaciente
+              document.getElementById("d-id-atention").innerHTML = data[0][0].IdAtencion
+
+              document.getElementById("d-svi").innerHTML = data[0][0].ServicioIngreso
+              document.getElementById("d-id-svi").innerHTML = data[0][0].IdServicioIngreso
+              document.getElementById("d-sve").innerHTML = data[0][0].ServicioEgreso
+              document.getElementById("d-fi").innerHTML = data[0][0].FechaIngreso
+              document.getElementById("d-fe").innerHTML = data[0][0].FechaEgreso
+
+              document.getElementById("d-dig").innerHTML = isDataNull(data[0][0].Empleado)
+              document.getElementById("d-ff").innerHTML = data[0][0].FuenteFinanciamiento
+              document.getElementById("d-tipo-ff").innerHTML = data[0][0].IdTipoFinanciamiento
+              document.getElementById("d-id-ff").innerHTML = data[0][0].IdFuenteFinanciamiento
+
+              document.getElementById("d-fur").innerHTML = dateNull(data[0][0].F_ultima_receta)
+
+              document.getElementById("loaderDetails").style = "display:none;"
+              document.getElementById("div-details").style = "display:block;"
+              document.getElementById("btn-edit-account").style="display: block;"
+              
+              $("#tbodyDiag").html(data[1].map((d) => {
+                
+                      return `
+                      <tr>
+                      <td>${d.IdClasificacionDx}</td>
+                      <td>${d.CodigoCIE2004}</td>
+                      <td>${d.Descripcion}</td>
+                      </tr>`;
+    
+                  })
+                  .join("")
+              );
+
+              $("#tbodyPro").html(data[2].map((d) => {
+                
+                ctxPro++
+
+                t_pro += parseFloat((d.Precio))
+
+                      return `
+                      <tr>
+                      <td>${d.Codigo}</td>
+                      <td>${(d.Nombre).trimEnd()}</td>
+                      <td>${d.Cantidad}</td>
+                      <td>${d.PrecioUnitario}</td>
+                      <td>${d.Precio}</td>
+                      <td><button onclick="showModalDetailProcedure('${encodeURIComponent(JSON.stringify(d))}','${ctxPro}')" class="btn btn-dark"><i class="bi bi-pencil-square"></i></button></td>
+                      </tr>`;
+
+                  })
+                  .join("")
+              );
+              document.getElementById("t-pro").innerHTML = t_pro.toFixed(2).toString()
+
+              $("#tbodyLab").html(data[3].map((d) => {
+
+                t_lab += parseFloat((d.Precio))
+                
+                      return `
+                      <tr>
+                      <td>${d.Codigo}</td>
+                      <td>${(d.Nombre).trimEnd()}</td>
+                      <td>${d.Cantidad}</td>
+                      <td>${d.PrecioUnitario}</td>
+                      <td>${d.Precio}</td>
+                      <td><button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button></td>
+                      </tr>`;
+
+                  })
+                  .join("")
+              );
+              document.getElementById("t-lab").innerHTML = t_lab.toFixed(2).toString()
+
+              $("#tbodyImg").html(data[4].map((d) => {
+
+                t_img += parseFloat((d.Precio))
+                
+                      return `
+                      <tr>
+                      <td>${d.Codigo}</td>
+                      <td>${(d.Nombre).trimEnd()}</td>
+                      <td>${d.Cantidad}</td>
+                      <td>${d.PrecioUnitario}</td>
+                      <td>${d.Precio}</td>
+                      <td><button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button></td>
+                      </tr>`;
+
+                  })
+                  .join("")
+              );
+              document.getElementById("t-img").innerHTML = t_img.toFixed(2).toString()
+
+              $("#tbodyMed").html(data[5].map((d) => {
+                
+                let diag_med = isDataNull(d.dx)
+
+                t_med += parseFloat((d.Precio))
+
+                      return `
+                      <tr>
+                      <td>${d.Codigo}</td>
+                      <td>${(d.Nombre).trimEnd()}</td>
+                      <td>${d.Cantidad}</td>
+                      <td>${diag_med}</td>
+                      <td>${d.PrecioUnidad}</td>
+                      <td>${d.Precio}</td>
+                      <td><button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button></td>
+                      </tr>`;
+
+                  })
+                  .join("")
+              );
+              document.getElementById("t-med").innerHTML = t_med.toFixed(2).toString()
+
+              $("#tbodyIns").html(data[6].map((d) => {
+
+                let diag_med = isDataNull(d.dx)
+
+                t_ins += parseFloat((d.Precio))
+                
+                      return `
+                      <tr>
+                      <td>${d.Codigo}</td>
+                      <td>${(d.Nombre).trimEnd()}</td>
+                      <td>${d.Cantidad}</td>
+                      <td>${diag_med}</td>
+                      <td>${d.PrecioUnidad}</td>
+                      <td>${d.Precio}</td>
+                      <td><button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button></td>
+                      </tr>`;
+
+                  })
+                  .join("")
+              );
+              document.getElementById("t-ins").innerHTML = t_ins.toFixed(2).toString()
+              document.getElementById("t-ate").innerHTML = (t_pro+t_lab+t_img+t_med+t_ins).toFixed(2).toString()
+
+            }).catch(err =>{
+                console.log(err)
+            } );
+}
+
+function openModalAddProcedure(){
+  $('#addProcedure').modal('show')
+}
+
+function searchProcedure(){
+  var input = document.getElementById("in-procedure");
+  var inputValue = input.value.trim();
+  
+  if (inputValue.length > 1) {
+    fetchSearchProcedure(inputValue)
+  }
+}
+
+function searchProcedureByCode(){
+  var input = document.getElementById("in-procedure-code").value;
+
+  if (input != "") {
+    fetchSearchProcedureByCode(input)
+  }
+  else{
+    Swal.fire(
+      'Oops!',
+      'Ingrese el código del procedimiento!',
+      'error'
+    )
+  }
+}
+
+$('#addProcedure').on('hidden.bs.modal', function (e) {
+  cleanTableAddProcedure()
+})
+
+function cleanTableAddProcedure(){
+  document.getElementById("in-procedure").value = ""
+  document.getElementById("in-procedure-code").value = ""
+  document.getElementById("tbodySeachProcedure").innerHTML = ''
+  document.getElementById("select-name-procedure").innerHTML = ''
+  document.getElementById("edt-id-product").value = ""
+  document.getElementById("edt-product-price").value = ""
+  document.getElementById("edt-product-quantity").value = ""
+  document.getElementById("edt-product-total-price").value = ""
+}
+
+function fetchSearchProcedure(n){
+
+  fetch(`${url}/search-procedure/${n}`)
+    .then(response => response.json())
+    .then(data => {
+
+      document.getElementById("tbodySeachProcedure").innerHTML = ''
+      $('#tb-data-search-procedure').DataTable().destroy()
+      
+      $("#tbodySeachProcedure").html(data.map((d) => {
+                
+              return `
+              <tr>
+              <td><button onclick="getDetailsProcedure('${encodeURIComponent(JSON.stringify(d))}')" class="btn btn-primary"><i class="bi bi-plus-circle"></i><label style="font-size:14px;margin-left:4px;">Seleccionar</label></button></td>
+              <td>${d.IdProducto}</td>
+              <td>${d.Codigo}</td>
+              <td>${(d.Nombre).toUpperCase()}</td>
+              <td>${d.PrecioUnitario}</td>
+              </tr>`;
+
+          })
+          .join("")
+      );
+      createDatatableSearchProcedure()
+    
+    }).catch(err =>{
+        console.log(err)
+        Swal.fire(
+          'Oops!',
+          'Ocurrió un error!',
+          'error'
+        )
+    } );
+
+}
+
+function fetchSearchProcedureByCode(n){
+
+  fetch(`${url}/search-procedure-by-code/${n}`)
+    .then(response => response.json())
+    .then(data => {
+
+      console.log(data)
+
+      document.getElementById("tbodySeachProcedure").innerHTML = ''
+      $('#tb-data-search-procedure').DataTable().destroy()
+      
+      $("#tbodySeachProcedure").html(data.map((d) => {
+                
+              return `
+              <tr>
+              <td><button onclick="getDetailsProcedure('${encodeURIComponent(JSON.stringify(d))}')" class="btn btn-primary"><i class="bi bi-plus-circle"></i><label style="font-size:14px;margin-left:4px;">Seleccionar</label></button></td>
+              <td>${d.IdProducto}</td>
+              <td>${d.Codigo}</td>
+              <td>${(d.Nombre).toUpperCase()}</td>
+              <td>${d.PrecioUnitario}</td>
+              </tr>`;
+
+          })
+          .join("")
+      );
+      createDatatableSearchProcedure()
+    
+    }).catch(err =>{
+        console.log(err)
+        Swal.fire(
+          'Oops!',
+          'Ocurrió un error!',
+          'error'
+        )
+    } );
+
+}
+
+function getDetailsProcedure(data){
+  data = JSON.parse(decodeURIComponent(data))
+
+  document.getElementById("select-name-procedure").innerHTML = (data.Nombre).toUpperCase()
+  document.getElementById("edt-id-product").value = data.IdProducto
+  document.getElementById("edt-product-price").value = data.PrecioUnitario
+  document.getElementById("edt-product-quantity").value = ""
+  document.getElementById("edt-product-total-price").value = ""
+
+}
+
+function addQuantityAndPriceProcedure(){
+  let quantity = document.getElementById("edt-product-quantity").value
+  let price = document.getElementById("edt-product-price").value
+  let total = 0
+
+  if(price != "" && quantity != 0){
+    total = price*quantity
+    document.getElementById("edt-product-total-price").value = total
+  }else{
+    document.getElementById("edt-product-total-price").value = ""
+  }
+
+}
+
+function showModaladdProcedureAccount(){
+
+  let price = document.getElementById("edt-product-total-price").value
+  let procedure = document.getElementById("select-name-procedure").innerHTML
+
+  var  filter, table, tr, td, i, txtValue;
+  filter = procedure
+  table = document.getElementById("tb-data-pro");
+  tr = table.getElementsByTagName("tr");
+  var found = false; // Variable para rastrear si se encontró el término
+
+  for (i = 1; i < tr.length; i++) { // Comenzamos desde 1 para omitir la fila de encabezados
+    td = tr[i].getElementsByTagName("td")[1]; // Columna "Nombre" (índice 0)
+
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        found = true; // Se encontró el término
+      } 
+    }
+  }
+  
+  if(price != ""){
+
+    if(!found){
+
+      Swal.fire({
+        title: 'Estas seguro de agregar este procedimiento?',
+        showCancelButton: true,
+        confirmButtonText: 'Si',
+        cancelButtonText : 'Cancelar'
+      }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          addProcedureAccount()
+        } 
+      })
+
+    }else{
+      Swal.fire(
+        'Oops!',
+        'Ya existe el procedimiento en la tabla!',
+        'info'
+      )
+    }
+  }else{
+    Swal.fire(
+      'Oops!',
+      'Inserte una cantidad al procedimiento!',
+      'info'
+    )
+  }
+}
+
+function addProcedureAccount(){
+
+  let idServicioPaciente = document.getElementById("d-id-svi").innerHTML
+
+  let fechaHoraActual = new Date();
+
+// Obtener componentes individuales (opcional)
+  let año = fechaHoraActual.getFullYear();
+  let mes = fechaHoraActual.getMonth() + 1; // Los meses en JavaScript van de 0 a 11, por lo que sumamos 1.
+  let dia = fechaHoraActual.getDate();
+  let hora = fechaHoraActual.getHours();
+  let minutos = fechaHoraActual.getMinutes();
+  let segundos = fechaHoraActual.getSeconds();
+
+  // Formatear la fecha y hora como una cadena (opcional)
+
+  let idPuntoCarga = 1
+  let idPaciente = document.getElementById("d-id-patient").innerHTML
+  let idCuentaAtencion = document.getElementById("d-account").innerHTML
+  let idTipoFinanciamiento = document.getElementById("d-tipo-ff").innerHTML
+  let FuenteFinanciamiento = document.getElementById("d-id-ff").innerHTML
+  let fechaActual = `${año}-${mes < 10 ? '0' + mes : mes}-${dia < 10 ? '0' + dia : dia} ${hora < 10 ? '0' + hora : hora}:${minutos < 10 ? '0' + minutos : minutos}:${segundos < 10 ? '0' + segundos : segundos}`;
+  let usuario = 2060
+  let estado = 1
+
+  let idProduct = document.getElementById("edt-id-product").value
+  let quantity = document.getElementById("edt-product-quantity").value
+  let price = document.getElementById("edt-product-price").value
+  let totalPrice = document.getElementById("edt-product-total-price").value
+
+  let data = {
+    puntoCarga : idPuntoCarga,
+    idPaciente : parseInt(idPaciente),
+    idCuentaAtencion : parseInt(idCuentaAtencion),
+    idServicioPaciente : parseInt(idServicioPaciente),
+    idTipoFinanciamiento : parseInt(idTipoFinanciamiento),
+    fuenteFinanciamiento : parseInt(FuenteFinanciamiento),
+    fechaCrea : fechaActual,
+    usuario : usuario,
+    fechaDespacho : fechaActual,
+    usuarioDespacho : usuario,
+    estado : estado,
+    fechaCpt : fechaActual,
+    idProducto : parseInt(idProduct),
+    cantidad : parseInt(quantity),
+    precio : parseFloat(price).toFixed(2),
+    precioTotal : parseFloat(totalPrice).toFixed(2),
+    labHis : '',
+    grupo : 0,
+    subGrupo : 0,
+    labHisCodigo : ''
+  }
+
+  fetchInsertDataProcedureSaludpol(data)
+
+}
+
+function fetchInsertDataProcedureSaludpol(data){
+
+  fetch(`${url}/insert-procedure-saludpol/`, {
+    method: 'POST', // o 'PUT', 'DELETE', etc.
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data) // data es un objeto con los datos a enviar
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log(data)
+     if(data[0].success == "insertado"){
+
+      Swal.fire('Agregado!', '', 'success')
+
+      let account = document.getElementById("d-account").innerHTML 
+      let sex = document.getElementById("d-sex").innerHTML 
+      let valueSex = 2
+
+      if(sex.includes("Masculino")){
+        valueSex = 1
+      }
+    
+      let d = {
+          CAMPO2:account,
+          CAMPO11:valueSex
+        }
+
+      getDataClientSaludpol(d)
+      cleanTableAddProcedure()
+      
+     }else{
+      Swal.fire(
+        'Oops!',
+        'Se produjo un error',
+        'warning'
+      )
+     }
+  })
+  .catch(error => {
+    Swal.fire(
+        'Oops!',
+        'Se produjo un error',
+        'warning'
+      )
+    console.error(error)
+
+});
+
+
+
+}

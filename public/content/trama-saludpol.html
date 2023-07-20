@@ -221,7 +221,8 @@
           <label style="font-weight: bold;">ID atención :</label>&nbsp;<label id="d-id-atention"></label>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <P></P>
-          <label style="font-weight: bold;">Servicio ingreso :</label>&nbsp;<label id="d-svi"></label>
+          <label style="font-weight: bold;">Servicio ingreso :</label>
+          &nbsp;<label id="d-svi"></label>&nbsp;-&nbsp;<label id="d-id-svi"></label>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <label style="font-weight: bold;">Fecha ingreso :</label>&nbsp;<label id="d-fi"></label><p></p>
           <label style="font-weight: bold;">Servicio egreso :</label>&nbsp;<label id="d-sve"></label>
@@ -229,7 +230,11 @@
           <label style="font-weight: bold;">Fecha egreso :</label>&nbsp;<label id="d-fe"></label><p></p>
           <label style="font-weight: bold;">Digitador :</label>&nbsp;<label id="d-dig"></label>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <label style="font-weight: bold;">Fuente de financiamiento :</label>&nbsp;<label id="d-ff"></label>
+          <label style="font-weight: bold;">Fuente de financiamiento :</label>&nbsp;
+          <label id="d-ff"></label>
+          &nbsp;<label id="d-tipo-ff"></label>
+          <label>-</label>
+          &nbsp;<label id="d-id-ff"></label>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <label style="font-weight: bold;">Fecha de ultima receta :</label>&nbsp;<label id="d-fur"></label>
         </div>
@@ -254,6 +259,7 @@
         <br><br>
 
         <label style="color:#d3a202; font-weight: bolder ;font-size: 20px;">Procedimientos</label>
+        <button onclick="openModalAddProcedure()" style="margin-bottom: 10px;background-color: #d3a202;border-color: #d3a202;" class="btn btn-success">+</button>
         <div class="table-responsive">
           <table class="table table-hover table-bordered display" id="tb-data-pro">
             <thead>
@@ -378,9 +384,9 @@
 
           <!-- Modal -->
           <div class="modal fade" style="background-color: #ffffff8f;" data-bs-backdrop="static" data-bs-keyboard="false" id="detailProcedure" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
               <div class="modal-content border border-dark rounded" 
-              style="background-color: #fffcf3;">
+              style="background-color: #fffefb;">
                   <div class="modal-header">
                       <h1 class="modal-title fs-5" id="staticBackdropLabel">Detalle de procedimiento</h1>
                       <label style="visibility: hidden;" id="index-pro"></label>
@@ -388,8 +394,7 @@
                     </div>
                     <div class="modal-body">
                       <center><div id="loader-procedure-detail" class="loaderSmall"></div><p></p></center>
-                      <p></p>
-                      <center><h5>Datos del procedimiento</h5></center>
+                     
                       <p></p>
                       <label><b>Procedimiento :</b></label>&nbsp;<label id="id-detail-procedure"></label>
                       <p></p>
@@ -399,18 +404,18 @@
                       <p></p>
                       <label><b>ID producto :</b></label>&nbsp;<label id="id-product"></label>
                       <p></p>
-                      <center><h5>Actualización</h5></center>
+                      <h5>Actualización / Eliminación</h5>
                       <p></p>
                       <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">Cantidad</span>
                         <input type="number" id="detail-procedure-quantity" class="form-control" placeholder="..." aria-label="Username" aria-describedby="basic-addon1">
                         <button class="btn btn-success" onclick="updateQuantityProcedure()" type="button">Actualizar</button>
+                        <button onclick="modalDeleteProcedure()" class="btn btn-danger">Eliminar procedimiento</button>
                       </div>
                       <p></p>
-                      <center><h5>Reemplazar</h5></center>
+                      <h5>Reemplazar</h5>
                       <p></p>
-                      <center><h5>Eliminar</h5></center>
-                      <center><button class="btn btn-danger">Eliminar procedimiento</button></center>
+                  
                     </div>
                 
                   </div>
@@ -421,7 +426,7 @@
 
 
          <!-- Modal -->
-         <div class="modal fade" style="background-color: #ffffff8f;" data-bs-backdrop="static" data-bs-keyboard="false" id="editAccount" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+         <div class="modal fade" style="background-color: #fffcfc8f;" data-bs-backdrop="static" data-bs-keyboard="false" id="editAccount" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-lg">
             <div class="modal-content border border-dark rounded">
               <div class="modal-header">
@@ -488,7 +493,76 @@
   </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" style="background-color: #ffffff8f;" data-bs-backdrop="static" data-bs-keyboard="false" id="addProcedure" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content border border-dark rounded" 
+    style="background-color: #fbfdff;">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5">Agregar procedimiento</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+         
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
+              <input type="text" id="in-procedure" onkeyup="searchProcedure()" class="form-control" placeholder="Nombre de procedimiento..." aria-describedby="basic-addon1">
+            </div>       
+            
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
+              <input type="tel" id="in-procedure-code" class="form-control" placeholder="Código de procedimiento..." aria-describedby="basic-addon1">
+              <button onclick="searchProcedureByCode()" class="btn btn-primary">Buscar</button>
+            </div>  
+
+            <br>
+
+            <table class="table table-hover table-bordered display" id="tb-data-search-procedure">
+              <thead>
+                  <tr>
+                    <th></th>
+                    <th>ID</th>
+                    <th>Código</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                  </tr>
+                </thead>
+                <tbody id="tbodySeachProcedure">
+                </tbody>
+              </table>
+
+              <br>
+
+              <h3>Parámetros</h3>
+
+              <label>Procedimiento :&nbsp;</label><label style="color: #cf7c00;" id="select-name-procedure"></label>
+
+              <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1"><i class="bi bi-border-middle"></i>&nbsp;ID Producto</span>
+                <input disabled style="background-color: white;color: #000833;" type="text" id="edt-id-product" class="form-control" aria-describedby="basic-addon1">
     
+                <span class="input-group-text" id="basic-addon1"><i class="bi bi-tag"></i>&nbsp;Precio</span>
+                <input disabled style="background-color: white;color: #000833;" type="number" id="edt-product-price" class="form-control" aria-describedby="basic-addon1">
+
+                <span class="input-group-text" id="basic-addon1"><i class="bi bi-boxes"></i>&nbsp;Cantidad</span>
+                <input maxlength="1" onkeyup="addQuantityAndPriceProcedure()" style="background-color: white;color: #000833;" type="tel" id="edt-product-quantity" class="form-control" aria-describedby="basic-addon1">
+
+                <span class="input-group-text" id="basic-addon1"><i class="bi bi-tags"></i>&nbsp;Total</span>
+                <input disabled style="background-color: white;color: #000833;" type="text" id="edt-product-total-price" class="form-control" aria-describedby="basic-addon1">
+
+                <button onclick="showModaladdProcedureAccount()" class="btn btn-success"><i class="bi bi-clipboard-plus"></i>&nbsp;Agregar</button>
+
+              </div>   
+        
+          </div>
+      
+        </div>
+      </div>
+    </div>
+
+<!---->
+    
+
      <script>
 
      for(let i = 1 ; i<= 24 ; i++ ){

@@ -19,6 +19,8 @@ $('document').ready(function () {
           reporte_seguros()
         }else if (direccion == '#fua_analysis') {
           fua_analysis()
+        }else if (direccion == '#fua_correcion') {
+          fua_correcion()
         }else if (direccion == '#estado_atencion') {
           estado_atencion()
         }else if (direccion == '#diag_proc') {
@@ -63,6 +65,10 @@ $('document').ready(function () {
   function fua_analysis() {
     window.location.hash = "#fua_analysis"
     contentModulo.innerHTML = urlModule("/content/analisis-fua.html");
+  }
+  function fua_correcion() {
+    window.location.hash = "#fua_correcion"
+    contentModulo.innerHTML = urlModule("/content/correcion-fua.html");
   }
   function estado_atencion() {
     window.location.hash = "#estado_atencion"

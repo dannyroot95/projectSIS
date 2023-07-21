@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="/libraries/sweetalert2/dist/sweetalert2.min.js"></script>
+    <script src="/libraries/jspdf/jspdf.min.js"></script>
+    <script src="/libraries/jspdf/jspdf.plugin.autotable.min.js"></script>
+    <link rel="stylesheet" href="/libraries/sweetalert2/dist/sweetalert2.min.css">
+    <link href='/bootstrap/css/bootstrap.min.css' rel='stylesheet'>
+    <link href='/bootstrap/datatables.min.css' rel='stylesheet'>
+    <link href='/css/styles.css' rel='stylesheet'>
+    <script type="text/javascript" src="/libraries/xlsexport/xls-export.es5.js"></script>
+    <link rel="stylesheet" href="/bootstrap/icons/font/bootstrap-icons.css">
+    
+</head>
+<body id="g-body">
+    
+    <h2>Corrección de FUA</h2>
+    <br>
+  
+<div id="body">
+
+  <center>
+  <div id="type-content">
+
+    <label><b>N° de formato FUA</b></label>
+    <div class="input-group mb-3" style="width: 50%;margin-top: 10px;">
+      <span class="input-group-text">Disa</span>
+      <input s type="number" value="250" disabled style="background-color: white;color: black;" 
+      class="form-control" >
+    
+      <span class="input-group-text" id="lote">Lote</span>
+      <input type="number" style="background-color: white;color: black;" 
+      class="form-control" >
+
+      <span class="input-group-text" id="lote">FUA</span>
+      <input type="number" style="background-color: white;color: black;" 
+      class="form-control" >
+
+      <span class="input-group-text" id="lote">Cod.Prestación</span>
+      <input type="number" style="background-color: white;color: black;" 
+      class="form-control" >
+    </div>
+    
+    <p></p>
+
+    <label><b>Identificación</b></label>
+    <div class="input-group mb-3" style="width: 50%;margin-top: 10px;">
+   
+      <span class="input-group-text" id="lote">Tipo Doc</span>
+      <input type="number" style="background-color: white;color: black;" 
+      class="form-control" >
+
+      <span class="input-group-text" id="lote">N° de documento</span>
+      <input type="number" style="background-color: white;color: black;" 
+      class="form-control" >
+      </div>
+
+  </div>
+</center>
+</div>
+   
+
+  
+      
+
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/bootstrap/datatables.min.js"></script>
+    <script src="/js/utils/constants.js"></script>
+    <script src="/js/fuaAnalysis.js"></script>
+</body>
+</html>

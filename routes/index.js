@@ -942,6 +942,7 @@ function getTypeUser(value){
           <ul class="sub-menu">
             <li><a class="link_name" href="#">Digitación</a></li>
             <li><a href="#fua_analysis">Análisis de FUA</a></li>
+            <li><a href="#fua_correcion">Correción de FUA</a></li>
           </ul>
         </li>
   
@@ -1067,6 +1068,7 @@ function getTypeUser(value){
           <ul class="sub-menu">
             <li><a class="link_name" href="#">Digitación</a></li>
             <li><a href="#fua_analysis">Análisis de FUA</a></li>
+            <li><a href="#fua_correcion">Correción de FUA</a></li>
           </ul>
         </li>
   
@@ -1249,6 +1251,7 @@ function getTypeUser(value){
           <ul class="sub-menu">
             <li><a class="link_name" href="#">Digitación</a></li>
             <li><a href="#fua_analysis">Análisis de FUA</a></li>
+            <li><a href="#fua_correcion">Correción de FUA</a></li>
           </ul>
         </li>
 

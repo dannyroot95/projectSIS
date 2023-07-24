@@ -1197,6 +1197,20 @@ console.log("error :" + error);
     }
   }
 
+  async function search_fua_by_num_and_size(lote,fua) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('LOTE',lote)
+      .input('FUA',fua)
+      .execute(`BUSCAR_FUA_POR_NRO_FUA`) 
+      return res.recordsets
+    } catch (error) {
+       console.log("error : " + error);
+       return [[{success:"error"}]]
+    }
+  }
+
 module.exports = {
   getdata: getdata,
   sendTrama:sendTrama,
@@ -1269,5 +1283,6 @@ module.exports = {
   delete_procedure_saludpol:delete_procedure_saludpol,
   search_procedure:search_procedure,
   search_procedure_by_code:search_procedure_by_code,
-  add_procedure_saludpol:add_procedure_saludpol
+  add_procedure_saludpol:add_procedure_saludpol,
+  search_fua_by_num_and_size:search_fua_by_num_and_size
 };

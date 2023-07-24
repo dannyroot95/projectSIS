@@ -1530,6 +1530,18 @@ router.post("/insert-procedure-saludpol", function (req, res,next) {
 });
 
 
+router.get("/search-fua-by-num-size/:a/:b", function (req, res, next) {
+  let size = req.params.a 
+  let fua = req.params.b
+  sql.search_fua_by_num_and_size(size,fua).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
 module.exports = router;
 
 

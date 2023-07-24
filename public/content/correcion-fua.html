@@ -22,46 +22,172 @@
     <h2>Corrección de FUA</h2>
     <br>
   
-<div id="body">
+<div id="body" style="height: 80%;">
 
-  <center>
+
   <div id="type-content">
 
-    <label><b>N° de formato FUA</b></label>
+    <form id="form-search">
+    <label style="font-size: 18px;"><b>N° de formato FUA</b></label>
     <div class="input-group mb-3" style="width: 50%;margin-top: 10px;">
       <span class="input-group-text">Disa</span>
-      <input s type="number" value="250" disabled style="background-color: white;color: black;" 
+      <input type="number" value="250" disabled style="background-color: white;color: black;" 
       class="form-control" >
     
-      <span class="input-group-text" id="lote">Lote</span>
-      <input type="number" style="background-color: white;color: black;" 
+      <span class="input-group-text">Lote</span>
+      <input type="number" id="lote" style="background-color: white;color: black;" 
       class="form-control" >
 
-      <span class="input-group-text" id="lote">FUA</span>
-      <input type="number" style="background-color: white;color: black;" 
+      <span class="input-group-text">FUA</span>
+      <input id="fua" oninput="actualizarNumero()" type="number" style="background-color: white;color: black;" 
       class="form-control" >
 
-      <span class="input-group-text" id="lote">Cod.Prestación</span>
-      <input type="number" style="background-color: white;color: black;" 
+      <span class="input-group-text">Cod.Prestación</span>
+      <input type="number" id="cod-pres" style="background-color: white;color: black;" 
       class="form-control" >
     </div>
     
     <p></p>
 
-    <label><b>Identificación</b></label>
+    <label style="font-size: 18px;"><b>Identificación</b></label>
     <div class="input-group mb-3" style="width: 50%;margin-top: 10px;">
    
-      <span class="input-group-text" id="lote">Tipo Doc</span>
-      <input type="number" style="background-color: white;color: black;" 
+      <span class="input-group-text" >Tipo Doc</span>
+      <input id="type-doc-patient" type="tel" maxlength="1" style="background-color: white;color: black;" 
       class="form-control" >
 
-      <span class="input-group-text" id="lote">N° de documento</span>
-      <input type="number" style="background-color: white;color: black;" 
+      <span class="input-group-text" >N° de documento</span>
+      <input type="tel" id="num-doc-patient" maxlength="10" style="background-color: white;color: black;" 
       class="form-control" >
       </div>
 
+      <p></p>
+
+    <label style="font-size: 18px;"><b>Afiliación</b></label>
+    <div class="input-group mb-3" style="width: 50%;margin-top: 10px;">
+   
+      <span class="input-group-text">Disa</span>
+      <input id="disa-afi" type="number" style="background-color: white;color: black;" 
+      class="form-control" >
+
+      <span class="input-group-text">Tipo de afiliación</span>
+      <input id="type-afi" type="text" maxlength="1" style="background-color: white;color: black;" 
+      class="form-control" >
+     
+      <span class="input-group-text">N° de Afiliación</span>
+      <input id="num-afi" type="number" style="background-color: white;color: black;" 
+      class="form-control" >
+      </div>
+
+      <p></p>
+
+      <label style="font-size: 18px;"><b>Historia</b></label>
+      <div class="input-group mb-3" style="width: 50%;margin-top: 10px;">
+     
+        <span class="input-group-text">N° de historia clínica</span>
+        <input type="number" id="hist-fua" style="background-color: white;color: black;" 
+        class="form-control" >
+
+        </div>
+
+        <p></p>
+
+        <label style="font-size: 18px;"><b>Datos del paciente</b></label>
+        <div class="input-group mb-3" style="margin-top: 10px;">
+       
+          <span class="input-group-text" >A.paterno</span>
+          <input type="text" id="ap-paterno" style="text-transform: uppercase;background-color: rgb(240, 249, 255);color: black;" 
+          class="form-control" >
+
+          <span class="input-group-text" >A.materno</span>
+          <input type="text" id="ap-materno" style="text-transform: uppercase;background-color: rgb(255, 239, 239);color: black;" 
+          class="form-control" >
+
+          <span class="input-group-text" >Primer nombre</span>
+          <input type="text" id="nombre" style="text-transform: uppercase;background-color: white;color: black;" 
+          class="form-control" >
+
+          <span class="input-group-text" >Segundo/Ter nombre</span>
+          <input type="text" id="ot-nombre" style="text-transform: uppercase;background-color: white;color: black;" 
+          class="form-control" >
+
+          
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text" ><i class="bi bi-gender-ambiguous" style="color: rgb(92, 0, 92);"></i>&nbsp;Sexo</span>
+          <select class="custom-select" id="sex" name="sex">
+            <option disabled value="0">Seleccionar Sexo
+            </option>
+            <option value="1"> M
+            </option>
+            <option value="2"> F
+            </option>
+         </select>
+
+         <span class="input-group-text" >Fecha de nacimiento</span>
+         <input type="date" style="background-color: white;color: black;" 
+         class="form-control">
+
+         <span class="input-group-text" >Fecha de facecimiento</span>
+         <input type="date" style="background-color: white;color: black;" 
+         class="form-control">
+
+          </div>   
+
+          <p></p>
+
+      <label style="font-size: 18px;"><b>Médico</b></label>
+      <div class="input-group mb-3" style="width: 80%;margin-top: 10px;">
+     
+        <span class="input-group-text" >Nombre completo</span>
+        <input id="medic" type="text" style="background-color: white;color: black;" 
+        class="form-control" >
+
+        <span class="input-group-text" >Número.doc</span>
+        <input id="dni-medic" type="number" style="background-color: white;color: black;" 
+        class="form-control" >
+
+        </div>
+
+        <p></p>
+
+        <label style="font-size: 18px;"><b>Digitador</b></label>
+        <div class="input-group mb-3" style="width: 80%;margin-top: 10px;">
+       
+          <span class="input-group-text" >Tipo.doc</span>
+          <input id="type-doc-dig" type="number" style="background-color: white;color: black;" 
+          class="form-control" >
+  
+          <span class="input-group-text" >Nombre completo</span>
+          <input id="name-dig" type="text" style="background-color: white;color: black;" 
+          class="form-control" >
+  
+          <span class="input-group-text" >Número.doc</span>
+          <input id="num-doc-dig" type="number" style="background-color: white;color: black;" 
+          class="form-control" >
+  
+          </div>
+
+          <p></p>
+
+          <label style="font-size: 18px;"><b>Atención</b></label>
+          <div class="input-group mb-3" style="width: 80%;margin-top: 10px;">
+         
+            <span class="input-group-text" >F.Ingreso</span>
+            <input type="date" style="background-color: white;color: black;" 
+            class="form-control" >
+    
+            <span class="input-group-text" >F.Egreso</span>
+            <input type="date" style="background-color: white;color: black;" 
+            class="form-control" >
+    
+            </div>
+
+          </form>
+
   </div>
-</center>
+
 </div>
    
 
@@ -71,6 +197,6 @@
     <script src="/bootstrap/js/bootstrap.min.js"></script>
     <script src="/bootstrap/datatables.min.js"></script>
     <script src="/js/utils/constants.js"></script>
-    <script src="/js/fuaAnalysis.js"></script>
+    <script src="/js/correctionFUA.js"></script>
 </body>
 </html>

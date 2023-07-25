@@ -1211,6 +1211,38 @@ console.log("error :" + error);
     }
   }
 
+  async function search_medic_fua(ap,am,nom) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('AP',ap)
+      .input('AM',am)
+      .input('NOM',nom)
+      .execute(`CORRECCION_FUA_BUSCAR_MEDICO`) 
+      return res.recordsets
+    } catch (error) {
+       console.log("error : " + error);
+       return [[{success:"error"}]]
+    }
+  }
+
+  async function update_medic_fua(dni,medic,type_doc,type_medic,fua,lote) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('DNI',dni)
+      .input('MEDICO',medic)
+      .input('TIPO_DOCUMENTO',type_doc)
+      .input('TIPO_MEDICO',type_medic)
+      .input('FUA',fua)
+      .input('LOTE',lote)
+      .execute(`ACTUALIZAR_MEDICO_FUA`) 
+      return [[{success:"actualizado"}]]
+    } catch (error) {
+       return [[{success:"error"}]]
+    }
+  }
+
 module.exports = {
   getdata: getdata,
   sendTrama:sendTrama,
@@ -1284,5 +1316,7 @@ module.exports = {
   search_procedure:search_procedure,
   search_procedure_by_code:search_procedure_by_code,
   add_procedure_saludpol:add_procedure_saludpol,
-  search_fua_by_num_and_size:search_fua_by_num_and_size
+  search_fua_by_num_and_size:search_fua_by_num_and_size,
+  search_medic_fua:search_medic_fua,
+  update_medic_fua:update_medic_fua
 };

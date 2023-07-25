@@ -1542,6 +1542,32 @@ router.get("/search-fua-by-num-size/:a/:b", function (req, res, next) {
   });
 });
 
+router.get("/search-medic-fua/:a/:b/:c", function (req, res, next) {
+  let ap = req.params.a 
+  let am = req.params.b
+  let nom = req.params.c
+  sql.search_medic_fua(ap,am,nom).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
+router.post("/update-medic-fua", function (req, res,next) {
+  
+  let d = req.body
+
+  sql.update_medic_fua(d.dni,d.medic,d.type_doc,d.type_medic,d.fua,d.lote).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({success:"error"})
+    }
+  });
+});
+
 module.exports = router;
 
 

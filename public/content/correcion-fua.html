@@ -27,7 +27,9 @@
 
   <div id="type-content">
 
-    <form id="form-search">
+    <div id="form-search">
+
+      <input type="checkbox" id="checkbox-fua-formato" style="width: 18px;height: 18px;">
     <label style="font-size: 18px;"><b>N° de formato FUA</b></label>
     <div class="input-group mb-3" style="width: 50%;margin-top: 10px;">
       <span class="input-group-text">Disa</span>
@@ -43,12 +45,14 @@
       class="form-control" >
 
       <span class="input-group-text">Cod.Prestación</span>
-      <input type="number" id="cod-pres" style="background-color: white;color: black;" 
+      <input type="text" maxlength="3" id="cod-pres" disabled style="background-color: white;color: black;" 
       class="form-control" >
+      <button id="btn-up-1" disabled class="btn btn-success"><i class="bi bi-arrow-repeat"></i>&nbsp;Actualizar</button>
     </div>
     
     <p></p>
 
+    <input type="checkbox" id="checkbox-fua-identificacion" style="width: 18px;height: 18px;">
     <label style="font-size: 18px;"><b>Identificación</b></label>
     <div class="input-group mb-3" style="width: 50%;margin-top: 10px;">
    
@@ -59,10 +63,12 @@
       <span class="input-group-text" >N° de documento</span>
       <input type="tel" id="num-doc-patient" maxlength="10" style="background-color: white;color: black;" 
       class="form-control" >
+      <button id="btn-up-dni" disabled class="btn btn-success"><i class="bi bi-arrow-repeat"></i>&nbsp;Actualizar</button>
       </div>
 
       <p></p>
 
+      <input type="checkbox" id="checkbox-fua-afi" style="width: 18px;height: 18px;">
     <label style="font-size: 18px;"><b>Afiliación</b></label>
     <div class="input-group mb-3" style="width: 50%;margin-top: 10px;">
    
@@ -77,21 +83,23 @@
       <span class="input-group-text">N° de Afiliación</span>
       <input id="num-afi" type="number" style="background-color: white;color: black;" 
       class="form-control" >
+      <button id="btn-up-afi" disabled class="btn btn-success"><i class="bi bi-arrow-repeat"></i>&nbsp;Actualizar</button>
       </div>
 
       <p></p>
-
+      <input type="checkbox" id="checkbox-fua-history" style="width: 18px;height: 18px;">
       <label style="font-size: 18px;"><b>Historia</b></label>
       <div class="input-group mb-3" style="width: 50%;margin-top: 10px;">
      
         <span class="input-group-text">N° de historia clínica</span>
         <input type="number" id="hist-fua" style="background-color: white;color: black;" 
         class="form-control" >
-
+        <button id="btn-up-hist" disabled class="btn btn-success"><i class="bi bi-arrow-repeat"></i>&nbsp;Actualizar</button>
         </div>
 
         <p></p>
 
+        <input type="checkbox" id="checkbox-fua-datos-paciente" style="width: 18px;height: 18px;">
         <label style="font-size: 18px;"><b>Datos del paciente</b></label>
         <div class="input-group mb-3" style="margin-top: 10px;">
        
@@ -116,7 +124,7 @@
 
           <div class="input-group mb-3">
             <span class="input-group-text" ><i class="bi bi-gender-ambiguous" style="color: rgb(92, 0, 92);"></i>&nbsp;Sexo</span>
-          <select class="custom-select" id="sex" name="sex">
+          <select disabled class="custom-select" id="sex" name="sex">
             <option disabled value="0">Seleccionar Sexo
             </option>
             <option value="1"> M
@@ -126,72 +134,128 @@
          </select>
 
          <span class="input-group-text" >Fecha de nacimiento</span>
-         <input type="date" style="background-color: white;color: black;" 
+         <input id="date-nac" type="date" style="background-color: white;color: black;" 
          class="form-control">
 
-         <span class="input-group-text" >Fecha de facecimiento</span>
-         <input type="date" style="background-color: white;color: black;" 
+         <span class="input-group-text" >Fecha de fallecimiento</span>
+         <input id="date-death" type="date" style="background-color: white;color: black;" 
          class="form-control">
+         <button id="btn-up-paciente" disabled class="btn btn-success"><i class="bi bi-arrow-repeat"></i>&nbsp;Actualizar</button>
 
           </div>   
 
           <p></p>
 
+          <input type="checkbox" id="checkbox-fua-medic" style="width: 18px;height: 18px;">
       <label style="font-size: 18px;"><b>Médico</b></label>
-      <div class="input-group mb-3" style="width: 80%;margin-top: 10px;">
+      <div class="input-group mb-3" style="margin-top: 10px;">
      
         <span class="input-group-text" >Nombre completo</span>
-        <input id="medic" type="text" style="background-color: white;color: black;" 
+        <input disabled id="medic" type="text" style="font-size: 14px;background-color: white;color: black;" 
+        class="form-control" >
+
+        <span class="input-group-text" >Tipo de médico</span>
+        <input disabled id="type-medic" type="number" style="background-color: white;color: black;" 
+        class="form-control" >
+
+        <span class="input-group-text" >Tipo de doc</span>
+        <input disabled id="type-dni-medic" type="number" style="background-color: white;color: black;" 
         class="form-control" >
 
         <span class="input-group-text" >Número.doc</span>
-        <input id="dni-medic" type="number" style="background-color: white;color: black;" 
+        <input id="dni-medic" disabled type="number" style="background-color: white;color: black;" 
         class="form-control" >
-
-        </div>
+        <button id="btn-up-medic" onclick="updateMedic()" disabled class="btn btn-success"><i class="bi bi-arrow-repeat"></i>&nbsp;Actualizar</button>
+        <button id="btn-search-medic" onclick="openModalAddMedic()" disabled class="btn btn-primary"><i class="bi bi-search"></i>&nbsp;Buscar</button>  
+      </div>
 
         <p></p>
 
+        <input type="checkbox" id="checkbox-fua-dig" style="width: 18px;height: 18px;">
         <label style="font-size: 18px;"><b>Digitador</b></label>
         <div class="input-group mb-3" style="width: 80%;margin-top: 10px;">
        
-          <span class="input-group-text" >Tipo.doc</span>
-          <input id="type-doc-dig" type="number" style="background-color: white;color: black;" 
-          class="form-control" >
-  
+
           <span class="input-group-text" >Nombre completo</span>
           <input id="name-dig" type="text" style="background-color: white;color: black;" 
           class="form-control" >
   
           <span class="input-group-text" >Número.doc</span>
-          <input id="num-doc-dig" type="number" style="background-color: white;color: black;" 
+          <input id="num-doc-dig" disabled type="number" style="background-color: white;color: black;" 
           class="form-control" >
-  
-          </div>
+          <button id="btn-up-dig" disabled class="btn btn-success"><i class="bi bi-arrow-repeat"></i>&nbsp;Actualizar</button>
+          <button id="btn-search-dig" disabled class="btn btn-primary"><i class="bi bi-search"></i>&nbsp;Buscar</button>  
+        </div>
 
           <p></p>
 
+          <input type="checkbox" id="checkbox-fua-ate" style="width: 18px;height: 18px;">
           <label style="font-size: 18px;"><b>Atención</b></label>
           <div class="input-group mb-3" style="width: 80%;margin-top: 10px;">
          
             <span class="input-group-text" >F.Ingreso</span>
-            <input type="date" style="background-color: white;color: black;" 
+            <input id="ate-f-in" type="date" style="background-color: white;color: black;" 
             class="form-control" >
     
             <span class="input-group-text" >F.Egreso</span>
-            <input type="date" style="background-color: white;color: black;" 
+            <input id="ate-f-out" type="date" style="background-color: white;color: black;" 
             class="form-control" >
-    
+            <button id="btn-up-ate" disabled class="btn btn-success"><i class="bi bi-arrow-repeat"></i>&nbsp;Actualizar</button>
             </div>
 
-          </form>
+          </div>
 
   </div>
 
 </div>
    
 
-  
+  <!-- Modal -->
+<div class="modal fade" id="modalAddMedic" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Busca un médico</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+        <div class="input-group mb-3">
+          <span class="input-group-text">Apellido paterno</span>
+          <input id="s-ap" type="text" style="background-color: white;color: black;" 
+          class="form-control" >
+        
+          <span class="input-group-text">Apellido materno</span>
+          <input type="text" id="s-am" style="background-color: white;color: black;" 
+          class="form-control" >
+    
+          <span class="input-group-text">Nombres</span>
+          <input id="s-nom" oninput="searchMedic()" type="text" style="background-color: white;color: black;" 
+          class="form-control" >
+
+        </div>
+
+        <br>
+
+          <table class="table table-hover table-bordered display" id="tb-data-search-medic">
+            <thead>
+                <tr>
+                  <th></th>
+                  <th>Nombres</th>
+                  <th>Tipo.Medico</th>
+                  <th>Tipo.doc</th>
+                  <th>DNI</th>
+                </tr>
+              </thead>
+              <tbody id="tbodySeachMedic">
+              </tbody>
+            </table>
+
+      </div>
+
+    </div>
+  </div>
+</div>
       
 
     <script src="/bootstrap/js/bootstrap.min.js"></script>

@@ -1,5 +1,4 @@
 
-
 var trama1 = ``
 var trama2 = ``
 var trama3 = ``
@@ -13,6 +12,7 @@ createDatatable2()
 createDatatable3()
 createDatatable4()
 createDatatableSearchProcedure()
+createDatatableSearchDiagnosys()
 
 function createDatatable(){
 
@@ -162,6 +162,35 @@ function createDatatableSearchProcedure(){
     table.columns.adjust().draw();
 }
 
+function createDatatableSearchDiagnosys(){
+  $('#tb-data-search-diagnosys').DataTable({
+      language: {
+            "decimal": "",
+            "emptyTable": "No hay información",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ datos",
+            "infoEmpty": "Mostrando 0 to 0 of 0 datos",
+            "infoFiltered": "(Filtrado de _MAX_ total datos)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar _MENU_ datos",
+            "loadingRecords": "Cargando...",
+            "processing": "Procesando...",
+            "search": "Buscar en la lista:",
+            "zeroRecords": "Sin resultados encontrados",
+            "paginate": {
+                "first": "Primero",
+                "last": "Ultimo",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            }
+     },scrollY: '28vh',scrollX: true, sScrollXInner: "100%",
+     scrollCollapse: true,
+    });
+
+    var table = $('#tb-data-search-diagnosys').DataTable();
+    $('#container').css( 'display', 'block' );
+    table.columns.adjust().draw();
+}
 
 
 function query(){
@@ -1751,6 +1780,7 @@ function getDataClientSaludpol(d){
                       <td>${d.IdClasificacionDx}</td>
                       <td>${d.CodigoCIE2004}</td>
                       <td>${d.Descripcion}</td>
+                      <td><center><button style="background-color:red;border-color:red;" onclick="showModalDeleteDiagnosys('${d.IdAtencionDiagnostico}')" class="btn btn-dark">X</button></center></td>
                       </tr>`;
     
                   })
@@ -1770,7 +1800,7 @@ function getDataClientSaludpol(d){
                       <td>${d.Cantidad}</td>
                       <td>${d.PrecioUnitario}</td>
                       <td>${d.Precio}</td>
-                      <td><button onclick="showModalDetailProcedure('${encodeURIComponent(JSON.stringify(d))}','${ctxPro}')" class="btn btn-dark"><i class="bi bi-pencil-square"></i></button></td>
+                      <td><center><button style="background-color:#d3a202;border-color:#d3a202;" onclick="showModalDetailProcedure('${encodeURIComponent(JSON.stringify(d))}','${ctxPro}')" class="btn btn-dark"><i class="bi bi-pencil-square"></i></button></center></td>
                       </tr>`;
 
                   })
@@ -1896,6 +1926,11 @@ function searchProcedureByCode(){
 
 $('#addProcedure').on('hidden.bs.modal', function (e) {
   cleanTableAddProcedure()
+})
+
+$('#modalAddDiagnosys').on('hidden.bs.modal', function (e) {
+  document.getElementById("tbodySeachDiagnosys").innerHTML = ''
+  document.getElementById("in-diagnosys").value = ''
 })
 
 function cleanTableAddProcedure(){
@@ -2170,6 +2205,244 @@ function fetchInsertDataProcedureSaludpol(data){
 
 });
 
+}
+
+function showModalDeleteDiagnosys(id){
+
+  let atencion = document.getElementById("d-id-atention").innerHTML
+
+  Swal.fire({
+    title: 'Estas seguro de eliminar este diagnostico?',
+    showCancelButton: true,
+    confirmButtonText: 'Si',
+    cancelButtonText : 'Cancelar'
+  }).then((result) => {
+    /* Read more about isConfirmed, isDenied below */
+    if (result.isConfirmed) {
+      //Swal.fire('Eliminado!', '', 'success')
+
+  fetch(`${url}/delete-diagnosys/${id}/${atencion}`)
+    .then(response => response.json())
+    .then(data => {
+
+      console.log(data)
+
+      if(data[0].success == "eliminado"){
+
+      let account = document.getElementById("d-account").innerHTML 
+      let sex = document.getElementById("d-sex").innerHTML 
+      let valueSex = 2
+    
+          if(sex.includes("Masculino")){
+            valueSex = 1
+          }
+        
+          let ate = {
+              CAMPO2:account,
+              CAMPO11:valueSex
+            }
+
+          getDataClientSaludpol(ate)
+          Swal.fire('Eliminado!', '', 'success')
+      }else{
+        Swal.fire(
+          'Oops!',
+          'Ocurrió un error!',
+          'error'
+        )
+      }
+
+      
+    }).catch(err =>{
+        console.log(err)
+        Swal.fire(
+          'Oops!',
+          'Ocurrió un error!',
+          'error'
+        )
+    } );
+
+    } 
+  })
+
+}
 
 
+function showModalAddDiagnosys(){
+  $('#modalAddDiagnosys').modal('show')
+}
+
+function getSubDiagnosys() {
+  var selectElement = document.getElementById("inputGroupSelectTypeAtention");
+  var selectedValue = selectElement.value;
+
+  fetch(`${url}/get-sub-diagnosys/${selectedValue}`)
+    .then(response => response.json())
+    .then(data => {
+
+      document.getElementById("selectSubClass").style = "display:flex;"
+      document.getElementById("input-diagnosys").style = "display:flex;"
+      
+      document.getElementById("inputGroupSelectSubClass").innerHTML = ''
+
+      $("#inputGroupSelectSubClass").html(data.map((d) => {
+        
+        return `
+        <option value="${d.IdClasificacionDx+'/'+d.IdSubclasificacionDx}">${(d.Descripcion).toUpperCase()}</option>
+        `;
+
+    })
+    .join("")
+    )
+
+    }).catch(err =>{
+        console.log(err)
+        Swal.fire(
+          'Oops!',
+          'Ocurrió un error!',
+          'error'
+        )
+    } );
+
+}
+
+function fetchSearchDiagnosys(diagnosys){
+
+  fetch(`${url}/get-diagnosys/${diagnosys}`)
+    .then(response => response.json())
+    .then(data => {
+
+      if(data[0].success != "error"){
+        document.getElementById("tbodySeachDiagnosys").innerHTML = ''
+        $('#tb-data-search-diagnosys').DataTable().destroy()
+        
+        $("#tbodySeachDiagnosys").html(data.map((d) => {
+                  
+                return `
+                <tr>
+                <td><button onclick="insertDiagnosys('${encodeURIComponent(JSON.stringify(d))}')" class="btn btn-primary"><i class="bi bi-plus-circle"></i><label style="font-size:14px;margin-left:4px;">Seleccionar</label></button></td>
+                <td>${d.IdDiagnostico}</td>
+                <td>${d.Descripcion}</td>
+                </tr>`;
+  
+            })
+            .join("")
+        );
+        createDatatableSearchDiagnosys()
+      }else{
+        document.getElementById("tbodySeachDiagnosys").innerHTML = ''
+      }
+    
+    }).catch(err =>{
+        console.log(err)
+        Swal.fire(
+          'Oops!',
+          'Ocurrió un error!',
+          'error'
+        )
+    } );
+
+}
+
+function searchDiagnosys(){
+  var input = document.getElementById("in-diagnosys");
+  var inputValue = input.value.trim();
+  
+  if (inputValue.length > 1) {
+    fetchSearchDiagnosys(inputValue)
+  }else{
+    document.getElementById("tbodySeachDiagnosys").innerHTML = ''
+  }
+}
+
+function insertDiagnosys(d){
+  d = JSON.parse(decodeURIComponent(d))
+
+  let IdAtencion = document.getElementById("d-id-atention").innerHTML
+  let IdClasificacionDx = (document.getElementById("inputGroupSelectSubClass").value).split("/")[0]
+  let IdDiagnostico = d.IdDiagnostico
+  let IdSubclasificacionDx = (document.getElementById("inputGroupSelectSubClass").value).split("/")[1]
+  let labConfHIS = null
+  let GrupoHIS = 0
+  let SubGrupoHIS = 0
+  let labConfHIScodigo = ''
+  let idServicio = null
+  let IdUsuario = null
+  let NroEvaluacion = null
+
+  let values = {
+    IdAtencion : IdAtencion ,
+    IdClasificacionDx : IdClasificacionDx,
+    IdDiagnostico : IdDiagnostico,
+    IdSubclasificacionDx : IdSubclasificacionDx ,
+    labConfHIS : labConfHIS,
+    GrupoHIS : GrupoHIS,
+    SubGrupoHIS : SubGrupoHIS,
+    labConfHIScodigo : labConfHIScodigo,
+    idServicio : idServicio,
+    IdUsuario : IdUsuario,
+    NroEvaluacion : NroEvaluacion
+  }
+
+  let account = document.getElementById("d-account").innerHTML 
+  let sex = document.getElementById("d-sex").innerHTML 
+  let valueSex = 2
+
+      if(sex.includes("Masculino")){
+        valueSex = 1
+      }
+    
+      let ate = {
+          CAMPO2:account,
+          CAMPO11:valueSex
+        }
+
+   Swal.fire({
+    title: 'Estas seguro de agregar este diagnostico?',
+    showCancelButton: true,
+    confirmButtonText: 'Si',
+    cancelButtonText : 'Cancelar'
+  }).then((result) => {
+    /* Read more about isConfirmed, isDenied below */
+    if (result.isConfirmed) {
+
+      fetch(`${url}/insert-diagnosys-saludpol/`, {
+        method: 'POST', // o 'PUT', 'DELETE', etc.
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(values) // data es un objeto con los datos a enviar
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+         if(data[0].success == "insertado"){
+    
+          document.getElementById("tbodySeachDiagnosys").innerHTML = ''
+          document.getElementById("in-diagnosys").value = ''
+          getDataClientSaludpol(ate)
+          Swal.fire('Agregado!', '', 'success')
+    
+        
+         }else{
+          Swal.fire(
+            'Oops!',
+            'Se produjo un error',
+            'warning'
+          )
+         }
+      })
+      .catch(error => {
+        Swal.fire(
+            'Oops!',
+            'Se produjo un error',
+            'warning'
+          )
+        console.error(error)
+    
+    });
+      
+    } 
+  })     
+        
 }

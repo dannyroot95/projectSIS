@@ -165,7 +165,6 @@
         <span class="input-group-text" >Número.doc</span>
         <input id="dni-medic" disabled type="number" style="background-color: white;color: black;" 
         class="form-control" >
-        <button id="btn-up-medic" onclick="updateMedic()" disabled class="btn btn-success"><i class="bi bi-arrow-repeat"></i>&nbsp;Actualizar</button>
         <button id="btn-search-medic" onclick="openModalAddMedic()" disabled class="btn btn-primary"><i class="bi bi-search"></i>&nbsp;Buscar</button>  
       </div>
 
@@ -222,15 +221,7 @@
         
         <div class="input-group mb-3">
           <span class="input-group-text">Apellido paterno</span>
-          <input id="s-ap" type="text" style="background-color: white;color: black;" 
-          class="form-control" >
-        
-          <span class="input-group-text">Apellido materno</span>
-          <input type="text" id="s-am" style="background-color: white;color: black;" 
-          class="form-control" >
-    
-          <span class="input-group-text">Nombres</span>
-          <input id="s-nom" oninput="searchMedic()" type="text" style="background-color: white;color: black;" 
+          <input id="s-ap"  oninput="searchMedic()" type="text" style="background-color: white;color: black;" 
           class="form-control" >
 
         </div>

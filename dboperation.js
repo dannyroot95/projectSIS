@@ -1211,13 +1211,11 @@ console.log("error :" + error);
     }
   }
 
-  async function search_medic_fua(ap,am,nom) {
+  async function search_medic_fua(ap) {
     try {
       let pool = await sql.connect(config);
       let res = await pool.request()
       .input('AP',ap)
-      .input('AM',am)
-      .input('NOM',nom)
       .execute(`CORRECCION_FUA_BUSCAR_MEDICO`) 
       return res.recordsets
     } catch (error) {
@@ -1240,6 +1238,79 @@ console.log("error :" + error);
       return [[{success:"actualizado"}]]
     } catch (error) {
        return [[{success:"error"}]]
+    }
+  }
+
+  async function get_sub_diagnosys(type) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request().query(` SELECT IdSubclasificacionDx,Descripcion,IdClasificacionDx 
+      FROM SIGH..SubclasificacionDiagnosticos 
+      WHERE IdTipoServicio = ${type}`);
+      return res.recordsets;
+    } catch (error) {
+      return [[{success:"error"}]]
+    }finally {
+      sql.close();
+    }
+  }
+
+  async function get_diagnosys(diagnosys) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request().query(`SELECT IdDiagnostico,Descripcion
+      FROM SIGH..Diagnosticos 
+      WHERE Descripcion LIKE '${diagnosys}%'`);
+      return res.recordsets;
+    } catch (error) {
+      return [[{success:"error"}]]
+    }finally {
+      sql.close();
+    }
+  }
+
+  async function insert_diagnosys_saludpol(IdAtencion,
+    IdClasificacionDx,
+    IdDiagnostico,
+    IdSubclasificacionDx,
+    labConfHIS,
+    GrupoHIS,
+    SubGrupoHIS,
+    labConfHIScodigo,
+    idServicio,
+    IdUsuario,
+    NroEvaluacion) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('IdAtencion',IdAtencion)
+      .input('IdClasificacionDx',IdClasificacionDx)
+      .input('IdDiagnostico',IdDiagnostico)
+      .input('IdSubclasificacionDx',IdSubclasificacionDx)
+      .input('labConfHIS',labConfHIS)
+      .input('GrupoHIS',GrupoHIS)
+      .input('SubGrupoHIS',SubGrupoHIS)
+      .input('labConfHIScodigo',labConfHIScodigo)
+      .input('idServicio',idServicio)
+      .input('IdUsuario',IdUsuario)
+      .input('NroEvaluacion',NroEvaluacion)
+      .execute(`INSERTAR_DIAGNOSTICO_SALUDPOL`) 
+      return [[{success:"insertado"}]]
+    } catch (error) {
+       return [[{success:"error"}]]
+    }
+  }
+
+  async function delete_diagnosys_saludpol(idDiagnostico,IdAtencion) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request().query(`DELETE FROM SIGH..AtencionesDiagnosticos
+       WHERE IdAtencionDiagnostico = ${idDiagnostico} and IdAtencion = ${IdAtencion}`);
+      return [[{success:"eliminado"}]];
+    } catch (error) {
+      return [[{success:"error"}]]
+    }finally {
+      sql.close();
     }
   }
 
@@ -1318,5 +1389,9 @@ module.exports = {
   add_procedure_saludpol:add_procedure_saludpol,
   search_fua_by_num_and_size:search_fua_by_num_and_size,
   search_medic_fua:search_medic_fua,
-  update_medic_fua:update_medic_fua
+  update_medic_fua:update_medic_fua,
+  get_sub_diagnosys:get_sub_diagnosys,
+  get_diagnosys:get_diagnosys,
+  insert_diagnosys_saludpol:insert_diagnosys_saludpol,
+  delete_diagnosys_saludpol:delete_diagnosys_saludpol
 };

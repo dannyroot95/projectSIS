@@ -1542,11 +1542,9 @@ router.get("/search-fua-by-num-size/:a/:b", function (req, res, next) {
   });
 });
 
-router.get("/search-medic-fua/:a/:b/:c", function (req, res, next) {
+router.get("/search-medic-fua/:a", function (req, res, next) {
   let ap = req.params.a 
-  let am = req.params.b
-  let nom = req.params.c
-  sql.search_medic_fua(ap,am,nom).then((result) => {
+  sql.search_medic_fua(ap).then((result) => {
     if(result[0].length>0){
       res.json(result[0]);
     }else{
@@ -1567,6 +1565,76 @@ router.post("/update-medic-fua", function (req, res,next) {
     }
   });
 });
+
+router.get("/get-sub-diagnosys/:a", function (req, res, next) {
+  let type = req.params.a 
+  sql.get_sub_diagnosys(type).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
+router.get("/get-diagnosys/:a", function (req, res, next) {
+  let diagnosys = req.params.a 
+  sql.get_diagnosys(diagnosys).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
+router.post("/insert-diagnosys-saludpol", function (req, res,next) {
+  
+  let d = req.body
+
+  let IdAtencion = d.IdAtencion
+  let IdClasificacionDx = d.IdClasificacionDx
+  let IdDiagnostico = d.IdDiagnostico
+  let IdSubclasificacionDx = d.IdSubclasificacionDx
+  let labConfHIS = d.labConfHIS
+  let GrupoHIS = d.GrupoHIS
+  let SubGrupoHIS = d.SubGrupoHIS
+  let labConfHIScodigo = d.labConfHIScodigo
+  let idServicio = d.idServicio
+  let IdUsuario = d.IdUsuario
+  let NroEvaluacion = d.NroEvaluacion
+
+  sql.insert_diagnosys_saludpol(IdAtencion,
+    IdClasificacionDx,
+    IdDiagnostico,
+    IdSubclasificacionDx,
+    labConfHIS,
+    GrupoHIS,
+    SubGrupoHIS,
+    labConfHIScodigo,
+    idServicio,
+    IdUsuario,
+    NroEvaluacion).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({success:"error"})
+    }
+  });
+});
+
+router.get("/delete-diagnosys/:a/:b", function (req, res, next) {
+  let IdDiagnosys = req.params.a 
+  let IdAtention = req.params.b
+  sql.delete_diagnosys_saludpol(IdDiagnosys,IdAtention).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
 
 module.exports = router;
 

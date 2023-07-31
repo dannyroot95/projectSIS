@@ -145,7 +145,6 @@ function actualizarNumero() {
     document.getElementById("dni-medic").value = ""
     document.getElementById("type-dni-medic").value = ""
     document.getElementById("type-medic").value = ""
-    document.getElementById("btn-up-medic").disabled = true
     document.getElementById("btn-search-medic").disabled = true
 
     document.getElementById("checkbox-fua-dig").checked = false
@@ -250,11 +249,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if(fua != ""){
       if (this.checked) {
-        document.getElementById("btn-up-medic").disabled = false
         document.getElementById("btn-search-medic").disabled = false
           
       } else {
-        document.getElementById("btn-up-medic").disabled = true
         document.getElementById("btn-search-medic").disabled = true
           
       }
@@ -272,23 +269,20 @@ function openModalAddMedic(){
 
 function searchMedic(){
   var input1 = document.getElementById("s-ap").value
-  var input2 = document.getElementById("s-am").value
+
+  if (input1 != "" ) {
   
-  if (input1 != "" && input2 != "") {
-    var nom = document.getElementById("s-nom")
-    fetchSearchMedic(input1,input2,nom)
+    fetchSearchMedic(input1)
   }else{
-    Swal.fire(
-      'Oops!',
-      'Complete los campos!',
-      'info'
-    )
+  document.getElementById("tbodySeachMedic").innerHTML = ''
+ 
   }
+
 }
 
-function fetchSearchMedic(ap,am,nom){
+function fetchSearchMedic(ap){
 
-  fetch(`${url}/search-medic-fua/${ap}/${am}/${nom}`)
+  fetch(`${url}/search-medic-fua/${ap}`)
     .then(response => response.json())
     .then(data => {
 
@@ -328,94 +322,84 @@ function fetchSearchMedic(ap,am,nom){
 
 }
 
-function getDetailsMedic(data){
+function getDetailsMedic(v){
 
-  data = JSON.parse(decodeURIComponent(data))
+  v = JSON.parse(decodeURIComponent(v))
 
-  document.getElementById("medic").value = data.nombres
-  document.getElementById("type-medic").value = data.TipoEmpleadoSIS
-  document.getElementById("type-dni-medic").value = data.idTipoDocumento
-  document.getElementById("dni-medic").value = (data.DNI).trim()
-
-
-  $('#modalAddMedic').modal('hide')
-
-  document.getElementById("tbodySeachMedic").innerHTML = ''
-  $('#tb-data-search-medic').DataTable().destroy()
-  createDatatableSearchMedic()
-
-
-  document.getElementById("s-ap").value = ""
-  document.getElementById("s-am").value = ""
-  document.getElementById("s-nom").value = ""
-
-
-}
-
-$('#modalAddMedic').on('hidden.bs.modal', function (e) {
-  //document.getElementById("tbodyAccount").innerHTML = ""
-  //document.getElementById("tbodyAccountIn").innerHTML = ""
-  document.getElementById("tbodySeachMedic").innerHTML = ''
-  $('#tb-data-search-medic').DataTable().destroy()
-  createDatatableSearchMedic()
-})
-
-
-function updateMedic(){
- 
-  let dni = document.getElementById("dni-medic").value
-  let nameMedic = document.getElementById("medic").value
-  let typeDocMedic = document.getElementById("type-dni-medic").value
-  let typeMedic = document.getElementById("type-medic").value
+  let dni = (v.DNI).trim()
+  let nameMedic = v.nombres
+  let typeDocMedic = v.idTipoDocumento
+  let typeMedic = v.TipoEmpleadoSIS
   let fua = document.getElementById("fua").value
   let lote = document.getElementById("lote").value
 
+
   if(fua != "" && lote != ""){
-    
-    let json = {
-      dni : dni,
-      medic:nameMedic,
-      type_doc:typeDocMedic,
-      type_medic:typeMedic,
-      fua:fua,lote:lote
-    }
 
-    fetch(`${url}/update-medic-fua/`, {
-      method: 'POST', // o 'PUT', 'DELETE', etc.
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(json) // data es un objeto con los datos a enviar
-    })
-    .then(response => response.json())
-    .then(data => {
-
-      console.log(data)
-
-       if(data[0].success == "actualizado"){
-        Swal.fire(
-          'Muy bien!',
-          'FUA actualizado!',
-          'success'
-        )
-       }else{
-        Swal.fire(
-          'Oops!',
-          'Se produjo un error',
-          'warning'
-        )
-       }
-    })
-    .catch(error => {
-      Swal.fire(
-          'Oops!',
-          'Se produjo un error',
-          'warning'
-        )
-      console.error(error)
+    Swal.fire({
+      title: 'Estas seguro de actualizar el médico de este FUA?',
+      showCancelButton: true,
+      confirmButtonText: 'Si',
+      cancelButtonText : 'Cancelar'
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
   
-  });
+        let json = {
+          dni : dni,
+          medic:nameMedic,
+          type_doc:typeDocMedic,
+          type_medic:typeMedic,
+          fua:fua,lote:lote
+        }
+    
+        fetch(`${url}/update-medic-fua/`, {
+          method: 'POST', // o 'PUT', 'DELETE', etc.
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(json) // data es un objeto con los datos a enviar
+        })
+        .then(response => response.json())
+        .then(data => {
 
+    
+           if(data[0].success == "actualizado"){
+           
+            document.getElementById("medic").value = nameMedic
+            document.getElementById("type-medic").value = typeMedic
+            document.getElementById("type-dni-medic").value = typeDocMedic
+            document.getElementById("dni-medic").value = dni
+
+
+            Swal.fire(
+              'Muy bien!',
+              'FUA actualizado!',
+              'success'
+            )
+            
+           }else{
+            Swal.fire(
+              'Oops!',
+              'Se produjo un error',
+              'warning'
+            )
+           }
+        })
+        .catch(error => {
+          Swal.fire(
+              'Oops!',
+              'Se produjo un error',
+              'warning'
+            )
+          console.error(error)
+      
+      });
+    
+        
+  
+      }
+    })
 
   }else{
     Swal.fire(
@@ -425,4 +409,23 @@ function updateMedic(){
     )
   }
 
+
+  /*
+  $('#modalAddMedic').modal('hide')
+
+  document.getElementById("tbodySeachMedic").innerHTML = ''
+  $('#tb-data-search-medic').DataTable().destroy()
+  createDatatableSearchMedic()
+  document.getElementById("s-ap").value = ""
+  */
+
 }
+
+$('#modalAddMedic').on('hidden.bs.modal', function (e) {
+
+  document.getElementById("tbodySeachMedic").innerHTML = ''
+  document.getElementById("s-ap").value = ""
+
+})
+
+

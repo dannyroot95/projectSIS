@@ -242,13 +242,15 @@
         <br><br>
 
         <label style="color:#0192ac; font-weight: bolder ;font-size: 20px;">Diagnosticos</label>
+        <button onclick="showModalAddDiagnosys()" style="margin-bottom: 10px;background-color: #0192ac;border-color: #0192ac;" class="btn btn-success">+</button>
         <div class="table-responsive">
           <table class="table table-hover table-bordered display" id="tb-data-diag">
             <thead>
                 <tr>
                   <th>ID clasificación</th>
                   <th>CIE 10</th>
-                  <th>Descrición</th>
+                  <th>Descripción</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody id="tbodyDiag">
@@ -559,7 +561,60 @@
       </div>
     </div>
 
-<!---->
+<!-- Modal -->
+<div class="modal fade" style="background-color: #ffffff8f;" id="modalAddDiagnosys" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Agregar diagnostico</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <div class="input-group mb-3">
+          <label class="input-group-text">Tipo de atención</label>
+          <select onchange="getSubDiagnosys()" class="form-select" id="inputGroupSelectTypeAtention">
+            <option value="0" disabled selected>Seleccione una opción...</option>
+            <option value="1">CONSULTORIOS EXTERNOS</option>
+            <option value="2">CONSULTORIOS DE EMERGENCIA</option>
+            <option value="3">HOSPITALIZACIÓN</option>
+          </select>
+        </div>
+
+        <p></p>
+
+        <div class="input-group mb-3" id="selectSubClass" style="display: none;">
+          <label class="input-group-text" for="inputGroupSelect01">Sub-clasificación de diagnostico</label>
+          <select class="form-select" id="inputGroupSelectSubClass">
+            
+          </select>
+        </div>
+
+        <p></p>
+
+        <div class="input-group mb-3" id="input-diagnosys" style="display: none;">
+          <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
+          <input type="text" id="in-diagnosys" onkeyup="searchDiagnosys()" class="form-control" placeholder="Nombre de diagnostico..." aria-describedby="basic-addon1">
+        </div>    
+
+        <p></p>
+
+        <table class="table table-hover table-bordered display" id="tb-data-search-diagnosys">
+          <thead>
+              <tr>
+                <th></th>
+                <th>ID</th>
+                <th>Nombre</th>
+              </tr>
+            </thead>
+            <tbody id="tbodySeachDiagnosys">
+            </tbody>
+          </table>
+        
+      </div>
+    </div>
+  </div>
+</div>
     
 
      <script>

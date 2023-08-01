@@ -1819,7 +1819,7 @@ function getDataClientSaludpol(d){
                       <td>${d.Cantidad}</td>
                       <td>${d.PrecioUnitario}</td>
                       <td>${d.Precio}</td>
-                      <td><button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button></td>
+                        <td><center><button style="background-color:#d3a202;border-color:#d3a202;" onclick="showModalDetailProcedure('${encodeURIComponent(JSON.stringify(d))}','${ctxPro}')" class="btn btn-dark"><i class="bi bi-pencil-square"></i></button></center></td>
                       </tr>`;
 
                   })

@@ -13,6 +13,7 @@ createDatatable3()
 createDatatable4()
 createDatatableSearchProcedure()
 createDatatableSearchDiagnosys()
+createDatatableSearchDiagnosysByLab()
 
 function createDatatable(){
 
@@ -191,6 +192,67 @@ function createDatatableSearchDiagnosys(){
     $('#container').css( 'display', 'block' );
     table.columns.adjust().draw();
 }
+
+function createDatatableSearchDiagnosysByLab(){
+  $('#tb-data-search-diagnosys-by-lab').DataTable({
+      language: {
+            "decimal": "",
+            "emptyTable": "No hay información",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ datos",
+            "infoEmpty": "Mostrando 0 to 0 of 0 datos",
+            "infoFiltered": "(Filtrado de _MAX_ total datos)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar _MENU_ datos",
+            "loadingRecords": "Cargando...",
+            "processing": "Procesando...",
+            "search": "Buscar en la lista:",
+            "zeroRecords": "Sin resultados encontrados",
+            "paginate": {
+                "first": "Primero",
+                "last": "Ultimo",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            }
+     },scrollY: '28vh',scrollX: true, sScrollXInner: "100%",
+     scrollCollapse: true,
+    });
+
+    var table = $('#tb-data-search-diagnosys').DataTable();
+    $('#container').css( 'display', 'block' );
+    table.columns.adjust().draw();
+}
+
+function createDatatableSearchProcedureByLab(){
+  $('#tb-data-search-procedure-by-lab').DataTable({
+      language: {
+            "decimal": "",
+            "emptyTable": "No hay información",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ datos",
+            "infoEmpty": "Mostrando 0 to 0 of 0 datos",
+            "infoFiltered": "(Filtrado de _MAX_ total datos)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar _MENU_ datos",
+            "loadingRecords": "Cargando...",
+            "processing": "Procesando...",
+            "search": "Buscar en la lista:",
+            "zeroRecords": "Sin resultados encontrados",
+            "paginate": {
+                "first": "Primero",
+                "last": "Ultimo",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            }
+     },scrollY: '28vh',scrollX: true, sScrollXInner: "100%",
+     scrollCollapse: true,
+    });
+
+    var table = $('#tb-data-search-procedure-by-lab').DataTable();
+    $('#container').css( 'display', 'block' );
+    table.columns.adjust().draw();
+}
+
 
 
 function query(){
@@ -1224,9 +1286,11 @@ var actual = +dia + '/' + mes + '/' + anio;
   xls.exportToXLS(`reporte_saludpol_${actual}.xls`)
 }
 
-function showModalDetailProcedure(data,index){
+function showModalDetailProcedure(data,index,type){
   data = JSON.parse(decodeURIComponent(data))
   $('#detailProcedure').modal('show')
+
+  let procedureType = type
 
   document.getElementById("id-detail-procedure").innerHTML = ''
   document.getElementById("id-detail-code").innerHTML = ''
@@ -1238,16 +1302,46 @@ function showModalDetailProcedure(data,index){
   let account =  document.getElementById("d-account").innerHTML
 
   let code = data.Codigo  
-  let procedure = data.Nombre
+  let procedure = (data.Nombre).trimEnd()
 
-  var tabla = document.getElementById("tb-data-pro");
+  if(procedureType == '1'){
+    document.getElementById("staticBackdropLabel").innerHTML = 'Detalle de procedimiento'
+    var tabla = document.getElementById("tb-data-pro");
+    var filaIndex = index; // Índice de la fila a actualizar (por ejemplo, la primera fila)
+    var columnaIndex = 2; 
+    let quantity = tabla.rows[filaIndex].cells[columnaIndex].textContent;
+  
+    document.getElementById("loader-procedure-detail").style = "display:block;"
+  
+    fetch(`${url}/get-id-procedure/${account}/${data.Nombre}`)
+              .then(response => response.json())
+              .then(data => {
+               
+  
+                document.getElementById("loader-procedure-detail").style = "display:none;"
+  
+                document.getElementById("id-detail-procedure").innerHTML = procedure
+                document.getElementById("id-detail-code").innerHTML = code
+                document.getElementById("detail-procedure-quantity").value = quantity
+  
+                document.getElementById("id-order").innerHTML = data[0].idOrden
+                document.getElementById("id-product").innerHTML = data[0].IdProducto
+  
+                document.getElementById("index-pro").innerHTML = index
+  
+              }).catch(err =>{
+                  console.log(err)
+              } );
+  }else if(procedureType == '2'){
+    document.getElementById("staticBackdropLabel").innerHTML = 'Detalle de laboratorio'
+  var tabla = document.getElementById("tb-data-lab");
   var filaIndex = index; // Índice de la fila a actualizar (por ejemplo, la primera fila)
   var columnaIndex = 2; 
   let quantity = tabla.rows[filaIndex].cells[columnaIndex].textContent;
 
   document.getElementById("loader-procedure-detail").style = "display:block;"
 
-  fetch(`${url}/get-id-procedure/${account}/${data.Nombre}`)
+  fetch(`${url}/get-id-laboratory/${account}/${data.Nombre}`)
             .then(response => response.json())
             .then(data => {
              
@@ -1267,8 +1361,11 @@ function showModalDetailProcedure(data,index){
                 console.log(err)
             } );
 
+  }
 
+  
 }
+
 
 function updateQuantityProcedure(){
 
@@ -1288,41 +1385,7 @@ function updateQuantityProcedure(){
           'success'
         )
 
-        let index = document.getElementById("index-pro").innerHTML
-        var tabla = document.getElementById("tb-data-pro");
-        var filaIndex = index; // Índice de la fila a actualizar (por ejemplo, la primera fila)
-        var columnaIndex = 2; // Índice de la columna a actualizar (por ejemplo, la tercera columna)
-        var celda = tabla.rows[filaIndex].cells[columnaIndex];
-        
-        // Actualizar el valor de la celda
-        var nuevoValor = quantity; // El valor que deseas asignar a la celda
-        celda.innerHTML = nuevoValor;
-
-        let pUnit = tabla.rows[filaIndex].cells[3].textContent;
-        let newSum = (parseInt(quantity)*parseFloat(pUnit))
-        var newTotalCell = tabla.rows[filaIndex].cells[4];
-        var nuevoValorTotal = newSum; // El valor que deseas asignar a la celda
-        newTotalCell.innerHTML = nuevoValorTotal;
-
-        let suma = 0;
-          // Recorrer las filas de la tabla
-          for (var i = 0; i < tabla.rows.length; i++) {
-            // Obtener el valor de la celda en la posición deseada (tercera columna)
-            var celda = tabla.rows[i].cells[4]; // Cambia el índice (2) según la posición de la columna que deseas sumar
-
-            // Obtener el valor numérico de la celda y sumarlo a la variable suma
-            var valor = parseFloat(celda.innerHTML);
-            if (!isNaN(valor)) {
-              suma += valor;
-            }
-          }
-          document.getElementById("t-pro").innerHTML = suma.toFixed(2)
-          let t_lab = parseFloat((document.getElementById("t-lab").innerHTML)).toFixed(2)
-          let t_img = parseFloat((document.getElementById("t-img").innerHTML)).toFixed(2)
-          let t_med = parseFloat((document.getElementById("t-med").innerHTML)).toFixed(2)
-          let t_ins = parseFloat((document.getElementById("t-ins").innerHTML)).toFixed(2)
-          let consumo_total = (parseFloat((suma.toFixed(2)+t_lab+t_img+t_med+t_ins)).toFixed(2)).toString()
-          document.getElementById("t-ate").innerHTML = consumo_total
+        updateDetailAccount()
 
       }else{
         Swal.fire(
@@ -1638,7 +1701,7 @@ function fetchUpdateGenderPatient(id_patient,gender){
 
 function modalDeleteProcedure(){
   Swal.fire({
-    title: 'Estas seguro de eliminar este procedimiento?',
+    title: 'Estas seguro de eliminar este item?',
     showCancelButton: true,
     confirmButtonText: 'Si',
     cancelButtonText : 'Cancelar'
@@ -1654,70 +1717,115 @@ function modalDeleteProcedure(){
 function deleteProcedure(){
 
   let account = document.getElementById("d-account").innerHTML 
-  let sex = document.getElementById("d-sex").innerHTML 
-  let valueSex = 2
   let order = document.getElementById("id-order").innerHTML 
   let id_product = document.getElementById("id-product").innerHTML
   let index = document.getElementById("index-pro").innerHTML
-  let table = document.getElementById("tb-data-pro")
-  const numReg = table.rows.length;
+  let type = document.getElementById("staticBackdropLabel").innerHTML
+  let table 
 
-  if(sex.includes("Masculino")){
-    valueSex = 1
-  }
+  if(type == "Detalle de laboratorio"){
 
-  let d = {
-      CAMPO2:account,
-      CAMPO11:valueSex
-    }
+    table = document.getElementById("tb-data-lab")
+    const numReg = table.rows.length;
 
     if(numReg > 2){
-
-  fetch(`${url}/delete-procedure-saludpol/${order}/${id_product}/${account}`)
-    .then(response => response.json())
-    .then(data => {
-
-      let response = data[0]
-
-      if(response.success == "eliminado"){
-
-      getDataClientSaludpol(d)
-      table.deleteRow(index)
-      $('#detailProcedure').modal('hide')
-
-        Swal.fire(
-          'Muy bien!',
-          'El procedimiento ha sido eliminado!',
-          'success'
-        )
-
+  
+    fetch(`${url}/delete-laboratory-saludpol/${order}/${id_product}/${account}`)
+      .then(response => response.json())
+      .then(data => {
+  
+        let response = data[0]
+  
+        if(response.success == "eliminado"){
+  
+        updateDetailAccount()
+        table.deleteRow(index)
+        $('#detailProcedure').modal('hide')
+  
+          Swal.fire(
+            'Muy bien!',
+            'El procedimiento ha sido eliminado!',
+            'success'
+          )
+  
+        }else{
+          Swal.fire(
+            'Oops!',
+            'Ocurrió un error!',
+            'error'
+          )
+        }
+      
+      }).catch(err =>{
+          console.log(err)
+          Swal.fire(
+            'Oops!',
+            'Ocurrió un error!',
+            'error'
+          )
+      } );
+    
+  
       }else{
         Swal.fire(
           'Oops!',
-          'Ocurrió un error!',
-          'error'
+          'Debe tener al menos un laboratorio!',
+          'info'
         )
       }
+  
+  }else if(type == "Detalle de procedimiento"){
+
+    table = document.getElementById("tb-data-pro")
+    const numReg = table.rows.length;
+  
+    if(numReg > 2){
+  
+    fetch(`${url}/delete-procedure-saludpol/${order}/${id_product}/${account}`)
+      .then(response => response.json())
+      .then(data => {
+  
+        let response = data[0]
+  
+        if(response.success == "eliminado"){
+  
+        updateDetailAccount()
+        table.deleteRow(index)
+        $('#detailProcedure').modal('hide')
+  
+          Swal.fire(
+            'Muy bien!',
+            'El procedimiento ha sido eliminado!',
+            'success'
+          )
+  
+        }else{
+          Swal.fire(
+            'Oops!',
+            'Ocurrió un error!',
+            'error'
+          )
+        }
+      
+      }).catch(err =>{
+          console.log(err)
+          Swal.fire(
+            'Oops!',
+            'Ocurrió un error!',
+            'error'
+          )
+      } );
     
-    }).catch(err =>{
-        console.log(err)
+  
+      }else{
         Swal.fire(
           'Oops!',
-          'Ocurrió un error!',
-          'error'
+          'Debe tener al menos un procedimiento!',
+          'info'
         )
-    } );
+      }
   
-
-    }else{
-      Swal.fire(
-        'Oops!',
-        'Debe tener al menos un procedimiento!',
-        'info'
-      )
-    }
-
-
+  }
 
 
 }
@@ -1725,6 +1833,7 @@ function deleteProcedure(){
 function getDataClientSaludpol(d){
 
   let ctxPro = 0
+  let ctxLab = 0
   let gender = ``
 
 
@@ -1752,6 +1861,7 @@ function getDataClientSaludpol(d){
               document.getElementById("d-dni").innerHTML = data[0][0].NroDocumento
               document.getElementById("d-fullname").innerHTML = data[0][0].Nombres
               document.getElementById("d-sex").innerHTML = gender+data[0][0].Sexo
+              document.getElementById("d-nac").innerHTML = ((data[0][0].FechaNacimiento).split("T")[0]).split("-")[2]+'-'+((data[0][0].FechaNacimiento).split("T")[0]).split("-")[1]+'-'+((data[0][0].FechaNacimiento).split("T")[0]).split("-")[0]
               document.getElementById("d-age").innerHTML = data[0][0].Edad
               document.getElementById("d-id-patient").innerHTML = data[0][0].IdPaciente
               document.getElementById("d-id-atention").innerHTML = data[0][0].IdAtencion
@@ -1768,6 +1878,9 @@ function getDataClientSaludpol(d){
               document.getElementById("d-id-ff").innerHTML = data[0][0].IdFuenteFinanciamiento
 
               document.getElementById("d-fur").innerHTML = dateNull(data[0][0].F_ultima_receta)
+
+              document.getElementById("d-id-medico").innerHTML = data[0][0].medico
+              document.getElementById("d-id-medic-col").innerHTML = data[0][0].Colegiatura
 
               document.getElementById("loaderDetails").style = "display:none;"
               document.getElementById("div-details").style = "display:block;"
@@ -1800,7 +1913,7 @@ function getDataClientSaludpol(d){
                       <td>${d.Cantidad}</td>
                       <td>${d.PrecioUnitario}</td>
                       <td>${d.Precio}</td>
-                      <td><center><button style="background-color:#d3a202;border-color:#d3a202;" onclick="showModalDetailProcedure('${encodeURIComponent(JSON.stringify(d))}','${ctxPro}')" class="btn btn-dark"><i class="bi bi-pencil-square"></i></button></center></td>
+                      <td><center><button style="background-color:#d3a202;border-color:#d3a202;" onclick="showModalDetailProcedure('${encodeURIComponent(JSON.stringify(d))}','${ctxPro}','1')" class="btn btn-dark"><i class="bi bi-pencil-square"></i></button></center></td>
                       </tr>`;
 
                   })
@@ -1810,6 +1923,7 @@ function getDataClientSaludpol(d){
 
               $("#tbodyLab").html(data[3].map((d) => {
 
+                ctxLab++
                 t_lab += parseFloat((d.Precio))
                 
                       return `
@@ -1819,7 +1933,7 @@ function getDataClientSaludpol(d){
                       <td>${d.Cantidad}</td>
                       <td>${d.PrecioUnitario}</td>
                       <td>${d.Precio}</td>
-                        <td><center><button style="background-color:#d3a202;border-color:#d3a202;" onclick="showModalDetailProcedure('${encodeURIComponent(JSON.stringify(d))}','${ctxPro}')" class="btn btn-dark"><i class="bi bi-pencil-square"></i></button></center></td>
+                        <td><center><button style="background-color:#d3a202;border-color:#d3a202;" onclick="showModalDetailProcedure('${encodeURIComponent(JSON.stringify(d))}','${ctxLab}','2')" class="btn btn-dark"><i class="bi bi-pencil-square"></i></button></center></td>
                       </tr>`;
 
                   })
@@ -2171,20 +2285,7 @@ function fetchInsertDataProcedureSaludpol(data){
 
       Swal.fire('Agregado!', '', 'success')
 
-      let account = document.getElementById("d-account").innerHTML 
-      let sex = document.getElementById("d-sex").innerHTML 
-      let valueSex = 2
-
-      if(sex.includes("Masculino")){
-        valueSex = 1
-      }
-    
-      let d = {
-          CAMPO2:account,
-          CAMPO11:valueSex
-        }
-
-      getDataClientSaludpol(d)
+      updateDetailAccount()
       cleanTableAddProcedure()
       
      }else{
@@ -2228,21 +2329,7 @@ function showModalDeleteDiagnosys(id){
       console.log(data)
 
       if(data[0].success == "eliminado"){
-
-      let account = document.getElementById("d-account").innerHTML 
-      let sex = document.getElementById("d-sex").innerHTML 
-      let valueSex = 2
-    
-          if(sex.includes("Masculino")){
-            valueSex = 1
-          }
-        
-          let ate = {
-              CAMPO2:account,
-              CAMPO11:valueSex
-            }
-
-          getDataClientSaludpol(ate)
+          updateDetailAccount()
           Swal.fire('Eliminado!', '', 'success')
       }else{
         Swal.fire(
@@ -2344,6 +2431,44 @@ function fetchSearchDiagnosys(diagnosys){
 
 }
 
+function fetchSearchDiagnosysByLab(diagnosys){
+
+  fetch(`${url}/get-diagnosys/${diagnosys}`)
+    .then(response => response.json())
+    .then(data => {
+
+      if(data[0].success != "error"){
+        document.getElementById("tbodySeachDiagnosysByLab").innerHTML = ''
+        $('#tb-data-search-diagnosys-by-lab').DataTable().destroy()
+        
+        $("#tbodySeachDiagnosysByLab").html(data.map((d) => {
+                  
+                return `
+                <tr>
+                <td><button onclick="insertDiagnosysByLab('${encodeURIComponent(JSON.stringify(d))}')" class="btn btn-primary"><i class="bi bi-plus-circle"></i><label style="font-size:14px;margin-left:4px;">Seleccionar</label></button></td>
+                <td>${d.IdDiagnostico}</td>
+                <td>${d.Descripcion}</td>
+                </tr>`;
+  
+            })
+            .join("")
+        );
+        createDatatableSearchDiagnosysByLab()
+      }else{
+        document.getElementById("tbodySeachDiagnosysByLab").innerHTML = ''
+      }
+    
+    }).catch(err =>{
+        console.log(err)
+        Swal.fire(
+          'Oops!',
+          'Ocurrió un error!',
+          'error'
+        )
+    } );
+
+}
+
 function searchDiagnosys(){
   var input = document.getElementById("in-diagnosys");
   var inputValue = input.value.trim();
@@ -2353,6 +2478,28 @@ function searchDiagnosys(){
   }else{
     document.getElementById("tbodySeachDiagnosys").innerHTML = ''
   }
+}
+
+
+function searchDiagnosysByLab(){
+  var input = document.getElementById("in-diagnosys-by-lab");
+  var inputValue = input.value.trim();
+  
+  if (inputValue.length > 1) {
+    fetchSearchDiagnosysByLab(inputValue)
+  }else{
+    document.getElementById("tbodySeachDiagnosysByLab").innerHTML = ''
+  }
+}
+
+function insertDiagnosysByLab(d){
+  d = JSON.parse(decodeURIComponent(d))
+  document.getElementById("lab-diagnosys").innerHTML = d.Descripcion
+  document.getElementById("lab-diagnosys-code").innerHTML = d.IdDiagnostico
+  document.getElementById ("lab-t-t1").style = "display:flex;font-weight: 700;"
+  $('#tb-data-search-procedure-by-lab').DataTable().destroy()
+  document.getElementById("tb-data-search-procedure-by-lab").style = "display:flex;"
+  createDatatableSearchProcedureByLab()
 }
 
 function insertDiagnosys(d){
@@ -2384,18 +2531,6 @@ function insertDiagnosys(d){
     NroEvaluacion : NroEvaluacion
   }
 
-  let account = document.getElementById("d-account").innerHTML 
-  let sex = document.getElementById("d-sex").innerHTML 
-  let valueSex = 2
-
-      if(sex.includes("Masculino")){
-        valueSex = 1
-      }
-    
-      let ate = {
-          CAMPO2:account,
-          CAMPO11:valueSex
-        }
 
    Swal.fire({
     title: 'Estas seguro de agregar este diagnostico?',
@@ -2420,7 +2555,7 @@ function insertDiagnosys(d){
     
           document.getElementById("tbodySeachDiagnosys").innerHTML = ''
           document.getElementById("in-diagnosys").value = ''
-          getDataClientSaludpol(ate)
+          updateDetailAccount()
           Swal.fire('Agregado!', '', 'success')
     
         
@@ -2445,4 +2580,29 @@ function insertDiagnosys(d){
     } 
   })     
         
+}
+
+function updateDetailAccount(){
+        let account = document.getElementById("d-account").innerHTML 
+        let sex = document.getElementById("d-sex").innerHTML 
+        let valueSex = 2
+      
+            if(sex.includes("Masculino")){
+              valueSex = 1
+            }
+          
+            let ate = {
+                CAMPO2:account,
+                CAMPO11:valueSex
+              }
+              getDataClientSaludpol(ate)
+}
+
+function openModalAddLaboratory(){
+    let tb = document.getElementById("tbodyLab").rows.length
+
+    if(tb > 0){
+      $('#modalAddLab').modal('show')
+    }
+    
 }

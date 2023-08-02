@@ -1011,6 +1011,19 @@ console.log("error :" + error);
     }
   }
 
+  async function id_laboratory(account,procedure) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('idCuentaAtencion',account)
+      .input('procedimiento',procedure)
+      .execute(`OBTENER_ID_LABORATORIO`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
   async function update_quantity_procedure(quantity,idProduct,idOrder) {
     const q = quantity
     const id_product = idProduct
@@ -1133,6 +1146,20 @@ console.log("error :" + error);
     }
   }
 
+  async function delete_laboratory_saludpol(order,idProducto,cuenta) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('ORDEN',order)
+      .input('PRODUCTO',idProducto)
+      .input('CUENTA',cuenta)
+      .execute(`BORRAR_LABORATORIO_SALUDPOL`) 
+      return [[{success:"eliminado"}]]
+    } catch (error) {
+       return [[{success:"error"}]]
+    }
+  }
+
   async function search_procedure(name) {
     const n = name
     try {
@@ -1191,6 +1218,47 @@ console.log("error :" + error);
       .input('LABHISCODIGO',d.labHisCodigo)
   
       .execute(`INSERTAR_PROCEDIMIENTO_SALUDPOL`) 
+      return [[{success:"insertado"}]]
+    } catch (error) {
+       return [[{success:"error"}]]
+    }
+  }
+
+  async function add_laboratory_saludpol(d) {
+    try {
+
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('PUNTOCARGA',d.puntoCarga)
+      .input('PACIENTE',d.idPaciente)
+      .input('CUENTA',d.idCuentaAtencion)
+      .input('SERVICIO',d.idServicioPaciente)
+      .input('TIPOFINANCIAMIENTO',d.idTipoFinanciamiento)
+      .input('FUENTEFINANCIAMIENTO',d.fuenteFinanciamiento)
+      .input('FECHACREA',d.fechaCrea)
+      .input('USUARIO',d.usuario)
+      .input('FECHADESPACHO',d.fechaDespacho)
+      .input('USUARIODESPACHO',d.usuarioDespacho)
+      .input('ESTADO',d.estado)
+      .input('FECHACPT',d.fechaCpt)
+      .input('PRODUCTO',d.idProducto)
+      .input('CANTIDAD',d.cantidad)
+      .input('PRECIO',d.precio)
+      .input('TOTAL',d.precioTotal)
+      .input('LABHIS',d.labHis)
+      .input('GRUPO',d.grupo)
+      .input('SUBGRUPO',d.subGrupo)
+      .input('LABHISCODIGO',d.labHisCodigo)
+      .input('IDPERSONATOMALAB',d.idPersonaTomaLab)
+      .input('IDIDAGNOSTICO',d.idDiagnostico)
+      .input('DIAGNOSTICODEF',d.EsDiagnosticoDefinitivo)
+      .input('ORDENAPRUEBA',d.labHisCodigo)
+      .input('PACIENTENOMBRE',d.Paciente)
+      .input('TIPOSEXO',d.idTipoSexo)
+      .input('FECHANAC',d.FechaNacimiento)
+      .input('COLEGIATURA',d.colegiatura)
+
+      .execute(`INSERTAR_LABORATORIO_SALUDPOL`) 
       return [[{success:"insertado"}]]
     } catch (error) {
        return [[{success:"error"}]]
@@ -1375,6 +1443,7 @@ module.exports = {
   updateSisFiliacion:updateSisFiliacion,
   production_saludpol:production_saludpol,
   id_procedure:id_procedure,
+  id_laboratory:id_laboratory,
   update_quantity_procedure:update_quantity_procedure,
   update_dni_patient:update_dni_patient,
   update_gender_patient:update_gender_patient,
@@ -1393,5 +1462,7 @@ module.exports = {
   get_sub_diagnosys:get_sub_diagnosys,
   get_diagnosys:get_diagnosys,
   insert_diagnosys_saludpol:insert_diagnosys_saludpol,
-  delete_diagnosys_saludpol:delete_diagnosys_saludpol
+  delete_diagnosys_saludpol:delete_diagnosys_saludpol,
+  add_laboratory_saludpol:add_laboratory_saludpol,
+  delete_laboratory_saludpol:delete_laboratory_saludpol
 };

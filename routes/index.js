@@ -1370,6 +1370,20 @@ router.get("/get-id-procedure/:a/:b", function (req, res,next) {
   });
 });
 
+router.get("/get-id-laboratory/:a/:b", function (req, res,next) {
+  let account = req.params.a;
+  let procedure = req.params.b;
+
+  sql.id_laboratory(account,procedure).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+  });
+});
+
 router.get("/update-quantity-procedure/:a/:b/:c", function (req, res,next) {
   let quantity = req.params.a;
   let id_product = req.params.b;
@@ -1498,6 +1512,22 @@ router.get("/delete-procedure-saludpol/:a/:b/:c", function (req, res,next) {
   });
 });
 
+router.get("/delete-laboratory-saludpol/:a/:b/:c", function (req, res,next) {
+  
+  let orden = req.params.a;
+  let idProducto = req.params.b;
+  let account = req.params.c;
+ 
+  sql.delete_laboratory_saludpol(orden,idProducto,account).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
+
 router.get("/search-procedure/:a", function (req, res, next) {
   let name = req.params.a 
   sql.search_procedure(name).then((result) => {
@@ -1521,6 +1551,19 @@ router.post("/insert-procedure-saludpol", function (req, res,next) {
   let data = req.body
 
   sql.add_procedure_saludpol(data).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({success:"error"})
+    }
+  });
+});
+
+router.post("/insert-laboratory-saludpol", function (req, res,next) {
+  
+  let data = req.body
+
+  sql.add_laboratory_saludpol(data).then((result) => {
     if(result[0].length>0){
       res.json(result[0]);
     }else{

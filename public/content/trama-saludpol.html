@@ -214,6 +214,8 @@
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <label style="font-weight: bold;">Sexo :</label>&nbsp;<label id="d-sex"></label>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <label style="font-weight: bold;">F.nacimiento :</label>&nbsp;<label id="d-nac"></label>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <label style="font-weight: bold;">Edad :</label>&nbsp;<label id="d-age"></label>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <label style="font-weight: bold;">ID paciente :</label>&nbsp;<label id="d-id-patient"></label>
@@ -237,6 +239,12 @@
           &nbsp;<label id="d-id-ff"></label>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <label style="font-weight: bold;">Fecha de ultima receta :</label>&nbsp;<label id="d-fur"></label>
+          <P></P>
+          <label style="font-weight: bold;">Médico :</label>
+          <label id="d-id-medico"></label>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <label style="font-weight: bold;">Colegiatura :</label>
+          <label id="d-id-medic-col"></label>
         </div>
         
         <br><br>
@@ -285,6 +293,7 @@
           <br><br>
 
           <label style="color:#d3a202; font-weight: bolder ;font-size: 20px;">Laboratorio</label>
+          <button onclick="openModalAddLaboratory()" style="margin-bottom: 10px;background-color: #d3a202;border-color: #d3a202;" class="btn btn-success">+</button>
           <div class="table-responsive">
             <table class="table table-hover table-bordered display" id="tb-data-lab">
               <thead>
@@ -390,7 +399,7 @@
               <div class="modal-content border border-dark rounded" 
               style="background-color: #fffefb;">
                   <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="staticBackdropLabel">Detalle de procedimiento</h1>
+                      <h1 class="modal-title fs-5" id="staticBackdropLabel"></h1>
                       <label style="visibility: hidden;" id="index-pro"></label>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -412,10 +421,10 @@
                         <span class="input-group-text" id="basic-addon1">Cantidad</span>
                         <input type="number" id="detail-procedure-quantity" class="form-control" placeholder="..." aria-label="Username" aria-describedby="basic-addon1">
                         <button class="btn btn-success" onclick="updateQuantityProcedure()" type="button">Actualizar</button>
-                        <button onclick="modalDeleteProcedure()" class="btn btn-danger">Eliminar procedimiento</button>
+                        <button onclick="modalDeleteProcedure()" class="btn btn-danger">Eliminar</button>
                       </div>
                       <p></p>
-                      <h5>Reemplazar</h5>
+                
                       <p></p>
                   
                     </div>
@@ -611,6 +620,73 @@
             </tbody>
           </table>
         
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" style="background-color: #ffffff8f;" id="modalAddLab" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Agregar laboratorio</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+         <label style="font-weight: 700;">Busque y seleccione un diagnostico</label>
+        <p></p>
+
+        <div class="input-group mb-3" id="input-diagnosys">
+          <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
+          <input type="text" id="in-diagnosys-by-lab" onkeyup="searchDiagnosysByLab()" class="form-control" placeholder="Nombre de diagnostico..." aria-describedby="basic-addon1">
+        </div>    
+
+        <table class="table table-hover table-bordered display" id="tb-data-search-diagnosys-by-lab">
+          <thead>
+              <tr>
+                <th></th>
+                <th>ID</th>
+                <th>Nombre</th>
+              </tr>
+            </thead>
+            <tbody id="tbodySeachDiagnosysByLab">
+            </tbody>
+          </table>
+          
+          <p></p>
+          <label style="color: #0192ac;">Diagnostico seleccionado :</label>
+          <label style="font-weight: 500;" id="lab-diagnosys"></label>
+          <p></p>
+          <label style="color: #0192ac;">Código :</label>
+          <label style="font-weight: 500;" id="lab-diagnosys-code"></label>
+          
+          <br><p></p>
+
+          <div  id="lab-t-t1" style="display: none;">
+            <label>Busque y seleccione un procedimiento de laboratorio</label>
+            <p></p>
+            <div class="input-group mb-3" id="input-diagnosys">
+              <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
+              <input type="text" id="in-diagnosys-by-lab" onkeyup="searchProcedureLab()" class="form-control" placeholder="Nombre de procedimiento de lab..." aria-describedby="basic-addon1">
+            </div>    
+          </div>
+
+          <p></p>
+
+          <table class="table table-hover table-bordered display" style="display: none;" id="tb-data-search-procedure-by-lab">
+            <thead>
+                <tr>
+                  <th></th>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                </tr>
+              </thead>
+              <tbody id="tbodySeachProcedureByLab">
+              </tbody>
+            </table>
+
       </div>
     </div>
   </div>

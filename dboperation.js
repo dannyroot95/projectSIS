@@ -1277,7 +1277,7 @@ console.log("error :" + error);
       .execute(`INSERTAR_MOV_LABORATORIO_SALUDPOL`) 
       return [[{success:"insertado"}]]
     } catch (error) {
-      console.log(error)
+    
        return [[{success:"error"}]]
     }
   }

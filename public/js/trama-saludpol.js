@@ -2023,6 +2023,15 @@ function searchProcedure(){
   }
 }
 
+function searchProcedureLab(){
+  var input = document.getElementById("in-procedure-by-lab");
+  var inputValue = input.value.trim();
+  
+  if (inputValue.length > 1) {
+    fetchSearchProcedureByLab(inputValue)
+  }
+}
+
 function searchProcedureByCode(){
   var input = document.getElementById("in-procedure-code").value;
 
@@ -2094,6 +2103,43 @@ function fetchSearchProcedure(n){
 
 }
 
+function fetchSearchProcedureByLab(n){
+
+  fetch(`${url}/search-procedure/${n}`)
+    .then(response => response.json())
+    .then(data => {
+
+      document.getElementById("tbodySeachProcedureByLab").innerHTML = ''
+      $('#tb-data-search-procedure-by-lab').DataTable().destroy()
+      
+      $("#tbodySeachProcedureByLab").html(data.map((d) => {
+                
+              return `
+              <tr>
+              <td><button onclick="getDetailsProcedureByLab('${encodeURIComponent(JSON.stringify(d))}')" class="btn btn-primary"><i class="bi bi-plus-circle"></i><label style="font-size:14px;margin-left:4px;">Seleccionar</label></button></td>
+              <td>${d.IdProducto}</td>
+              <td>${d.Codigo}</td>
+              <td>${(d.Nombre).toUpperCase()}</td>
+              <td>${d.PrecioUnitario}</td>
+              </tr>`;
+
+          })
+          .join("")
+      );
+      createDatatableSearchProcedureByLab()
+    
+    }).catch(err =>{
+        console.log(err)
+        Swal.fire(
+          'Oops!',
+          'Ocurrió un error!',
+          'error'
+        )
+    } );
+
+}
+
+
 function fetchSearchProcedureByCode(n){
 
   fetch(`${url}/search-procedure-by-code/${n}`)
@@ -2143,6 +2189,17 @@ function getDetailsProcedure(data){
 
 }
 
+function getDetailsProcedureByLab(data){
+  data = JSON.parse(decodeURIComponent(data))
+
+  document.getElementById("select-name-procedure-lab").innerHTML = (data.Nombre).toUpperCase()
+  document.getElementById("edt-id-product-lab").value = data.IdProducto
+  document.getElementById("edt-product-price-lab").value = data.PrecioUnitario
+  document.getElementById("edt-product-quantity-lab").value = ""
+  document.getElementById("edt-product-total-price-lab").value = ""
+
+}
+
 function addQuantityAndPriceProcedure(){
   let quantity = document.getElementById("edt-product-quantity").value
   let price = document.getElementById("edt-product-price").value
@@ -2153,6 +2210,20 @@ function addQuantityAndPriceProcedure(){
     document.getElementById("edt-product-total-price").value = total
   }else{
     document.getElementById("edt-product-total-price").value = ""
+  }
+
+}
+
+function addQuantityAndPriceProcedureLab(){
+  let quantity = document.getElementById("edt-product-quantity-lab").value
+  let price = document.getElementById("edt-product-price-lab").value
+  let total = 0
+
+  if(price != "" && quantity != 0){
+    total = price*quantity
+    document.getElementById("edt-product-total-price-lab").value = total
+  }else{
+    document.getElementById("edt-product-total-price-lab").value = ""
   }
 
 }
@@ -2193,6 +2264,61 @@ function showModaladdProcedureAccount(){
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
           addProcedureAccount()
+        } 
+      })
+
+    }else{
+      Swal.fire(
+        'Oops!',
+        'Ya existe el procedimiento en la tabla!',
+        'info'
+      )
+    }
+  }else{
+    Swal.fire(
+      'Oops!',
+      'Inserte una cantidad al procedimiento!',
+      'info'
+    )
+  }
+}
+
+function showModaladdProcedureLabAccount(){
+
+  let price = document.getElementById("edt-product-total-price-lab").value
+  let procedure = document.getElementById("select-name-procedure-lab").innerHTML
+
+  var  filter, table, tr, td, i, txtValue;
+  filter = procedure
+  table = document.getElementById("tb-data-lab");
+  tr = table.getElementsByTagName("tr");
+  var found = false; // Variable para rastrear si se encontró el término
+
+  for (i = 1; i < tr.length; i++) { // Comenzamos desde 1 para omitir la fila de encabezados
+    td = tr[i].getElementsByTagName("td")[1]; // Columna "Nombre" (índice 0)
+
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        found = true; // Se encontró el término
+      } 
+    }
+  }
+  
+  if(price != ""){
+
+    if(!found){
+
+      Swal.fire({
+        title: 'Estas seguro de agregar este procedimiento de laboratorio?',
+        showCancelButton: true,
+        confirmButtonText: 'Si',
+        cancelButtonText : 'Cancelar'
+      }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          addProcedureAccountByLab()
         } 
       })
 
@@ -2269,6 +2395,78 @@ function addProcedureAccount(){
 
 }
 
+function addProcedureAccountByLab(){
+
+  let idServicioPaciente = document.getElementById("d-id-svi").innerHTML
+
+  let fechaHoraActual = new Date();
+
+// Obtener componentes individuales (opcional)
+  let año = fechaHoraActual.getFullYear();
+  let mes = fechaHoraActual.getMonth() + 1; // Los meses en JavaScript van de 0 a 11, por lo que sumamos 1.
+  let dia = fechaHoraActual.getDate();
+  let hora = fechaHoraActual.getHours();
+  let minutos = fechaHoraActual.getMinutes();
+  let segundos = fechaHoraActual.getSeconds();
+
+  // Formatear la fecha y hora como una cadena (opcional)
+
+  let idPuntoCarga = 2
+  let idPaciente = document.getElementById("d-id-patient").innerHTML
+  let idCuentaAtencion = document.getElementById("d-account").innerHTML
+  let idTipoFinanciamiento = document.getElementById("d-tipo-ff").innerHTML
+  let FuenteFinanciamiento = document.getElementById("d-id-ff").innerHTML
+  let fechaActual = `${año}-${mes < 10 ? '0' + mes : mes}-${dia < 10 ? '0' + dia : dia} ${hora < 10 ? '0' + hora : hora}:${minutos < 10 ? '0' + minutos : minutos}:${segundos < 10 ? '0' + segundos : segundos}`;
+  let usuario = 2060
+  let estado = 1
+
+  let idProduct = document.getElementById("edt-id-product-lab").value
+  let quantity = document.getElementById("edt-product-quantity-lab").value
+  let price = document.getElementById("edt-product-price-lab").value
+  let totalPrice = document.getElementById("edt-product-total-price-lab").value
+
+
+  let data = {
+    puntoCarga : idPuntoCarga,
+    idPaciente : parseInt(idPaciente),
+    idCuentaAtencion : parseInt(idCuentaAtencion),
+    idServicioPaciente : parseInt(idServicioPaciente),
+    idTipoFinanciamiento : parseInt(idTipoFinanciamiento),
+    fuenteFinanciamiento : parseInt(FuenteFinanciamiento),
+    fechaCrea : fechaActual,
+    usuario : usuario,
+    fechaDespacho : fechaActual,
+    usuarioDespacho : usuario,
+    estado : estado,
+    fechaCpt : fechaActual,
+    idProducto : parseInt(idProduct),
+    cantidad : parseInt(quantity),
+    precio : parseFloat(price).toFixed(2),
+    precioTotal : parseFloat(totalPrice).toFixed(2),
+    labHis : '',
+    grupo : 0,
+    subGrupo : 0,
+    labHisCodigo : ''
+  }
+
+  fetchInsertDataProcedureLabSaludpol(data)
+
+  /*
+  
+  ,
+    idPersonaTomaLab:idPersonaTomaLab,
+    idDiagnostico:idDiagnostico,
+    EsDiagnosticoDefinitivo:EsDiagnosticoDefinitivo,
+    OrdenaPrueba:OrdenaPrueba,
+    Paciente:paciente,
+    idTipoSexo:tipoSexo,
+    FechaNacimiento:fNac,
+    colegiatura:colegiatura
+  
+  */
+
+}
+
 function fetchInsertDataProcedureSaludpol(data){
 
   fetch(`${url}/insert-procedure-saludpol/`, {
@@ -2287,6 +2485,132 @@ function fetchInsertDataProcedureSaludpol(data){
 
       updateDetailAccount()
       cleanTableAddProcedure()
+      
+     }else{
+      Swal.fire(
+        'Oops!',
+        'Se produjo un error',
+        'warning'
+      )
+     }
+  })
+  .catch(error => {
+    Swal.fire(
+        'Oops!',
+        'Se produjo un error',
+        'warning'
+      )
+    console.error(error)
+
+});
+
+}
+
+function fetchInsertDataProcedureLabSaludpol(data){
+
+  console.log(data)
+
+  fetch(`${url}/insert-laboratory-saludpol/`, {
+    method: 'POST', // o 'PUT', 'DELETE', etc.
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data) // data es un objeto con los datos a enviar
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log(data)
+     if(data[0].length != 0){
+
+      console.log(data[0].IdOrden)
+      fetchInsertLabMovimiento(data[0].IdOrden)
+      
+     }else{
+      Swal.fire(
+        'Oops!',
+        'Se produjo un error',
+        'warning'
+      )
+     }
+  })
+  .catch(error => {
+    Swal.fire(
+        'Oops!',
+        'Se produjo un error',
+        'warning'
+      )
+    console.error(error)
+
+});
+
+}
+
+function fetchInsertLabMovimiento(orden){
+
+  let fechaHoraActual = new Date();
+
+// Obtener componentes individuales (opcional)
+  let año = fechaHoraActual.getFullYear();
+  let mes = fechaHoraActual.getMonth() + 1; // Los meses en JavaScript van de 0 a 11, por lo que sumamos 1.
+  let dia = fechaHoraActual.getDate();
+  let hora = fechaHoraActual.getHours();
+  let minutos = fechaHoraActual.getMinutes();
+  let segundos = fechaHoraActual.getSeconds();
+
+  let fechaActual = `${año}-${mes < 10 ? '0' + mes : mes}-${dia < 10 ? '0' + dia : dia} ${hora < 10 ? '0' + hora : hora}:${minutos < 10 ? '0' + minutos : minutos}:${segundos < 10 ? '0' + segundos : segundos}`;
+
+  let idCuentaAtencion = document.getElementById("d-account").innerHTML
+
+  let sex = document.getElementById("d-sex").innerHTML 
+  let valueSex = 2
+      
+  if(sex.includes("Masculino")){
+    valueSex = 1
+  }
+
+
+  let idPersonaTomaLab = 5708
+  let idDiagnostico = document.getElementById("lab-diagnosys-code").innerHTML
+  let EsDiagnosticoDefinitivo = 1
+  let OrdenaPrueba = document.getElementById("d-id-medico").innerHTML
+  let paciente = document.getElementById("d-fullname").innerHTML 
+  let tipoSexo = valueSex
+  let fNac = (document.getElementById("d-nac").innerHTML ).split("-")[2]+'-'+(document.getElementById("d-nac").innerHTML ).split("-")[1]+'-'+(document.getElementById("d-nac").innerHTML ).split("-")[0]
+  let colegiatura = document.getElementById("d-id-medic-col").innerHTML 
+
+  let datax = {
+    IdOrden:orden,
+    idCuentaAtencion:idCuentaAtencion,
+    fechaCrea:fechaActual,
+    idPersonaTomaLab:idPersonaTomaLab,
+    idDiagnostico:idDiagnostico,
+    EsDiagnosticoDefinitivo:EsDiagnosticoDefinitivo,
+    OrdenaPrueba:OrdenaPrueba,
+    Paciente:paciente,
+    idTipoSexo:tipoSexo,
+    FechaNacimiento:fNac,
+    colegiatura:colegiatura
+  }
+
+  console.log(datax)
+
+  fetch(`${url}/insert-mov-laboratory-saludpol/`, {
+    method: 'POST', // o 'PUT', 'DELETE', etc.
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(datax) // data es un objeto con los datos a enviar
+  })
+  .then(response => response.json())
+  .then(data => {
+    
+    console.log(data)
+
+     if(data[0].success == "insertado"){
+
+      Swal.fire('Agregado!', '', 'success')
+
+      updateDetailAccount()
       
      }else{
       Swal.fire(
@@ -2498,7 +2822,7 @@ function insertDiagnosysByLab(d){
   document.getElementById("lab-diagnosys-code").innerHTML = d.IdDiagnostico
   document.getElementById ("lab-t-t1").style = "display:flex;font-weight: 700;"
   $('#tb-data-search-procedure-by-lab').DataTable().destroy()
-  document.getElementById("tb-data-search-procedure-by-lab").style = "display:flex;"
+  document.getElementById("tb-data-search-procedure-by-lab").style = "display:run-in;"
   createDatatableSearchProcedureByLab()
 }
 

@@ -656,10 +656,10 @@
           </table>
           
           <p></p>
-          <label style="color: #0192ac;">Diagnostico seleccionado :</label>
+          <b style="color: #ac0039;">*</b><label style="color: #0192ac;">Diagnostico seleccionado :</label>
           <label style="font-weight: 500;" id="lab-diagnosys"></label>
           <p></p>
-          <label style="color: #0192ac;">Código :</label>
+          <b style="color: #ac0039;">*</b><label style="color: #0192ac;">Código :</label>
           <label style="font-weight: 500;" id="lab-diagnosys-code"></label>
           
           <br><p></p>
@@ -669,7 +669,7 @@
             <p></p>
             <div class="input-group mb-3" id="input-diagnosys">
               <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
-              <input type="text" id="in-diagnosys-by-lab" onkeyup="searchProcedureLab()" class="form-control" placeholder="Nombre de procedimiento de lab..." aria-describedby="basic-addon1">
+              <input type="text" id="in-procedure-by-lab" onkeyup="searchProcedureLab()" class="form-control" placeholder="Nombre de procedimiento de lab..." aria-describedby="basic-addon1">
             </div>    
           </div>
 
@@ -680,12 +680,35 @@
                 <tr>
                   <th></th>
                   <th>ID</th>
-                  <th>Nombre</th>
+                  <th>Cód</th>
+                  <th>Descripcion</th>
+                  <th>Precio</th>
                 </tr>
               </thead>
               <tbody id="tbodySeachProcedureByLab">
               </tbody>
             </table>
+
+            <br>
+
+            <label>Procedimiento de laboratorio :&nbsp;</label><label style="color: #cf7c00;" id="select-name-procedure-lab"></label>
+
+              <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1"><i class="bi bi-border-middle"></i>&nbsp;ID Producto</span>
+                <input disabled style="background-color: white;color: #000833;" type="text" id="edt-id-product-lab" class="form-control" aria-describedby="basic-addon1">
+    
+                <span class="input-group-text" id="basic-addon1"><i class="bi bi-tag"></i>&nbsp;Precio</span>
+                <input disabled style="background-color: white;color: #000833;" type="number" id="edt-product-price-lab" class="form-control" aria-describedby="basic-addon1">
+
+                <span class="input-group-text" id="basic-addon1"><i class="bi bi-boxes"></i>&nbsp;Cantidad</span>
+                <input maxlength="1" onkeyup="addQuantityAndPriceProcedureLab()" style="background-color: white;color: #000833;" type="tel" id="edt-product-quantity-lab" class="form-control" aria-describedby="basic-addon1">
+
+                <span class="input-group-text" id="basic-addon1"><i class="bi bi-tags"></i>&nbsp;Total</span>
+                <input disabled style="background-color: white;color: #000833;" type="text" id="edt-product-total-price-lab" class="form-control" aria-describedby="basic-addon1">
+
+                <button onclick="showModaladdProcedureLabAccount()" class="btn btn-success"><i class="bi bi-clipboard-plus"></i>&nbsp;Agregar</button>
+
+              </div>   
 
       </div>
     </div>

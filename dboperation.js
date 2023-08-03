@@ -1166,7 +1166,7 @@ console.log("error :" + error);
       let pool = await sql.connect(config);
       let res = await pool.request().query(`SELECT FC.IdProducto,FC.Codigo,FC.Nombre, FCS.PrecioUnitario FROM SIGH..FactCatalogoServicios  FC
       INNER JOIN SIGH..FactCatalogoServiciosHosp FCS ON FCS.IdProducto = FC.IdProducto 
-      where Nombre like '${n}%' AND FCS.IdTipoFinanciamiento = 7 AND FCS.Activo = 1`);
+      where Nombre like '${n}%' COLLATE Latin1_general_CI_AI AND FCS.IdTipoFinanciamiento = 7 AND FCS.Activo = 1`);
       return res.recordsets;
     } catch (error) {
       return [[{success:"error"}]]
@@ -1249,21 +1249,39 @@ console.log("error :" + error);
       .input('GRUPO',d.grupo)
       .input('SUBGRUPO',d.subGrupo)
       .input('LABHISCODIGO',d.labHisCodigo)
-      .input('IDPERSONATOMALAB',d.idPersonaTomaLab)
-      .input('IDIDAGNOSTICO',d.idDiagnostico)
-      .input('DIAGNOSTICODEF',d.EsDiagnosticoDefinitivo)
-      .input('ORDENAPRUEBA',d.labHisCodigo)
-      .input('PACIENTENOMBRE',d.Paciente)
-      .input('TIPOSEXO',d.idTipoSexo)
-      .input('FECHANAC',d.FechaNacimiento)
-      .input('COLEGIATURA',d.colegiatura)
 
       .execute(`INSERTAR_LABORATORIO_SALUDPOL`) 
-      return [[{success:"insertado"}]]
+      return res.recordsets
     } catch (error) {
        return [[{success:"error"}]]
     }
   }
+
+  async function add_mov_laboratory_saludpol(d) {
+
+    try {
+
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('ORDEN',d.IdOrden)
+      .input('CUENTA',d.idCuentaAtencion)
+      .input('FECHACREA',d.fechaCrea)
+      .input('IDPERSONATOMALAB',d.idPersonaTomaLab)
+      .input('IDIDAGNOSTICO',d.idDiagnostico)
+      .input('DIAGNOSTICODEF',d.EsDiagnosticoDefinitivo)
+      .input('ORDENAPRUEBA',d.OrdenaPrueba)
+      .input('PACIENTENOMBRE',d.Paciente)
+      .input('TIPOSEXO',d.idTipoSexo)
+      .input('FECHANAC',d.FechaNacimiento)
+      .input('COLEGIATURA',d.colegiatura)
+      .execute(`INSERTAR_MOV_LABORATORIO_SALUDPOL`) 
+      return [[{success:"insertado"}]]
+    } catch (error) {
+      console.log(error)
+       return [[{success:"error"}]]
+    }
+  }
+
 
   async function search_fua_by_num_and_size(lote,fua) {
     try {
@@ -1328,7 +1346,7 @@ console.log("error :" + error);
       let pool = await sql.connect(config);
       let res = await pool.request().query(`SELECT IdDiagnostico,Descripcion
       FROM SIGH..Diagnosticos 
-      WHERE Descripcion LIKE '${diagnosys}%'`);
+      WHERE Descripcion LIKE '${diagnosys}%' COLLATE Latin1_general_CI_AI`);
       return res.recordsets;
     } catch (error) {
       return [[{success:"error"}]]
@@ -1464,5 +1482,6 @@ module.exports = {
   insert_diagnosys_saludpol:insert_diagnosys_saludpol,
   delete_diagnosys_saludpol:delete_diagnosys_saludpol,
   add_laboratory_saludpol:add_laboratory_saludpol,
-  delete_laboratory_saludpol:delete_laboratory_saludpol
+  delete_laboratory_saludpol:delete_laboratory_saludpol,
+  add_mov_laboratory_saludpol:add_mov_laboratory_saludpol
 };

@@ -1572,6 +1572,19 @@ router.post("/insert-laboratory-saludpol", function (req, res,next) {
   });
 });
 
+router.post("/insert-mov-laboratory-saludpol", function (req, res,next) {
+  
+  let data = req.body
+
+  sql.add_mov_laboratory_saludpol(data).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({success:"error"})
+    }
+  });
+});
+
 
 router.get("/search-fua-by-num-size/:a/:b", function (req, res, next) {
   let size = req.params.a 

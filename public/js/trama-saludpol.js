@@ -1855,7 +1855,7 @@ function getDataClientSaludpol(d){
               document.getElementById("d-ate").innerHTML = data[0][0].TipoServicio
               document.getElementById("d-auth").innerHTML = data[0][0].Autorizacion
               document.getElementById("d-account").innerHTML = data[0][0].idCuentaAtencion
-              document.getElementById("d-fua").innerHTML = d.CAMPO1
+              document.getElementById("d-fua").innerHTML = isDataNull(data[0][0].Autorizacion)
               document.getElementById("d-history").innerHTML = data[0][0].NroHistoriaClinica
               
               document.getElementById("d-dni").innerHTML = data[0][0].NroDocumento
@@ -2929,4 +2929,298 @@ function openModalAddLaboratory(){
       $('#modalAddLab').modal('show')
     }
     
+}
+
+function printAtention(){
+
+  let account = document.getElementById("d-account").innerHTML
+  let fullname = document.getElementById("d-fullname").innerHTML
+  let ff = document.getElementById("d-ff").innerHTML
+  let ts = document.getElementById("d-ate").innerHTML
+  let afiliation = document.getElementById("d-auth").innerHTML
+  let servI = document.getElementById("d-svi").innerHTML
+  let servE = document.getElementById("d-sve").innerHTML
+  let his = document.getElementById("d-history").innerHTML
+  let fa = document.getElementById("d-fe").innerHTML
+
+  let totalPro = document.getElementById("t-pro").innerHTML
+  let totalLab = document.getElementById("t-lab").innerHTML
+  let totalImg= document.getElementById("t-img").innerHTML
+  let totalMed= document.getElementById("t-med").innerHTML
+  let totalIns= document.getElementById("t-ins").innerHTML
+
+  let totalAte= document.getElementById("t-ate").innerHTML
+
+  let fechaHoraActual = new Date();
+
+  let positionTableDiag = 73
+
+  const firstTableHeight = arrayDiag().length * 10;
+  const textYPositionDiag = firstTableHeight + positionTableDiag + 12;
+
+  // Obtener componentes individuales (opcional)
+    let año = fechaHoraActual.getFullYear();
+    let mes = fechaHoraActual.getMonth() + 1; // Los meses en JavaScript van de 0 a 11, por lo que sumamos 1.
+    let dia = fechaHoraActual.getDate();
+    let horas = fechaHoraActual.getHours();
+    let minutos = fechaHoraActual.getMinutes();
+    let segundos = fechaHoraActual.getSeconds();
+    let fechaActual = `${dia < 10 ? '0' + dia : dia}/${mes < 10 ? '0' + mes : mes}/${año}`;
+  
+    const ampm = horas >= 12 ? 'pm' : 'am';
+
+    const horas12 = horas % 12 === 0 ? 12 : horas % 12;
+    const formatoHora = `${horas12 < 10 ? '0' : ''}${horas12}:${minutos < 10 ? '0' : ''}${minutos} ${ampm}`;
+
+
+  var doc = new jspdf.jsPDF()
+  doc.addImage('/image/logoHSR.png', 'JPEG', 5, 7, 22, 12)
+  doc.setFontSize(9)
+  doc.text(62, 10, 'HOSPITAL SANTA ROSA    www.hospitalsantarosa.gob.pe')
+  doc.text(190, 10, fechaActual)
+  doc.text(89, 15, 'JR.CAJAMARCA 171')
+  doc.text(190, 15, formatoHora)
+  doc.text(88, 20, 'TELEFONO : 57-1019')
+  doc.setFontSize(10)
+  doc.setFont(undefined, 'bold')
+  doc.text(40, 27, 'COBERTURA DE PROCESOS DE PRESTACIONES DE SALUD DE SALUDPOL')
+  doc.setFontSize(9)
+  doc.setFont(undefined, 'normal')
+  doc.text(7, 38, 'Apellidos y nombres : '+fullname+'     Fte.Financ : '+ff+' ;  T.Serv : '+ts)
+  doc.text(7, 45, 'Código de afiliación : '+afiliation)
+  doc.text(160, 45, 'N°  Cuenta : '+account)
+  doc.text(7, 52, 'Servicio ingreso : '+servI)
+  doc.text(160, 52, 'Hist. Clin : '+his)
+  doc.text(7, 59, 'Servicio egreso : '+servE)
+  doc.text(160, 59, 'Fecha Alta : '+fa)
+  doc.setFont(undefined, 'bold')
+  doc.text(93, 68, 'DIAGNOSTICOS')
+   doc.autoTable({
+    head: [['Clasificación','Código','Descripción']],
+    body: arrayDiag(),
+    theme: 'grid',
+    styles : { halign : 'center',fontSize: 8},
+   headStyles :{fillColor : [0, 142, 138]}, 
+   alternateRowStyles: {fillColor : [238, 255, 254]}, 
+   tableLineColor: [0, 142, 138], 
+   tableLineWidth: 0.1,
+   margin: {top: positionTableDiag},
+    })
+
+  doc.text(91, doc.lastAutoTable.finalY+10, 'PROCEDIMIENTOS')
+  doc.autoTable({
+    startY: doc.lastAutoTable.finalY + 15,
+    head: [['Código','Descripción','Cantidad','Precio.U','Monto']],
+    body: arrayPro(),
+    theme: 'grid',
+    styles : { halign : 'center',fontSize: 8},
+   headStyles :{fillColor : [216, 166, 0]}, 
+   alternateRowStyles: {fillColor : [255, 252, 242]}, 
+   tableLineColor: [216, 166, 0], 
+   tableLineWidth: 0.1,
+   margin: {top: positionTableDiag},
+    })
+  doc.setFont(undefined, 'normal')
+  doc.text(138, doc.lastAutoTable.finalY+5, 'Sub Total de procedimientos : S/'+totalPro)
+
+  doc.setFont(undefined, 'bold')
+  doc.text(93, doc.lastAutoTable.finalY+10, 'LABORATORIO')
+  doc.autoTable({
+    startY: doc.lastAutoTable.finalY + 15,
+    head: [['Código','Descripción','Cantidad','Precio.U','Monto']],
+    body: arrayLab(),
+    theme: 'grid',
+    styles : { halign : 'center',fontSize: 8},
+   headStyles :{fillColor : [216, 166, 0]}, 
+   alternateRowStyles: {fillColor : [255, 252, 242]}, 
+   tableLineColor: [216, 166, 0], 
+   tableLineWidth: 0.1,
+   margin: {top: positionTableDiag},
+    })
+  doc.setFont(undefined, 'normal')
+  doc.text(143, doc.lastAutoTable.finalY+5, 'Sub Total de laboratorio : S/'+totalLab)
+
+
+  doc.setFont(undefined, 'bold')
+  doc.text(96, doc.lastAutoTable.finalY+10, 'IMÁGENES')
+  doc.autoTable({
+    startY: doc.lastAutoTable.finalY + 15,
+    head: [['Código','Descripción','Cantidad','Precio.U','Monto']],
+    body: arrayImg(),
+    theme: 'grid',
+    styles : { halign : 'center',fontSize: 8},
+   headStyles :{fillColor : [216, 166, 0]}, 
+   alternateRowStyles: {fillColor : [255, 252, 242]}, 
+   tableLineColor: [216, 166, 0], 
+   tableLineWidth: 0.1,
+   margin: {top: positionTableDiag},
+    })
+  doc.setFont(undefined, 'normal')
+  doc.text(146, doc.lastAutoTable.finalY+5, 'Sub Total de imágenes : S/'+totalImg)
+
+  doc.setFont(undefined, 'bold')
+  doc.text(93, doc.lastAutoTable.finalY+10, 'MEDICAMENTOS')
+  doc.autoTable({
+    startY: doc.lastAutoTable.finalY + 15,
+    head: [['Código','Nombre','Cantidad','Diagnostico','Precio.U','Monto']],
+    body: arrayMed(),
+    theme: 'grid',
+    styles : { halign : 'center',fontSize: 8},
+    headStyles :{fillColor : [172, 0, 57]}, 
+    alternateRowStyles: {fillColor : [255, 243, 247]}, 
+    tableLineColor: [172, 0, 57], 
+   tableLineWidth: 0.1,
+   margin: {top: positionTableDiag},
+    })
+  doc.setFont(undefined, 'normal')
+  doc.text(141, doc.lastAutoTable.finalY+5, 'Sub Total de medicamentos : S/'+totalMed)
+
+  doc.setFont(undefined, 'bold')
+  doc.text(96, doc.lastAutoTable.finalY+10, 'INSUMOS')
+  doc.autoTable({
+    startY: doc.lastAutoTable.finalY + 15,
+    head: [['Código','Nombre','Cantidad','Diagnostico','Precio.U','Monto']],
+    body: arrayIns(),
+    theme: 'grid',
+    styles : { halign : 'center',fontSize: 8},
+   headStyles :{fillColor : [172, 0, 57]}, 
+   alternateRowStyles: {fillColor : [255, 243, 247]}, 
+   tableLineColor: [172, 0, 57], 
+   tableLineWidth: 0.1,
+   margin: {top: positionTableDiag},
+    })
+  doc.setFont(undefined, 'normal')
+  doc.text(146, doc.lastAutoTable.finalY+5, 'Sub Total de insumos : S/'+totalIns)
+  doc.text(146, doc.lastAutoTable.finalY+10, 'Total consumo : S/'+totalAte)
+
+
+  doc.save('Saludpol'+'.pdf')
+
+}
+
+
+function arrayDiag(){
+  const table = document.getElementById('tb-data-diag');
+  const tbody = table.querySelector('tbody');
+
+  // Array para almacenar los datos de la tabla
+  const array = [];
+
+  // Recorrer las filas del cuerpo de la tabla
+  for (const row of tbody.rows) {
+    const rowData = [];
+
+    // Recorrer las celdas de la fila actual
+    for (const cell of row.cells) {
+      rowData.push(cell.textContent.trim());
+    }
+
+    array.push(rowData);
+  }
+  return array
+}
+
+function arrayPro(){
+  const table = document.getElementById('tb-data-pro');
+  const tbody = table.querySelector('tbody');
+
+  // Array para almacenar los datos de la tabla
+  const array = [];
+
+  // Recorrer las filas del cuerpo de la tabla
+  for (const row of tbody.rows) {
+    const rowData = [];
+
+    // Recorrer las celdas de la fila actual
+    for (const cell of row.cells) {
+      rowData.push(cell.textContent.trim());
+    }
+
+    array.push(rowData);
+  }
+  return array
+}
+
+function arrayLab(){
+  const table = document.getElementById('tb-data-lab');
+  const tbody = table.querySelector('tbody');
+
+  // Array para almacenar los datos de la tabla
+  const array = [];
+
+  // Recorrer las filas del cuerpo de la tabla
+  for (const row of tbody.rows) {
+    const rowData = [];
+
+    // Recorrer las celdas de la fila actual
+    for (const cell of row.cells) {
+      rowData.push(cell.textContent.trim());
+    }
+
+    array.push(rowData);
+  }
+  return array
+}
+
+function arrayImg(){
+  const table = document.getElementById('tb-data-img');
+  const tbody = table.querySelector('tbody');
+
+  // Array para almacenar los datos de la tabla
+  const array = [];
+
+  // Recorrer las filas del cuerpo de la tabla
+  for (const row of tbody.rows) {
+    const rowData = [];
+
+    // Recorrer las celdas de la fila actual
+    for (const cell of row.cells) {
+      rowData.push(cell.textContent.trim());
+    }
+
+    array.push(rowData);
+  }
+  return array
+}
+
+function arrayMed(){
+  const table = document.getElementById('tb-data-med');
+  const tbody = table.querySelector('tbody');
+
+  // Array para almacenar los datos de la tabla
+  const array = [];
+
+  // Recorrer las filas del cuerpo de la tabla
+  for (const row of tbody.rows) {
+    const rowData = [];
+
+    // Recorrer las celdas de la fila actual
+    for (const cell of row.cells) {
+      rowData.push(cell.textContent.trim());
+    }
+
+    array.push(rowData);
+  }
+  return array
+}
+
+function arrayIns(){
+  const table = document.getElementById('tb-data-ins');
+  const tbody = table.querySelector('tbody');
+
+  // Array para almacenar los datos de la tabla
+  const array = [];
+
+  // Recorrer las filas del cuerpo de la tabla
+  for (const row of tbody.rows) {
+    const rowData = [];
+
+    // Recorrer las celdas de la fila actual
+    for (const cell of row.cells) {
+      rowData.push(cell.textContent.trim());
+    }
+
+    array.push(rowData);
+  }
+  return array
 }

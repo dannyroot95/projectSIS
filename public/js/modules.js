@@ -41,8 +41,9 @@ $('document').ready(function () {
           plot_saludpol()
         }else if (direccion == '#catalogo') {
           catalog()
-        }    
-         else {
+        }else if (direccion == '#estadisticas') {
+          graph()
+        }else {
           routeErrE();
         }
       });
@@ -113,6 +114,10 @@ $('document').ready(function () {
   function catalog() {
     window.location.hash = "#catalogo"
     contentModulo.innerHTML = urlModule("/content/catalogo.html");
+  }
+  function graph() {
+    window.location.hash = "#estadisticas"
+    contentModulo.innerHTML = urlModule("/content/grafico.html");
   }
   function routeErrE() {
     console.log("ruta error")

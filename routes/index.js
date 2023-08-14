@@ -1021,6 +1021,19 @@ function getTypeUser(value){
  
       </div>
     </li>
+
+
+    <li>
+    <a href="#estadisticas">
+    <i class='bx bx-line-chart'></i>
+      <span class="link_name">Estadisticas</span>
+    </a>
+    <ul class="sub-menu blank">
+      <li><a class="link_name" href="#estadisticas">Estadisticas</a></li>
+    </ul>
+     </li>
+
+
   </ul>
   
   
@@ -1145,6 +1158,18 @@ function getTypeUser(value){
         <div id="typeuser" class="job">Tipo de usuario</div>
         </div>
     </li>
+
+    <li>
+    <a href="#estadisticas">
+    <i class='bx bx-line-chart'></i>
+      <span class="link_name">Estadisticas</span>
+    </a>
+    <ul class="sub-menu blank">
+      <li><a class="link_name" href="#estadisticas">Estadisticas</a></li>
+    </ul>
+     </li>
+
+
   </ul>
   
   
@@ -1683,6 +1708,17 @@ router.get("/delete-diagnosys/:a/:b", function (req, res, next) {
   let IdDiagnosys = req.params.a 
   let IdAtention = req.params.b
   sql.delete_diagnosys_saludpol(IdDiagnosys,IdAtention).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
+router.get("/get-graph/:a", function (req, res, next) {
+  let year = req.params.a 
+  sql.get_graph(year).then((result) => {
     if(result[0].length>0){
       res.json(result[0]);
     }else{

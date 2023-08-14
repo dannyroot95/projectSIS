@@ -649,7 +649,7 @@ console.log("error :" + error);
 
     try{
       // create archive and specify method of encryption and password
-      let archive = archiver.create('zip-encrypted', {zlib: {level: 8}, encryptionMethod: 'zip20', password: passwordTest});
+      let archive = archiver.create('zip-encrypted', {zlib: {level: 8}, encryptionMethod: 'zip20', password: passwordProduction});
       
       function writeFileWithUTF8(fileName, content) {
         fs.writeFileSync(fileName, content, 'utf8');
@@ -709,7 +709,7 @@ console.log("error :" + error);
           <!--Optional:-->
           <v2:canal>SOAPUI</v2:canal>
           <v2:usuario>HSRPM</v2:usuario>
-          <v2:autorizacion>${authTesting}</v2:autorizacion>
+          <v2:autorizacion>${authProduction}</v2:autorizacion>
         </v2:requestHeader>
       </soapenv:Header>
       <soapenv:Body>
@@ -725,7 +725,7 @@ console.log("error :" + error);
     'Content-Type': 'text/xml',
   };
    
-  const response = await axios.post(urlTesting, xmlBody, { headers });
+  const response = await axios.post(urlProduction, xmlBody, { headers });
 
   return [[
     {
@@ -1292,7 +1292,7 @@ console.log("error :" + error);
       .execute(`BUSCAR_FUA_POR_NRO_FUA`) 
       return res.recordsets
     } catch (error) {
-       console.log("error : " + error);
+       console.log(error);
        return [[{success:"error"}]]
     }
   }
@@ -1400,6 +1400,19 @@ console.log("error :" + error);
     }
   }
 
+  async function get_graph(year) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('YEAR',year)
+      .execute(`GRAFICO`) 
+      return res.recordsets
+    } catch (error) {
+       return [[{success:"error"}]]
+    }
+  }
+  
+
 module.exports = {
   getdata: getdata,
   sendTrama:sendTrama,
@@ -1483,5 +1496,6 @@ module.exports = {
   delete_diagnosys_saludpol:delete_diagnosys_saludpol,
   add_laboratory_saludpol:add_laboratory_saludpol,
   delete_laboratory_saludpol:delete_laboratory_saludpol,
-  add_mov_laboratory_saludpol:add_mov_laboratory_saludpol
+  add_mov_laboratory_saludpol:add_mov_laboratory_saludpol,
+  get_graph:get_graph
 };

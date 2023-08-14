@@ -288,6 +288,7 @@ function fetchTramaSaludpol(init,final){
             loader.style = "display:none;"
             enableButtons()
             document.getElementById("btn-trama").style = "display:block;"
+            document.getElementById("btn-upload-trama").style = "display:block;"
             document.getElementById("btn-obs").style = "display:block;"
             document.getElementById("btn-report").style = "display:block;"
           }).catch(err => {
@@ -320,6 +321,7 @@ function fetchTramaSaludpolEx(init,final){
             loader.style = "display:none;"
             enableButtons()
             document.getElementById("btn-trama").style = "display:block;"
+            document.getElementById("btn-upload-trama").style = "display:block;"
             document.getElementById("btn-obs").style = "display:block;"
             document.getElementById("btn-report").style = "display:block;"
           }).catch(err => {
@@ -352,6 +354,7 @@ function fetchTramaSaludpolExAndIn(init,final){
             loader.style = "display:none;"
             enableButtons()
             document.getElementById("btn-trama").style = "display:block;"
+            document.getElementById("btn-upload-trama").style = "display:block;"
             document.getElementById("btn-obs").style = "display:block;"
             document.getElementById("btn-report").style = "display:block;"
           }).catch(err => {
@@ -384,6 +387,7 @@ function fetchTramaSaludpolIn(init,final){
             loader.style = "display:none;"
             enableButtons()
             document.getElementById("btn-trama").style = "display:block;"
+            document.getElementById("btn-upload-trama").style = "display:block;"
             document.getElementById("btn-obs").style = "display:block;"
             document.getElementById("btn-report").style = "display:block;"
           }).catch(err => {
@@ -579,6 +583,7 @@ function disableButtons(){
 document.getElementById("btn-query").disabled = true
 document.getElementById("btn-deleted").disabled = true
 document.getElementById("btn-trama").disabled = true
+document.getElementById("btn-upload-trama").disabled = true
 document.getElementById("btn-obs").disabled = true
 document.getElementById("btn-report").disabled = true
 }
@@ -588,6 +593,7 @@ function enableButtons(){
   document.getElementById("btn-query").disabled = false
   document.getElementById("btn-deleted").disabled = false
   document.getElementById("btn-trama").disabled = false
+  document.getElementById("btn-upload-trama").disabled = false
   document.getElementById("btn-obs").disabled = false
   document.getElementById("btn-report").disabled = false
 }
@@ -1128,7 +1134,7 @@ function obtenerDatos() {
     Swal.fire(
       'Oops!',
       'Debe seleccionar al menos un item!',
-      'info'
+      'error'
     )
     return;
   }
@@ -1214,7 +1220,7 @@ function fetchReportSaludpol(n){
   fetch(`${url}/report-saludpol/${n}`)
             .then(response => response.json())
             .then(data => {
-               
+               console.log(data)
               for (var i = 0; i < data.length; i++) {
                 var item = data[i];
                 var newItem = {
@@ -1222,7 +1228,7 @@ function fetchReportSaludpol(n){
                   "N°_Autorizacion": convertBlank(item.Autorizacion),
                   "Cuenta": convertBlank(item.idCuentaAtencion),
                   "Nombres": convertBlank(item.Nombres),
-                  "Servicio": convertBlank(item.Nombres),
+                  "Servicio": convertBlank(item.ServicioIngreso),
                   "dias_hosp": convertBlank(item.dias_hosp),
                   "Codigo": convertBlank(item.Codigo),
                   "Consumo": convertBlank(item.Nombre),
@@ -1728,7 +1734,7 @@ function deleteProcedure(){
     table = document.getElementById("tb-data-lab")
     const numReg = table.rows.length;
 
-    if(numReg > 2){
+    if(numReg > 1){
   
     fetch(`${url}/delete-laboratory-saludpol/${order}/${id_product}/${account}`)
       .then(response => response.json())
@@ -2978,12 +2984,12 @@ function printAtention(){
   doc.setFontSize(9)
   doc.text(62, 10, 'HOSPITAL SANTA ROSA    www.hospitalsantarosa.gob.pe')
   doc.text(190, 10, fechaActual)
-  doc.text(89, 15, 'JR.CAJAMARCA 171')
+  doc.text(90, 15, 'JR.CAJAMARCA 171')
   doc.text(190, 15, formatoHora)
-  doc.text(88, 20, 'TELEFONO : 57-1019')
+  doc.text(89, 20, 'TELEFONO : 57-1019')
   doc.setFontSize(10)
   doc.setFont(undefined, 'bold')
-  doc.text(40, 27, 'COBERTURA DE PROCESOS DE PRESTACIONES DE SALUD DE SALUDPOL')
+  doc.text(41, 27, 'COBERTURA DE PROCESOS DE PRESTACIONES DE SALUD DE SALUDPOL')
   doc.setFontSize(9)
   doc.setFont(undefined, 'normal')
   doc.text(7, 38, 'Apellidos y nombres : '+fullname+'     Fte.Financ : '+ff+' ;  T.Serv : '+ts)
@@ -3094,7 +3100,7 @@ function printAtention(){
   doc.text(146, doc.lastAutoTable.finalY+10, 'Total consumo : S/'+totalAte)
 
 
-  doc.save('Saludpol'+'.pdf')
+  doc.save('Saludpol-'+account+'.pdf')
 
 }
 

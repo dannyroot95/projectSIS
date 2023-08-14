@@ -22,6 +22,46 @@ const chkMedic = document.getElementById("chkMedic")
 const chkAtention = document.getElementById("chkTypeAtention")
 const chkService = document.getElementById("chkService")
 
+const monthYearElement = document.getElementById("monthYear");
+const calendarCells = document.getElementById("calendarCells");
+
+const today = new Date();
+let currentMonth = today.getMonth();
+let currentYear = today.getFullYear();
+
+function getMonthName(month) {
+  const months = [
+   "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+   "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+  ];
+  return months[month];
+}
+
+function showCalendar(year, month) {
+
+  $('#modalCalendar').modal('show')
+  const firstDay = new Date(year, month, 1).getDay();
+  const lastDay = new Date(year, month + 1, 0).getDate();
+  
+  monthYearElement.textContent = `${getMonthName(month)} ${year}`;
+  
+  calendarCells.innerHTML = "";
+  
+  for (let i = 0; i < firstDay; i++) {
+    const emptyCell = document.createElement("div");
+    calendarCells.appendChild(emptyCell);
+  }
+  
+  for (let i = 1; i <= lastDay; i++) {
+  const cell = document.createElement("div");
+  cell.className = "cell";
+  const randomNumber = Math.floor(Math.random() * 10); // Generar número aleatorio del 0 al 9
+  cell.innerHTML = `<span class="number">${i}</span><span class="random-text">${randomNumber} Atenciones</span>`;
+  calendarCells.appendChild(cell);
+}
+}
+
+
 const Toast = Swal.mixin({
   toast: true,
   position: 'top-end',
@@ -320,9 +360,7 @@ function yearLater(){
                 rule: '%offset-values == 0',
                 visible: false
               }]
-            }
-          },
-        ]
+            }},]
       };
        
       zingchart.render({
@@ -331,8 +369,17 @@ function yearLater(){
         height: '100%',
         width: '100%'
       });
+
+      zingchart.click = function(data){ 
+        let year = document.getElementById("dp_graph").value
+        let monthIndex = parseInt((data["targetid"]).split("node-")[1])
+        showCalendar(year, monthIndex);
+       // alert("MES : " + arrayMonths[monthIndex]); 
+   }
+
       disableLoader()
   }
+
 
  function fetchGraph(year){
 

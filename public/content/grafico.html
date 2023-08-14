@@ -11,12 +11,12 @@
     <link href='/bootstrap/css/bootstrap.min.css' rel='stylesheet'>
     <link href='/bootstrap/datatables.min.css' rel='stylesheet'>
     <link href='/css/styles.css' rel='stylesheet'>
+    <link href='/css/calendar.css' rel='stylesheet'>
     <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <script src="/js/JSPDF/jspdf.min.js"></script>
     <script src="/js/JSPDF/jspdf.plugin.autotable.min.js"></script>
-
     <style>
         #myChart {
         width: 100%;
@@ -27,6 +27,8 @@
     height: 600px;
 }
     </style>
+
+
 
 </head>
 <body>
@@ -92,6 +94,45 @@
     <div id='myChart'></div>
     <br>
     <div id='myChartPie'></div>
+
+    <!-- Modal -->
+<div class="modal fade" id="modalCalendar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Detalle de atenciones por mes</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+         
+            <center>
+
+            <div class="calendar">
+                <div class="header">
+                  <button style="visibility: hidden;" id="prevMonthBtn">&lt;</button>
+                  <h2 id="monthYear"></h2>
+                  <button style="visibility: hidden;" id="nextMonthBtn">&gt;</button>
+                </div>
+                <div class="days">
+                  <div class="day">Dom</div>
+                  <div class="day">Lun</div>
+                  <div class="day">Mar</div>
+                  <div class="day">Mie</div>
+                  <div class="day">Jue</div>
+                  <div class="day">Vie</div>
+                  <div class="day">Sab</div>
+                </div>
+                <div class="cells" id="calendarCells"></div>
+              </div>
+
+            </center>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
  </div>
       
     <script src="/bootstrap/js/bootstrap.min.js"></script>

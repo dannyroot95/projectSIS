@@ -14,6 +14,7 @@ createDatatable4()
 createDatatableSearchProcedure()
 createDatatableSearchDiagnosys()
 createDatatableSearchDiagnosysByLab()
+createDatatableSearchService()
 
 function createDatatable(){
 
@@ -249,6 +250,36 @@ function createDatatableSearchProcedureByLab(){
     });
 
     var table = $('#tb-data-search-procedure-by-lab').DataTable();
+    $('#container').css( 'display', 'block' );
+    table.columns.adjust().draw();
+}
+
+function createDatatableSearchService(){
+  $('#tb-data-search-service').DataTable({
+      language: {
+            "decimal": "",
+            "emptyTable": "No hay información",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ datos",
+            "infoEmpty": "Mostrando 0 to 0 of 0 datos",
+            "infoFiltered": "(Filtrado de _MAX_ total datos)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar _MENU_ datos",
+            "loadingRecords": "Cargando...",
+            "processing": "Procesando...",
+            "search": "Buscar en la lista:",
+            "zeroRecords": "Sin resultados encontrados",
+            "paginate": {
+                "first": "Primero",
+                "last": "Ultimo",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            }
+     },scrollY: '28vh',scrollX: true, sScrollXInner: "100%",
+     scrollCollapse: true,
+    });
+
+    var table = $('#tb-data-search-service').DataTable();
     $('#container').css( 'display', 'block' );
     table.columns.adjust().draw();
 }
@@ -1224,12 +1255,21 @@ function fetchReportSaludpol(n){
               for (var i = 0; i < data.length; i++) {
                 var item = data[i];
                 var newItem = {
-                  "prestacion": convertBlank(item.prestacion),
+                  "Prestacion": convertBlank(item.prestacion),
                   "N°_Autorizacion": convertBlank(item.Autorizacion),
                   "Cuenta": convertBlank(item.idCuentaAtencion),
                   "Nombres": convertBlank(item.Nombres),
+                  "DNI": convertBlank(item.dni),
+                  "Sexo": convertBlank(item.sexo),
+                  "Historia": convertBlank(item.HC),
+                  "Fecha Ingreso": convertBlank(item.fIngreso),
+                  "Fecha Egreso": convertBlank(item.fEgreso),
+                  "Medico": convertBlank(item.medico),
                   "Servicio": convertBlank(item.ServicioIngreso),
-                  "dias_hosp": convertBlank(item.dias_hosp),
+                  "Dias_hosp": convertBlank(item.dias_hosp),
+                  "Dx": convertBlank(item.dx),
+                  "Diagnostico": convertBlank(item.diagnostico),
+                  "Tipo de consumo": convertBlank(item.tipo),
                   "Codigo": convertBlank(item.Codigo),
                   "Consumo": convertBlank(item.Nombre),
                   "Cantidad": convertBlank(item.Cantidad),
@@ -1339,7 +1379,7 @@ function showModalDetailProcedure(data,index,type){
                   console.log(err)
               } );
   }else if(procedureType == '2'){
-    document.getElementById("staticBackdropLabel").innerHTML = 'Detalle de laboratorio'
+  document.getElementById("staticBackdropLabel").innerHTML = 'Detalle de laboratorio'
   var tabla = document.getElementById("tb-data-lab");
   var filaIndex = index; // Índice de la fila a actualizar (por ejemplo, la primera fila)
   var columnaIndex = 2; 
@@ -1348,6 +1388,35 @@ function showModalDetailProcedure(data,index,type){
   document.getElementById("loader-procedure-detail").style = "display:block;"
 
   fetch(`${url}/get-id-laboratory/${account}/${data.Nombre}`)
+            .then(response => response.json())
+            .then(data => {
+             
+
+              document.getElementById("loader-procedure-detail").style = "display:none;"
+
+              document.getElementById("id-detail-procedure").innerHTML = procedure
+              document.getElementById("id-detail-code").innerHTML = code
+              document.getElementById("detail-procedure-quantity").value = quantity
+
+              document.getElementById("id-order").innerHTML = data[0].idOrden
+              document.getElementById("id-product").innerHTML = data[0].IdProducto
+
+              document.getElementById("index-pro").innerHTML = index
+
+            }).catch(err =>{
+                console.log(err)
+            } );
+
+  }else if(procedureType == '3'){
+  document.getElementById("staticBackdropLabel").innerHTML = 'Detalle de imagenes'
+  var tabla = document.getElementById("tb-data-img");
+  var filaIndex = index; // Índice de la fila a actualizar (por ejemplo, la primera fila)
+  var columnaIndex = 2; 
+  let quantity = tabla.rows[filaIndex].cells[columnaIndex].textContent;
+
+  document.getElementById("loader-procedure-detail").style = "display:block;"
+
+  fetch(`${url}/get-id-image/${account}/${data.Nombre}`)
             .then(response => response.json())
             .then(data => {
              
@@ -1434,6 +1503,12 @@ function showModalEditAccount(){
   let date1ISO = d_in.split("/").reverse().join("-")
   let date2ISO = d_out.split("/").reverse().join("-")
 
+  let service = document.getElementById("d-svi").innerHTML
+  let idService = document.getElementById("d-id-svi").innerHTML
+
+  let service2 = document.getElementById("d-sve").innerHTML
+  let idService2 = document.getElementById("d-id-sve").innerHTML
+
   document.getElementById("et-f-in").value = date1ISO
   document.getElementById("et-f-out").value = date2ISO
 
@@ -1446,6 +1521,12 @@ function showModalEditAccount(){
   if(dni != ""){
     document.getElementById("ed-dni").value = dni
   }
+
+  document.getElementById("ed-service").value = service
+  document.getElementById("id-ed-service").value = idService
+
+  document.getElementById("ed-service-2").value = service2
+  document.getElementById("id-ed-service-2").value = idService2
 
   if(gender.textContent.includes("Femenino")){
     document.getElementById("femaleCheckbox").checked = true
@@ -1840,6 +1921,7 @@ function getDataClientSaludpol(d){
 
   let ctxPro = 0
   let ctxLab = 0
+  let ctxImg = 0
   let gender = ``
 
 
@@ -1875,6 +1957,8 @@ function getDataClientSaludpol(d){
               document.getElementById("d-svi").innerHTML = data[0][0].ServicioIngreso
               document.getElementById("d-id-svi").innerHTML = data[0][0].IdServicioIngreso
               document.getElementById("d-sve").innerHTML = data[0][0].ServicioEgreso
+              document.getElementById("d-id-sve").innerHTML = data[0][0].IdServicioEgreso
+              document.getElementById("d-svi").innerHTML = data[0][0].ServicioIngreso
               document.getElementById("d-fi").innerHTML = data[0][0].FechaIngreso
               document.getElementById("d-fe").innerHTML = data[0][0].FechaEgreso
 
@@ -1949,6 +2033,7 @@ function getDataClientSaludpol(d){
 
               $("#tbodyImg").html(data[4].map((d) => {
 
+                ctxImg++
                 t_img += parseFloat((d.Precio))
                 
                       return `
@@ -1958,7 +2043,7 @@ function getDataClientSaludpol(d){
                       <td>${d.Cantidad}</td>
                       <td>${d.PrecioUnitario}</td>
                       <td>${d.Precio}</td>
-                      <td><button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button></td>
+                      <td><center><button style="background-color:#d3a202;border-color:#d3a202;" onclick="showModalDetailProcedure('${encodeURIComponent(JSON.stringify(d))}','${ctxImg}','3')" class="btn btn-dark"><i class="bi bi-pencil-square"></i></button></center></td>
                       </tr>`;
 
                   })
@@ -2057,6 +2142,10 @@ $('#addProcedure').on('hidden.bs.modal', function (e) {
   cleanTableAddProcedure()
 })
 
+$('#addService').on('hidden.bs.modal', function (e) {
+  cleanTableAddService()
+})
+
 $('#modalAddDiagnosys').on('hidden.bs.modal', function (e) {
   document.getElementById("tbodySeachDiagnosys").innerHTML = ''
   document.getElementById("in-diagnosys").value = ''
@@ -2071,6 +2160,11 @@ function cleanTableAddProcedure(){
   document.getElementById("edt-product-price").value = ""
   document.getElementById("edt-product-quantity").value = ""
   document.getElementById("edt-product-total-price").value = ""
+}
+
+function cleanTableAddService(){
+  document.getElementById("ser-service").value = ""
+  document.getElementById("tbodySeachService").innerHTML = ''
 }
 
 function fetchSearchProcedure(n){
@@ -3229,4 +3323,128 @@ function arrayIns(){
     array.push(rowData);
   }
   return array
+}
+
+function openModalSearchService(type){
+  $('#addService').modal('show')
+
+  if(type == 1){
+    document.getElementById("type-serv").innerHTML = "ingreso"
+  }else{
+    document.getElementById("type-serv").innerHTML = "egreso"
+  }
+
+}
+
+function searchService(){
+  var input = document.getElementById("ser-service");
+  var inputValue = input.value.trim();
+  if (inputValue.length > 0) {
+    fetchSearchService(inputValue)
+  }
+}
+
+function fetchSearchService(n){
+
+  let valueType = 1
+  let type = document.getElementById("type-serv").innerHTML
+  if(type == "egreso"){
+    valueType = 2
+  }
+
+  fetch(`${url}/search-service/${n}`)
+    .then(response => response.json())
+    .then(data => {
+
+      console.log(data)
+
+      document.getElementById("tbodySeachService").innerHTML = ''
+      $('#tb-data-search-service').DataTable().destroy()
+      
+      $("#tbodySeachService").html(data.map((d) => {
+                
+              return `
+              <tr>
+              <td><button onclick="updateService('${d.IdServicio}',${valueType})" class="btn btn-primary"><i class="bi bi-plus-circle"></i><label style="font-size:14px;margin-left:4px;">Seleccionar</label></button></td>
+              <td>${(d.descripcion).toUpperCase()}</td>
+              <td>${d.IdServicio}</td>
+              <td>${(d.especialidad).toUpperCase()}</td>
+              <td>${(d.tipoServicio).toUpperCase()}</td>
+              </tr>`;
+
+          })
+          .join("")
+      );
+      createDatatableSearchService()
+    
+    }).catch(err =>{
+        console.log(err)
+        Swal.fire(
+          'Oops!',
+          'Ocurrió un error!',
+          'error'
+        )
+    } );
+}
+
+function updateService(id,v){
+  
+  let account =  document.getElementById("d-account").innerHTML
+  
+  if(v == 1){
+    fetch(`${url}/update-service-in/${id}/${account}`)
+    .then(response => response.json())
+    .then(data => {
+     
+      if(data[0].success = "actualizado"){
+        Swal.fire(
+          'Muy bien!',
+          'Servicio de ingreso actualizado!',
+          'success'
+        )
+        $('#editAccount').modal('hide')
+        $('#addService').modal('hide')
+        updateDetailAccount()
+
+      }else{
+        Swal.fire(
+          'Oops!',
+          'Ocurrió un error!',
+          'error'
+        )
+      }
+      
+    }).catch(err =>{
+        console.log(err)
+    } );
+  }else{
+    fetch(`${url}/update-service-out/${id}/${account}`)
+    .then(response => response.json())
+    .then(data => {
+     
+      if(data[0].success = "actualizado"){
+        Swal.fire(
+          'Muy bien!',
+          'Servicio de egreso actualizado!',
+          'success'
+        )
+        $('#editAccount').modal('hide')
+        $('#addService').modal('hide')
+        updateDetailAccount()
+
+      }else{
+        Swal.fire(
+          'Oops!',
+          'Ocurrió un error!',
+          'error'
+        )
+      }
+      
+    }).catch(err =>{
+        console.log(err)
+    } );
+  }
+
+  
+
 }

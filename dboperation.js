@@ -1024,6 +1024,19 @@ console.log("error :" + error);
     }
   }
 
+  async function id_image(account,procedure) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('idCuentaAtencion',account)
+      .input('procedimiento',procedure)
+      .execute(`OBTENER_ID_IMAGEN`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
   async function update_quantity_procedure(quantity,idProduct,idOrder) {
     const q = quantity
     const id_product = idProduct
@@ -1412,6 +1425,61 @@ console.log("error :" + error);
     }
   }
   
+  async function search_service(name) {
+    const n = name
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request().query(`
+      SELECT S.IdServicio
+      ,S.Nombre AS descripcion
+      ,E.Nombre AS especialidad
+      ,TS.Descripcion AS tipoServicio
+      FROM SIGH..Servicios S
+      INNER JOIN SIGH..Especialidades E ON E.IdEspecialidad = S.IdEspecialidad
+      INNER JOIN SIGH..TiposServicio TS ON TS.IdTipoServicio = S.IdTipoServicio
+      WHERE S.Nombre LIKE '${name}%'  COLLATE Latin1_general_CI_AI
+  `);
+      return res.recordsets;
+    } catch (error) {
+      return [[{success:"error"}]]
+    }finally {
+      sql.close();
+    }
+  }
+
+  async function update_service_in(idService,account) {
+    idService = parseInt(idService)
+    account = parseInt(account)
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request().query(`
+      UPDATE SIGH..Atenciones SET IdServicioIngreso = ${idService} WHERE IdCuentaAtencion = ${account} 
+  `);
+  return [[{success:"actualizado"}]]
+    } catch (error) {
+      return [[{success:"error"}]]
+    }finally {
+      sql.close();
+    }
+  }
+
+  async function update_service_out(idService,account) {
+    idService = parseInt(idService)
+    account = parseInt(account)
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request().query(`
+      UPDATE SIGH..Atenciones SET IdServicioEgreso = ${idService} WHERE IdCuentaAtencion = ${account} 
+  `);
+  return [[{success:"actualizado"}]]
+    } catch (error) {
+      return [[{success:"error"}]]
+    }finally {
+      sql.close();
+    }
+  }
+
+
 
 module.exports = {
   getdata: getdata,
@@ -1475,6 +1543,7 @@ module.exports = {
   production_saludpol:production_saludpol,
   id_procedure:id_procedure,
   id_laboratory:id_laboratory,
+  id_image:id_image,
   update_quantity_procedure:update_quantity_procedure,
   update_dni_patient:update_dni_patient,
   update_gender_patient:update_gender_patient,
@@ -1497,5 +1566,8 @@ module.exports = {
   add_laboratory_saludpol:add_laboratory_saludpol,
   delete_laboratory_saludpol:delete_laboratory_saludpol,
   add_mov_laboratory_saludpol:add_mov_laboratory_saludpol,
-  get_graph:get_graph
+  get_graph:get_graph,
+  search_service:search_service,
+  update_service_in:update_service_in,
+  update_service_out:update_service_out
 };

@@ -232,7 +232,8 @@
           &nbsp;<label id="d-svi"></label>&nbsp;-&nbsp;<label id="d-id-svi"></label>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <label style="font-weight: bold;">Fecha ingreso :</label>&nbsp;<label id="d-fi"></label><p></p>
-          <label style="font-weight: bold;">Servicio egreso :</label>&nbsp;<label id="d-sve"></label>
+          <label style="font-weight: bold;">Servicio egreso :</label>
+          &nbsp;<label id="d-sve"></label>&nbsp;-&nbsp;<label id="d-id-sve"></label>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <label style="font-weight: bold;">Fecha egreso :</label>&nbsp;<label id="d-fe"></label><p></p>
           <label style="font-weight: bold;">Digitador :</label>&nbsp;<label id="d-dig"></label>
@@ -475,6 +476,24 @@
                   <button onclick="updateDniPatient()" class="btn btn-success">Actualizar</button>
                 </div>
                 <p></p>
+
+                <h5>Servicio</h5>
+                <p></p>
+                <div class="input-group mb-3">
+                  <span style="color: #ac0039;" class="input-group-text" id="basic-addon1">Servicio de ingreso</span>
+                  <input disabled style="color: black;background-color: white" type="text" id="ed-service" class="form-control" aria-describedby="basic-addon1">
+                  <span class="input-group-text" id="basic-addon1">ID</span>
+                  <input disabled style="color: black;background-color: white;" type="text" id="id-ed-service" class="form-control" aria-describedby="basic-addon1">
+                  <button onclick="openModalSearchService(1)" class="btn btn-primary">Buscar</button>
+                </div>
+                <div class="input-group mb-3">
+                  <span style="color: #005222;" class="input-group-text" id="basic-addon1">Servicio de egreso</span>
+                  <input disabled style="color: black;background-color: white" type="text" id="ed-service-2" class="form-control" aria-describedby="basic-addon1">
+                  <span class="input-group-text" id="basic-addon1">ID</span>
+                  <input disabled style="color: black;background-color: white;" type="text" id="id-ed-service-2" class="form-control" aria-describedby="basic-addon1">
+                  <button onclick="openModalSearchService(2)" class="btn btn-primary">Buscar</button>
+                </div>
+                <p></p>
                 
                 <div class="input-group mb-3">
                   <div class="input-group-text">
@@ -574,6 +593,46 @@
         </div>
       </div>
     </div>
+
+<!---->
+    <div class="modal fade" style="background-color: #ffffff8f;" data-bs-backdrop="static" data-bs-keyboard="false" id="addService" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content border border-dark rounded" 
+        style="background-color: #fbfdff;">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Editar servicio de</h1>
+                &nbsp;
+                <h1 class="modal-title fs-5" id="type-serv"></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+             
+                <div class="input-group mb-3">
+                  <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
+                  <input type="text" id="ser-service" onkeyup="searchService()" class="form-control" placeholder="Nombre de servicio..." aria-describedby="basic-addon1">
+                </div>       
+
+                <br>
+    
+                <table class="table table-hover table-bordered display" id="tb-data-search-service">
+                  <thead>
+                      <tr>
+                        <th></th>
+                        <th>Nombre</th>
+                        <th>ID</th>
+                        <th>Especialidad</th>
+                        <th>Tipo de servicio</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tbodySeachService">
+                    </tbody>
+                  </table>
+
+              </div>
+          
+            </div>
+          </div>
+        </div>    
 
 <!-- Modal -->
 <div class="modal fade" style="background-color: #ffffff8f;" id="modalAddDiagnosys" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

@@ -1409,6 +1409,20 @@ router.get("/get-id-laboratory/:a/:b", function (req, res,next) {
   });
 });
 
+router.get("/get-id-image/:a/:b", function (req, res,next) {
+  let account = req.params.a;
+  let procedure = req.params.b;
+
+  sql.id_image(account,procedure).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+  });
+});
+
 router.get("/update-quantity-procedure/:a/:b/:c", function (req, res,next) {
   let quantity = req.params.a;
   let id_product = req.params.b;
@@ -1727,6 +1741,28 @@ router.get("/get-graph/:a", function (req, res, next) {
   });
 });
 
+router.get("/search-service/:a", function (req, res, next) {
+  let service = req.params.a 
+  sql.search_service(service).then((result) => {
+    res.json(result[0]);
+  });
+});
+
+router.get("/update-service-in/:a/:b", function (req, res, next) {
+  let idService = req.params.a 
+  let account = req.params.b 
+  sql.update_service_in(idService,account).then((result) => {
+    res.json(result[0]);
+  });
+});
+
+router.get("/update-service-out/:a/:b", function (req, res, next) {
+  let idService = req.params.a 
+  let account = req.params.b 
+  sql.update_service_out(idService,account).then((result) => {
+    res.json(result[0]);
+  });
+});
 
 module.exports = router;
 

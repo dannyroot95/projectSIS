@@ -373,7 +373,10 @@ function yearLater(){
       zingchart.click = function(data){ 
         let year = document.getElementById("dp_graph").value
         let monthIndex = parseInt((data["targetid"]).split("node-")[1])
-        showCalendar(year, monthIndex);
+        console.log(year,monthIndex)
+        if(monthIndex >= 0){
+          showCalendar(year, monthIndex);
+        }
        // alert("MES : " + arrayMonths[monthIndex]); 
    }
 

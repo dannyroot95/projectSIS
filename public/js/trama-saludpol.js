@@ -14,6 +14,7 @@ createDatatable4()
 createDatatableSearchProcedure()
 createDatatableSearchDiagnosys()
 createDatatableSearchDiagnosysByLab()
+createDatatableSearchDiagnosysByImg()
 createDatatableSearchService()
 
 function createDatatable(){
@@ -219,13 +220,74 @@ function createDatatableSearchDiagnosysByLab(){
      scrollCollapse: true,
     });
 
-    var table = $('#tb-data-search-diagnosys').DataTable();
+    var table = $('#tb-data-search-diagnosys-by-lab').DataTable();
     $('#container').css( 'display', 'block' );
     table.columns.adjust().draw();
 }
 
+function createDatatableSearchDiagnosysByImg(){
+  $('#tb-data-search-diagnosys-by-img').DataTable({
+      language: {
+            "decimal": "",
+            "emptyTable": "No hay información",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ datos",
+            "infoEmpty": "Mostrando 0 to 0 of 0 datos",
+            "infoFiltered": "(Filtrado de _MAX_ total datos)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar _MENU_ datos",
+            "loadingRecords": "Cargando...",
+            "processing": "Procesando...",
+            "search": "Buscar en la lista:",
+            "zeroRecords": "Sin resultados encontrados",
+            "paginate": {
+                "first": "Primero",
+                "last": "Ultimo",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            }
+     },scrollY: '28vh',scrollX: true, sScrollXInner: "100%",
+     scrollCollapse: true,
+    });
+
+    var table = $('#tb-data-search-diagnosys-by-img').DataTable();
+    $('#container').css( 'display', 'block' );
+    table.columns.adjust().draw();
+}
+
+
 function createDatatableSearchProcedureByLab(){
   $('#tb-data-search-procedure-by-lab').DataTable({
+      language: {
+            "decimal": "",
+            "emptyTable": "No hay información",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ datos",
+            "infoEmpty": "Mostrando 0 to 0 of 0 datos",
+            "infoFiltered": "(Filtrado de _MAX_ total datos)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar _MENU_ datos",
+            "loadingRecords": "Cargando...",
+            "processing": "Procesando...",
+            "search": "Buscar en la lista:",
+            "zeroRecords": "Sin resultados encontrados",
+            "paginate": {
+                "first": "Primero",
+                "last": "Ultimo",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            }
+     },scrollY: '28vh',scrollX: true, sScrollXInner: "100%",
+     scrollCollapse: true,
+    });
+
+    var table = $('#tb-data-search-procedure-by-lab').DataTable();
+    $('#container').css( 'display', 'block' );
+    table.columns.adjust().draw();
+}
+
+function createDatatableSearchProcedureByImg(){
+  $('#tb-data-search-procedure-by-img').DataTable({
       language: {
             "decimal": "",
             "emptyTable": "No hay información",
@@ -1387,7 +1449,7 @@ function showModalDetailProcedure(data,index,type){
 
   document.getElementById("loader-procedure-detail").style = "display:block;"
 
-  fetch(`${url}/get-id-laboratory/${account}/${data.Nombre}`)
+  fetch(`${url}/get-id-laboratory/${account}/${(data.Nombre).trimEnd()}`)
             .then(response => response.json())
             .then(data => {
              
@@ -1416,7 +1478,18 @@ function showModalDetailProcedure(data,index,type){
 
   document.getElementById("loader-procedure-detail").style = "display:block;"
 
-  fetch(`${url}/get-id-image/${account}/${data.Nombre}`)
+  let x = {
+    account : account,
+    image : (data.Nombre).trimEnd()
+  }
+
+  fetch(`${url}/get-id-image`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(x)
+  })
             .then(response => response.json())
             .then(data => {
              
@@ -1912,6 +1985,57 @@ function deleteProcedure(){
         )
       }
   
+  }else if(type == "Detalle de imagenes"){
+
+    table = document.getElementById("tb-data-lab")
+    const numReg = table.rows.length;
+
+    if(numReg > 1){
+  
+    fetch(`${url}/delete-images-saludpol/${order}/${id_product}/${account}`)
+      .then(response => response.json())
+      .then(data => {
+  
+        let response = data[0]
+  
+        if(response.success == "eliminado"){
+  
+        updateDetailAccount()
+        table.deleteRow(index)
+        $('#detailProcedure').modal('hide')
+  
+          Swal.fire(
+            'Muy bien!',
+            'El procedimiento ha sido eliminado!',
+            'success'
+          )
+  
+        }else{
+          Swal.fire(
+            'Oops!',
+            'Ocurrió un error!',
+            'error'
+          )
+        }
+      
+      }).catch(err =>{
+          console.log(err)
+          Swal.fire(
+            'Oops!',
+            'Ocurrió un error!',
+            'error'
+          )
+      } );
+    
+  
+      }else{
+        Swal.fire(
+          'Oops!',
+          'Debe tener al menos un laboratorio!',
+          'info'
+        )
+      }
+  
   }
 
 
@@ -2003,7 +2127,7 @@ function getDataClientSaludpol(d){
                       <td>${d.Cantidad}</td>
                       <td>${d.PrecioUnitario}</td>
                       <td>${d.Precio}</td>
-                      <td><center><button style="background-color:#d3a202;border-color:#d3a202;" onclick="showModalDetailProcedure('${encodeURIComponent(JSON.stringify(d))}','${ctxPro}','1')" class="btn btn-dark"><i class="bi bi-pencil-square"></i></button></center></td>
+                      <td><center><button style="background-color:#d3a202;border-color:#d3a202;color:black;" onclick="showModalDetailProcedure('${encodeURIComponent(JSON.stringify(d))}','${ctxPro}','1')" class="btn btn-dark"><i class="bi bi-pencil-square"></i></button></center></td>
                       </tr>`;
 
                   })
@@ -2023,7 +2147,7 @@ function getDataClientSaludpol(d){
                       <td>${d.Cantidad}</td>
                       <td>${d.PrecioUnitario}</td>
                       <td>${d.Precio}</td>
-                        <td><center><button style="background-color:#d3a202;border-color:#d3a202;" onclick="showModalDetailProcedure('${encodeURIComponent(JSON.stringify(d))}','${ctxLab}','2')" class="btn btn-dark"><i class="bi bi-pencil-square"></i></button></center></td>
+                        <td><center><button style="background-color:#d3a202;border-color:#d3a202;color:black;" onclick="showModalDetailProcedure('${encodeURIComponent(JSON.stringify(d))}','${ctxLab}','2')" class="btn btn-dark"><i class="bi bi-pencil-square"></i></button></center></td>
                       </tr>`;
 
                   })
@@ -2043,7 +2167,7 @@ function getDataClientSaludpol(d){
                       <td>${d.Cantidad}</td>
                       <td>${d.PrecioUnitario}</td>
                       <td>${d.Precio}</td>
-                      <td><center><button style="background-color:#d3a202;border-color:#d3a202;" onclick="showModalDetailProcedure('${encodeURIComponent(JSON.stringify(d))}','${ctxImg}','3')" class="btn btn-dark"><i class="bi bi-pencil-square"></i></button></center></td>
+                      <td><center><button style="background-color:#d3a202;border-color:#d3a202;color:black;" onclick="showModalDetailProcedure('${encodeURIComponent(JSON.stringify(d))}','${ctxImg}','3')" class="btn btn-dark"><i class="bi bi-pencil-square"></i></button></center></td>
                       </tr>`;
 
                   })
@@ -2065,7 +2189,7 @@ function getDataClientSaludpol(d){
                       <td>${diag_med}</td>
                       <td>${d.PrecioUnidad}</td>
                       <td>${d.Precio}</td>
-                      <td><button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button></td>
+                      <td><button class="btn btn-warning" style="background-color:#ac0039;border-color:#ac0039;color:white;"><i class="bi bi-pencil-square"></i></button></td>
                       </tr>`;
 
                   })
@@ -2087,7 +2211,7 @@ function getDataClientSaludpol(d){
                       <td>${diag_med}</td>
                       <td>${d.PrecioUnidad}</td>
                       <td>${d.Precio}</td>
-                      <td><button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button></td>
+                      <td><button class="btn btn-warning" style="background-color:#ac0039;border-color:#ac0039;color:white;"><i class="bi bi-pencil-square"></i></button></td>
                       </tr>`;
 
                   })
@@ -2120,6 +2244,15 @@ function searchProcedureLab(){
   
   if (inputValue.length > 1) {
     fetchSearchProcedureByLab(inputValue)
+  }
+}
+
+function searchProcedureImg(){
+  var input = document.getElementById("in-procedure-by-img");
+  var inputValue = input.value.trim();
+  
+  if (inputValue.length > 1) {
+    fetchSearchProcedureByImg(inputValue)
   }
 }
 
@@ -2239,6 +2372,42 @@ function fetchSearchProcedureByLab(n){
 
 }
 
+function fetchSearchProcedureByImg(n){
+
+  fetch(`${url}/search-procedure/${n}`)
+    .then(response => response.json())
+    .then(data => {
+
+      document.getElementById("tbodySeachProcedureByImg").innerHTML = ''
+      $('#tb-data-search-procedure-by-img').DataTable().destroy()
+      
+      $("#tbodySeachProcedureByImg").html(data.map((d) => {
+                
+              return `
+              <tr>
+              <td><button onclick="getDetailsProcedureByImg('${encodeURIComponent(JSON.stringify(d))}')" class="btn btn-primary"><i class="bi bi-plus-circle"></i><label style="font-size:14px;margin-left:4px;">Seleccionar</label></button></td>
+              <td>${d.IdProducto}</td>
+              <td>${d.Codigo}</td>
+              <td>${(d.Nombre).toUpperCase()}</td>
+              <td>${d.PrecioUnitario}</td>
+              </tr>`;
+
+          })
+          .join("")
+      );
+      createDatatableSearchProcedureByImg()
+    
+    }).catch(err =>{
+        console.log(err)
+        Swal.fire(
+          'Oops!',
+          'Ocurrió un error!',
+          'error'
+        )
+    } );
+
+}
+
 
 function fetchSearchProcedureByCode(n){
 
@@ -2300,6 +2469,17 @@ function getDetailsProcedureByLab(data){
 
 }
 
+function getDetailsProcedureByImg(data){
+  data = JSON.parse(decodeURIComponent(data))
+
+  document.getElementById("select-name-procedure-img").innerHTML = (data.Nombre).toUpperCase()
+  document.getElementById("edt-id-product-img").value = data.IdProducto
+  document.getElementById("edt-product-price-img").value = data.PrecioUnitario
+  document.getElementById("edt-product-quantity-img").value = ""
+  document.getElementById("edt-product-total-price-img").value = ""
+
+}
+
 function addQuantityAndPriceProcedure(){
   let quantity = document.getElementById("edt-product-quantity").value
   let price = document.getElementById("edt-product-price").value
@@ -2311,7 +2491,19 @@ function addQuantityAndPriceProcedure(){
   }else{
     document.getElementById("edt-product-total-price").value = ""
   }
+}
 
+function addQuantityAndPriceProcedureImg(){
+  let quantity = document.getElementById("edt-product-quantity-img").value
+  let price = document.getElementById("edt-product-price-img").value
+  let total = 0
+
+  if(price != "" && quantity != 0){
+    total = price*quantity
+    document.getElementById("edt-product-total-price-img").value = total
+  }else{
+    document.getElementById("edt-product-total-price-img").value = ""
+  }
 }
 
 function addQuantityAndPriceProcedureLab(){
@@ -2893,6 +3085,44 @@ function fetchSearchDiagnosysByLab(diagnosys){
 
 }
 
+function fetchSearchDiagnosysByImg(diagnosys){
+
+  fetch(`${url}/get-diagnosys/${diagnosys}`)
+    .then(response => response.json())
+    .then(data => {
+
+      if(data[0].success != "error"){
+        document.getElementById("tbodySeachDiagnosysByImg").innerHTML = ''
+        $('#tb-data-search-diagnosys-by-img').DataTable().destroy()
+        
+        $("#tbodySeachDiagnosysByImg").html(data.map((d) => {
+                  
+                return `
+                <tr>
+                <td><button onclick="insertDiagnosysByImg('${encodeURIComponent(JSON.stringify(d))}')" class="btn btn-primary"><i class="bi bi-plus-circle"></i><label style="font-size:14px;margin-left:4px;">Seleccionar</label></button></td>
+                <td>${d.IdDiagnostico}</td>
+                <td>${d.Descripcion}</td>
+                </tr>`;
+  
+            })
+            .join("")
+        );
+        createDatatableSearchDiagnosysByImg()
+      }else{
+        document.getElementById("tbodySeachDiagnosysByImg").innerHTML = ''
+      }
+    
+    }).catch(err =>{
+        console.log(err)
+        Swal.fire(
+          'Oops!',
+          'Ocurrió un error!',
+          'error'
+        )
+    } );
+
+}
+
 function searchDiagnosys(){
   var input = document.getElementById("in-diagnosys");
   var inputValue = input.value.trim();
@@ -2916,6 +3146,17 @@ function searchDiagnosysByLab(){
   }
 }
 
+function searchDiagnosysByImg(){
+  var input = document.getElementById("in-diagnosys-by-img");
+  var inputValue = input.value.trim();
+  
+  if (inputValue.length > 1) {
+    fetchSearchDiagnosysByImg(inputValue)
+  }else{
+    document.getElementById("tbodySeachDiagnosysByImg").innerHTML = ''
+  }
+}
+
 function insertDiagnosysByLab(d){
   d = JSON.parse(decodeURIComponent(d))
   document.getElementById("lab-diagnosys").innerHTML = d.Descripcion
@@ -2924,6 +3165,16 @@ function insertDiagnosysByLab(d){
   $('#tb-data-search-procedure-by-lab').DataTable().destroy()
   document.getElementById("tb-data-search-procedure-by-lab").style = "display:run-in;"
   createDatatableSearchProcedureByLab()
+}
+
+function insertDiagnosysByImg(d){
+  d = JSON.parse(decodeURIComponent(d))
+  document.getElementById("img-diagnosys").innerHTML = d.Descripcion
+  document.getElementById("img-diagnosys-code").innerHTML = d.IdDiagnostico
+  document.getElementById ("img-t-t1").style = "display:flex;font-weight: 700;"
+  $('#tb-data-search-procedure-by-img').DataTable().destroy()
+  document.getElementById("tb-data-search-procedure-by-img").style = "display:run-in;"
+  createDatatableSearchProcedureByImg()
 }
 
 function insertDiagnosys(d){
@@ -3028,8 +3279,16 @@ function openModalAddLaboratory(){
     if(tb > 0){
       $('#modalAddLab').modal('show')
     }
-    
 }
+
+function openModalAddImages(){
+  let tb = document.getElementById("tbodyImg").rows.length
+
+  if(tb > 0){
+    $('#modalAddImg').modal('show')
+  }
+}
+
 
 function printAtention(){
 

@@ -1409,9 +1409,10 @@ router.get("/get-id-laboratory/:a/:b", function (req, res,next) {
   });
 });
 
-router.get("/get-id-image/:a/:b", function (req, res,next) {
-  let account = req.params.a;
-  let procedure = req.params.b;
+router.post("/get-id-image", function (req, res,next) {
+  const data = req.body
+  const account = data.account;
+  const procedure =data.image;
 
   sql.id_image(account,procedure).then((result) => {
 
@@ -1558,6 +1559,21 @@ router.get("/delete-laboratory-saludpol/:a/:b/:c", function (req, res,next) {
   let account = req.params.c;
  
   sql.delete_laboratory_saludpol(orden,idProducto,account).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
+router.get("/delete-images-saludpol/:a/:b/:c", function (req, res,next) {
+  
+  let orden = req.params.a;
+  let idProducto = req.params.b;
+  let account = req.params.c;
+ 
+  sql.delete_images_saludpol(orden,idProducto,account).then((result) => {
     if(result[0].length>0){
       res.json(result[0]);
     }else{

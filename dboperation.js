@@ -1159,6 +1159,7 @@ console.log("error :" + error);
     }
   }
 
+
   async function delete_laboratory_saludpol(order,idProducto,cuenta) {
     try {
       let pool = await sql.connect(config);
@@ -1167,6 +1168,20 @@ console.log("error :" + error);
       .input('PRODUCTO',idProducto)
       .input('CUENTA',cuenta)
       .execute(`BORRAR_LABORATORIO_SALUDPOL`) 
+      return [[{success:"eliminado"}]]
+    } catch (error) {
+       return [[{success:"error"}]]
+    }
+  }
+
+  async function delete_images_saludpol(order,idProducto,cuenta) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('ORDEN',order)
+      .input('PRODUCTO',idProducto)
+      .input('CUENTA',cuenta)
+      .execute(`BORRAR_IMAGENES_SALUDPOL`) 
       return [[{success:"eliminado"}]]
     } catch (error) {
        return [[{success:"error"}]]
@@ -1569,5 +1584,6 @@ module.exports = {
   get_graph:get_graph,
   search_service:search_service,
   update_service_in:update_service_in,
-  update_service_out:update_service_out
+  update_service_out:update_service_out,
+  delete_images_saludpol:delete_images_saludpol
 };

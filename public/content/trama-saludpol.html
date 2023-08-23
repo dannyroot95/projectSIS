@@ -256,7 +256,9 @@
         <br><br>
 
         <label style="color:#0192ac; font-weight: bolder ;font-size: 20px;">Diagnosticos</label>
-        <button onclick="showModalAddDiagnosys()" style="margin-bottom: 10px;background-color: #0192ac;border-color: #0192ac;" class="btn btn-success">+</button>
+        <div class="d-flex justify-content-end mb-2">
+        <button onclick="showModalAddDiagnosys()" style="margin-bottom: 10px;background-color: #0192ac;border-color: #0192ac;" class="btn btn-success"><i class="bi bi-prescription"></i>&nbsp;Agregar diagnostico</button>
+        </div>
         <div class="table-responsive">
           <table class="table table-hover table-bordered display" id="tb-data-diag">
             <thead>
@@ -275,7 +277,9 @@
         <br><br>
 
         <label style="color:#d3a202; font-weight: bolder ;font-size: 20px;">Procedimientos</label>
-        <button onclick="openModalAddProcedure()" style="margin-bottom: 10px;background-color: #d3a202;border-color: #d3a202;" class="btn btn-success">+</button>
+        <div class="d-flex justify-content-end mb-2">
+        <button onclick="openModalAddProcedure()" style="color: #222222;margin-bottom: 10px;background-color: #d3a202;border-color: #d3a202;" class="btn btn-success"><i class="bi bi-file-earmark-medical-fill"></i>&nbsp;Agregar procedimiento</button>
+        </div>
         <div class="table-responsive">
           <table class="table table-hover table-bordered display" id="tb-data-pro">
             <thead>
@@ -299,7 +303,9 @@
           <br><br>
 
           <label style="color:#d3a202; font-weight: bolder ;font-size: 20px;">Laboratorio</label>
-          <button onclick="openModalAddLaboratory()" style="margin-bottom: 10px;background-color: #d3a202;border-color: #d3a202;" class="btn btn-success">+</button>
+          <div class="d-flex justify-content-end mb-2">
+          <button onclick="openModalAddLaboratory()" style="color: #222222;margin-bottom: 10px;background-color: #d3a202;border-color: #d3a202;" class="btn btn-success"><i class="bi bi-clipboard2-pulse"></i>&nbsp;Agregar laboratorio</button>
+          </div>
           <div class="table-responsive">
             <table class="table table-hover table-bordered display" id="tb-data-lab">
               <thead>
@@ -323,6 +329,11 @@
           <br><br>
 
           <label style="color:#d3a202; font-weight: bolder ;font-size: 20px;">Imágenes</label>
+          <div class="d-flex justify-content-end mb-2">
+            <button onclick="openModalAddImages()" style="color: #222222;background-color: #d3a202; border-color: #d3a202;" class="btn btn-success">
+              <i class="bi bi-card-image"></i>&nbsp;Agregar imágenes
+            </button>
+          </div>
           <div class="table-responsive">
             <table class="table table-hover table-bordered display" id="tb-data-img">
               <thead>
@@ -773,7 +784,97 @@
                 <button onclick="showModaladdProcedureLabAccount()" class="btn btn-success"><i class="bi bi-clipboard-plus"></i>&nbsp;Agregar</button>
 
               </div>   
+      </div>
+    </div>
+  </div>
+</div>
 
+
+
+
+<div class="modal fade" style="background-color: #ffffff8f;" id="modalAddImg" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Agregar imágenes</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+         <label style="font-weight: 700;">Busque y seleccione un diagnostico</label>
+        <p></p>
+
+        <div class="input-group mb-3" id="input-diagnosys">
+          <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
+          <input type="text" id="in-diagnosys-by-img" onkeyup="searchDiagnosysByImg()" class="form-control" placeholder="Nombre de diagnostico..." aria-describedby="basic-addon1">
+        </div>    
+
+        <table class="table table-hover table-bordered display" id="tb-data-search-diagnosys-by-img">
+          <thead>
+              <tr>
+                <th></th>
+                <th>ID</th>
+                <th>Nombre</th>
+              </tr>
+            </thead>
+            <tbody id="tbodySeachDiagnosysByImg">
+            </tbody>
+          </table>
+          
+          <p></p>
+          <b style="color: #ac0039;">*</b><label style="color: #0192ac;">Diagnostico seleccionado :</label>
+          <label style="font-weight: 500;" id="img-diagnosys"></label>
+          <p></p>
+          <b style="color: #ac0039;">*</b><label style="color: #0192ac;">Código :</label>
+          <label style="font-weight: 500;" id="img-diagnosys-code"></label>
+          
+          <br><p></p>
+
+          <div  id="img-t-t1" style="display: none;">
+            <label>Busque y seleccione un procedimiento de imágenes</label>
+            <p></p>
+            <div class="input-group mb-3" id="input-diagnosys">
+              <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
+              <input type="text" id="in-procedure-by-img" onkeyup="searchProcedureImg()" class="form-control" placeholder="Nombre de procedimiento de imagenes..." aria-describedby="basic-addon1">
+            </div>    
+          </div>
+
+          <p></p>
+
+          <table class="table table-hover table-bordered display" style="display: none;" id="tb-data-search-procedure-by-img">
+            <thead>
+                <tr>
+                  <th></th>
+                  <th>ID</th>
+                  <th>Cód</th>
+                  <th>Descripcion</th>
+                  <th>Precio</th>
+                </tr>
+              </thead>
+              <tbody id="tbodySeachProcedureByImg">
+              </tbody>
+            </table>
+
+            <br>
+
+            <label>Procedimiento de imágenes :&nbsp;</label><label style="color: #cf7c00;" id="select-name-procedure-img"></label>
+
+              <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1"><i class="bi bi-border-middle"></i>&nbsp;ID Producto</span>
+                <input disabled style="background-color: white;color: #000833;" type="text" id="edt-id-product-img" class="form-control" aria-describedby="basic-addon1">
+    
+                <span class="input-group-text" id="basic-addon1"><i class="bi bi-tag"></i>&nbsp;Precio</span>
+                <input disabled style="background-color: white;color: #000833;" type="number" id="edt-product-price-img" class="form-control" aria-describedby="basic-addon1">
+
+                <span class="input-group-text" id="basic-addon1"><i class="bi bi-boxes"></i>&nbsp;Cantidad</span>
+                <input maxlength="1" onkeyup="addQuantityAndPriceProcedureImg()" style="background-color: white;color: #000833;" type="tel" id="edt-product-quantity-img" class="form-control" aria-describedby="basic-addon1">
+
+                <span class="input-group-text" id="basic-addon1"><i class="bi bi-tags"></i>&nbsp;Total</span>
+                <input disabled style="background-color: white;color: #000833;" type="text" id="edt-product-total-price-img" class="form-control" aria-describedby="basic-addon1">
+
+                <button onclick="showModaladdProcedureImgAccount()" class="btn btn-success"><i class="bi bi-clipboard-plus"></i>&nbsp;Agregar</button>
+
+              </div>   
       </div>
     </div>
   </div>

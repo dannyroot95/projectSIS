@@ -804,7 +804,6 @@ loader.style = "display:block;"
 document.getElementById("btn-logs").disabled = true
 document.getElementById("btn-package").disabled = true
 document.getElementById("btn-query").disabled = true
-document.getElementById("btn-send").disabled = true
 document.getElementById("btn-send-debug").disabled = true
 
 }
@@ -814,7 +813,6 @@ loader.style = "display:none;"
 document.getElementById("btn-logs").disabled = false
 document.getElementById("btn-query").disabled = false
 document.getElementById("btn-package").disabled = false
-document.getElementById("btn-send").disabled = false
 document.getElementById("btn-send-debug").disabled = false
 document.getElementById("btn-logs").style = "display:block;"
 }
@@ -825,7 +823,6 @@ function enableButtonsError(){
   document.getElementById("btn-logs").disabled = false
   document.getElementById("btn-query").disabled = false
   document.getElementById("btn-package").disabled = false
-  document.getElementById("btn-send").disabled = false
   document.getElementById("btn-send-debug").disabled = false
   document.getElementById("btn-logs").style = "display:block;"
   }

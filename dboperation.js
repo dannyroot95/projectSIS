@@ -643,12 +643,10 @@ console.log("error :" + error);
 
   }
 
-  
+
+ 
   async function sendTramaDebug(data) {
-
-
-    try{
-      // create archive and specify method of encryption and password
+    try {
       let archive = archiver.create('zip-encrypted', {zlib: {level: 8}, encryptionMethod: 'zip20', password: passwordProduction});
       
       function writeFileWithUTF8(fileName, content) {
@@ -687,21 +685,23 @@ console.log("error :" + error);
       archive.file('RESUMEN.TXT', { name: 'RESUMEN.TXT' });
 
       // Crea el archivo ZIP
-      const output = fs.createWriteStream('C:/users/Administrador/desktop/tramas/'+data.nameTrama);
-      archive.pipe(output);
-      archive.finalize();
+      const output = fs.createWriteStream(
+        "C:/users/Administrador/desktop/tramas/" + data.nameTrama
+      );
+  
+      // Espera a que se complete la creación del archivo ZIP antes de continuar
+      await new Promise((resolve) => {
+        output.on("close", resolve);
+        archive.pipe(output);
+        archive.finalize();
+      });
+  
+      const fileContent = readFileAsBase64(
+        "C:/users/Administrador/desktop/tramas/" + data.nameTrama
+      );
+  
+      // ... (código para construir xmlBody y realizar la solicitud)
 
-      archive.on('close', function() {
-        console.log('El archivo ZIP se ha creado exitosamente.');
-        // Aquí puedes agregar el código que deseas ejecutar después de que el archivo se haya creado exitosamente
-      });
-      
-      archive.on('error', function(err) {
-        console.error('Error al crear el archivo ZIP:', err);
-      });
-      
-      const fileContent = readFileAsBase64('C:/users/Administrador/desktop/tramas/'+data.nameTrama); // Ruta al archivo que deseas adjuntar
-     
       const xmlBody = `
       <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v2="http://sis.gob.pe/esb/negocio/registroFuaBatch/v2/">
       <soapenv:Header>
@@ -726,21 +726,20 @@ console.log("error :" + error);
   };
    
   const response = await axios.post(urlProduction, xmlBody, { headers });
-
-  return [[
-    {
-      success:"Enviado!",
-      server_response:response.data
-    }]]
-
-    //SI FALLA UTILIZAR TRY CATCH
-
-    }catch (error) {
+  
+      return [
+        [
+          {
+            success: "Enviado!",
+            server_response: response.data,
+          },
+        ],
+      ];
+    } catch (error) {
       console.log("error : " + error);
+      throw error; // Propagar el error para manejarlo en el nivel superior
     }
-  }
-
- 
+  }  
 
   function readFileAsBase64(filePath) {
     const fileData = fs.readFileSync(filePath);
@@ -1310,6 +1309,27 @@ console.log("error :" + error);
     }
   }
 
+  async function add_mov_images_saludpol(d) {
+
+    try {
+
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('FECHA',d.fecha)
+      .input('IDUSUARIO',d.IdUsuario)
+      .input('ORDEN',d.IdOrden)
+      .input('CUENTA',d.idCuentaAtencion)
+      .input('PACIENTE',d.Paciente)
+      .input('SEXO',d.idTipoSexo)
+      .input('FECHANACIMIENTO',d.FechaNacimiento)
+      .execute(`INSERTAR_MOV_IMAGENES_SALUDPOL`) 
+      return [[{success:"insertado"}]]
+    } catch (error) {
+    
+       return [[{success:"error"}]]
+    }
+  }
+
 
   async function search_fua_by_num_and_size(lote,fua) {
     try {
@@ -1581,6 +1601,7 @@ module.exports = {
   add_laboratory_saludpol:add_laboratory_saludpol,
   delete_laboratory_saludpol:delete_laboratory_saludpol,
   add_mov_laboratory_saludpol:add_mov_laboratory_saludpol,
+  add_mov_images_saludpol:add_mov_images_saludpol,
   get_graph:get_graph,
   search_service:search_service,
   update_service_in:update_service_in,

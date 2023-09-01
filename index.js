@@ -12,5 +12,5 @@ app.use(bodyParser.urlencoded({ limit: '300mb', extended: true}));
 app.use(router)
 
 server.listen(port,()=>console.log('SERVIDOR INICIADO'))
-server.setTimeout(1400000);
+server.setTimeout(5040000);
 

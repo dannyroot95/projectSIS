@@ -384,6 +384,7 @@ function fetchTramaSaludpol(init,final){
             document.getElementById("btn-upload-trama").style = "display:block;"
             document.getElementById("btn-obs").style = "display:block;"
             document.getElementById("btn-report").style = "display:block;"
+            document.getElementById("btn-no-ate").style = "display:block;background-color: #49002b;border-color: #49002b;"
           }).catch(err => {
             
             console.log(err)
@@ -417,6 +418,8 @@ function fetchTramaSaludpolEx(init,final){
             document.getElementById("btn-upload-trama").style = "display:block;"
             document.getElementById("btn-obs").style = "display:block;"
             document.getElementById("btn-report").style = "display:block;"
+            document.getElementById("btn-no-ate").style = "display:block;background-color: #49002b;border-color: #49002b;"
+
           }).catch(err => {
             
             console.log(err)
@@ -450,6 +453,7 @@ function fetchTramaSaludpolExAndIn(init,final){
             document.getElementById("btn-upload-trama").style = "display:block;"
             document.getElementById("btn-obs").style = "display:block;"
             document.getElementById("btn-report").style = "display:block;"
+            document.getElementById("btn-no-ate").style = "display:block;background-color: #49002b;border-color: #49002b;"
           }).catch(err => {
             
             console.log(err)
@@ -483,6 +487,7 @@ function fetchTramaSaludpolIn(init,final){
             document.getElementById("btn-upload-trama").style = "display:block;"
             document.getElementById("btn-obs").style = "display:block;"
             document.getElementById("btn-report").style = "display:block;"
+            document.getElementById("btn-no-ate").style = "display:block;background-color: #49002b;border-color: #49002b;"
           }).catch(err => {
             
             console.log(err)
@@ -679,6 +684,7 @@ document.getElementById("btn-trama").disabled = true
 document.getElementById("btn-upload-trama").disabled = true
 document.getElementById("btn-obs").disabled = true
 document.getElementById("btn-report").disabled = true
+document.getElementById("btn-no-ate").disabled = true
 }
 
 
@@ -689,6 +695,8 @@ function enableButtons(){
   document.getElementById("btn-upload-trama").disabled = false
   document.getElementById("btn-obs").disabled = false
   document.getElementById("btn-report").disabled = false
+  document.getElementById("btn-no-ate").disabled = false
+
 }
 
 function showModalDeleteAccount(){
@@ -1212,7 +1220,6 @@ function obtenerDatos() {
   var table = $('#tb-data-1').DataTable();
   allData = []
 
-
   var checkboxes = table.column(0).nodes().to$().find('input[type="checkbox"]');
   var isChecked = false;
 
@@ -1231,7 +1238,6 @@ function obtenerDatos() {
     )
     return;
   }
-
 
   table.rows({selected: true}).every(function() {
     var rowData = this.data();
@@ -1263,11 +1269,7 @@ function obtenerDatos() {
       });
     }
   });
-
- 
-  exportToExcel()
-  
-  
+  exportToExcel()  
 }
 
 function exportToExcel(){
@@ -1425,21 +1427,18 @@ function showModalDetailProcedure(data,index,type){
               .then(response => response.json())
               .then(data => {
                
-  
                 document.getElementById("loader-procedure-detail").style = "display:none;"
-  
                 document.getElementById("id-detail-procedure").innerHTML = procedure
                 document.getElementById("id-detail-code").innerHTML = code
                 document.getElementById("detail-procedure-quantity").value = quantity
-  
                 document.getElementById("id-order").innerHTML = data[0].idOrden
                 document.getElementById("id-product").innerHTML = data[0].IdProducto
-  
                 document.getElementById("index-pro").innerHTML = index
   
               }).catch(err =>{
                   console.log(err)
               } );
+              
   }else if(procedureType == '2'){
   document.getElementById("staticBackdropLabel").innerHTML = 'Detalle de laboratorio'
   var tabla = document.getElementById("tb-data-lab");
@@ -1987,7 +1986,7 @@ function deleteProcedure(){
   
   }else if(type == "Detalle de imagenes"){
 
-    table = document.getElementById("tb-data-lab")
+    table = document.getElementById("tb-data-img")
     const numReg = table.rows.length;
 
     if(numReg > 1){
@@ -2630,6 +2629,61 @@ function showModaladdProcedureLabAccount(){
   }
 }
 
+function showModaladdProcedureImgAccount(){
+
+  let price = document.getElementById("edt-product-total-price-img").value
+  let procedure = document.getElementById("select-name-procedure-img").innerHTML
+
+  var  filter, table, tr, td, i, txtValue;
+  filter = procedure
+  table = document.getElementById("tb-data-img");
+  tr = table.getElementsByTagName("tr");
+  var found = false; // Variable para rastrear si se encontró el término
+
+  for (i = 1; i < tr.length; i++) { // Comenzamos desde 1 para omitir la fila de encabezados
+    td = tr[i].getElementsByTagName("td")[1]; // Columna "Nombre" (índice 0)
+
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        found = true; // Se encontró el término
+      } 
+    }
+  }
+  
+  if(price != ""){
+
+    if(!found){
+
+      Swal.fire({
+        title: 'Estas seguro de agregar este procedimiento de imágenes?',
+        showCancelButton: true,
+        confirmButtonText: 'Si',
+        cancelButtonText : 'Cancelar'
+      }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          addProcedureAccountByImg()
+        } 
+      })
+
+    }else{
+      Swal.fire(
+        'Oops!',
+        'Ya existe el procedimiento en la tabla!',
+        'info'
+      )
+    }
+  }else{
+    Swal.fire(
+      'Oops!',
+      'Inserte una cantidad al procedimiento!',
+      'info'
+    )
+  }
+}
+
 function addProcedureAccount(){
 
   let idServicioPaciente = document.getElementById("d-id-svi").innerHTML
@@ -2687,6 +2741,7 @@ function addProcedureAccount(){
 
 }
 
+
 function addProcedureAccountByLab(){
 
   let idServicioPaciente = document.getElementById("d-id-svi").innerHTML
@@ -2742,6 +2797,78 @@ function addProcedureAccountByLab(){
   }
 
   fetchInsertDataProcedureLabSaludpol(data)
+
+  /*
+  
+  ,
+    idPersonaTomaLab:idPersonaTomaLab,
+    idDiagnostico:idDiagnostico,
+    EsDiagnosticoDefinitivo:EsDiagnosticoDefinitivo,
+    OrdenaPrueba:OrdenaPrueba,
+    Paciente:paciente,
+    idTipoSexo:tipoSexo,
+    FechaNacimiento:fNac,
+    colegiatura:colegiatura
+  
+  */
+
+}
+
+function addProcedureAccountByImg(){
+
+  let idServicioPaciente = document.getElementById("d-id-svi").innerHTML
+
+  let fechaHoraActual = new Date();
+
+// Obtener componentes individuales (opcional)
+  let año = fechaHoraActual.getFullYear();
+  let mes = fechaHoraActual.getMonth() + 1; // Los meses en JavaScript van de 0 a 11, por lo que sumamos 1.
+  let dia = fechaHoraActual.getDate();
+  let hora = fechaHoraActual.getHours();
+  let minutos = fechaHoraActual.getMinutes();
+  let segundos = fechaHoraActual.getSeconds();
+
+  // Formatear la fecha y hora como una cadena (opcional)
+
+  let idPuntoCarga = 2
+  let idPaciente = document.getElementById("d-id-patient").innerHTML
+  let idCuentaAtencion = document.getElementById("d-account").innerHTML
+  let idTipoFinanciamiento = document.getElementById("d-tipo-ff").innerHTML
+  let FuenteFinanciamiento = document.getElementById("d-id-ff").innerHTML
+  let fechaActual = `${año}-${mes < 10 ? '0' + mes : mes}-${dia < 10 ? '0' + dia : dia} ${hora < 10 ? '0' + hora : hora}:${minutos < 10 ? '0' + minutos : minutos}:${segundos < 10 ? '0' + segundos : segundos}`;
+  let usuario = 2060
+  let estado = 1
+
+  let idProduct = document.getElementById("edt-id-product-img").value
+  let quantity = document.getElementById("edt-product-quantity-img").value
+  let price = document.getElementById("edt-product-price-img").value
+  let totalPrice = document.getElementById("edt-product-total-price-img").value
+
+
+  let data = {
+    puntoCarga : idPuntoCarga,
+    idPaciente : parseInt(idPaciente),
+    idCuentaAtencion : parseInt(idCuentaAtencion),
+    idServicioPaciente : parseInt(idServicioPaciente),
+    idTipoFinanciamiento : parseInt(idTipoFinanciamiento),
+    fuenteFinanciamiento : parseInt(FuenteFinanciamiento),
+    fechaCrea : fechaActual,
+    usuario : usuario,
+    fechaDespacho : fechaActual,
+    usuarioDespacho : usuario,
+    estado : estado,
+    fechaCpt : fechaActual,
+    idProducto : parseInt(idProduct),
+    cantidad : parseInt(quantity),
+    precio : parseFloat(price).toFixed(2),
+    precioTotal : parseFloat(totalPrice).toFixed(2),
+    labHis : '',
+    grupo : 0,
+    subGrupo : 0,
+    labHisCodigo : ''
+  }
+
+  fetchInsertDataProcedureImgSaludpol(data)
 
   /*
   
@@ -2834,7 +2961,44 @@ function fetchInsertDataProcedureLabSaludpol(data){
     console.error(error)
 
 });
+}
 
+function fetchInsertDataProcedureImgSaludpol(data){
+
+  console.log(data)
+
+  fetch(`${url}/insert-laboratory-saludpol/`, {
+    method: 'POST', // o 'PUT', 'DELETE', etc.
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data) // data es un objeto con los datos a enviar
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log(data)
+     if(data[0].length != 0){
+
+      console.log(data[0].IdOrden)
+      fetchInsertImgMovimiento(data[0].IdOrden)
+      
+     }else{
+      Swal.fire(
+        'Oops!',
+        'Se produjo un error',
+        'warning'
+      )
+     }
+  })
+  .catch(error => {
+    Swal.fire(
+        'Oops!',
+        'Se produjo un error',
+        'warning'
+      )
+    console.error(error)
+
+});
 }
 
 function fetchInsertLabMovimiento(orden){
@@ -2921,7 +3085,85 @@ function fetchInsertLabMovimiento(orden){
     console.error(error)
 
 });
+}
 
+function fetchInsertImgMovimiento(orden){
+
+  let fechaHoraActual = new Date();
+
+// Obtener componentes individuales (opcional)
+  let año = fechaHoraActual.getFullYear();
+  let mes = fechaHoraActual.getMonth() + 1; // Los meses en JavaScript van de 0 a 11, por lo que sumamos 1.
+  let dia = fechaHoraActual.getDate();
+  let hora = fechaHoraActual.getHours();
+  let minutos = fechaHoraActual.getMinutes();
+  let segundos = fechaHoraActual.getSeconds();
+
+  let fechaActual = `${año}-${mes < 10 ? '0' + mes : mes}-${dia < 10 ? '0' + dia : dia} ${hora < 10 ? '0' + hora : hora}:${minutos < 10 ? '0' + minutos : minutos}:${segundos < 10 ? '0' + segundos : segundos}`;
+
+  let idCuentaAtencion = document.getElementById("d-account").innerHTML
+
+  let sex = document.getElementById("d-sex").innerHTML 
+  let valueSex = 2
+      
+  if(sex.includes("Masculino")){
+    valueSex = 1
+  }
+
+
+  let idPersonaTomaLab = 5708
+
+  let paciente = document.getElementById("d-fullname").innerHTML 
+  let tipoSexo = valueSex
+  let fNac = (document.getElementById("d-nac").innerHTML ).split("-")[2]+'-'+(document.getElementById("d-nac").innerHTML ).split("-")[1]+'-'+(document.getElementById("d-nac").innerHTML ).split("-")[0]
+
+  let datax = {
+    IdOrden:orden,
+    idCuentaAtencion:idCuentaAtencion,
+    fecha:fechaActual,
+    IdUsuario:idPersonaTomaLab,
+    Paciente:paciente,
+    idTipoSexo:tipoSexo,
+    FechaNacimiento:fNac,
+  }
+
+  console.log(datax)
+
+  fetch(`${url}/insert-mov-images-saludpol/`, {
+    method: 'POST', // o 'PUT', 'DELETE', etc.
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(datax) // data es un objeto con los datos a enviar
+  })
+  .then(response => response.json())
+  .then(data => {
+    
+    console.log(data)
+
+     if(data[0].success == "insertado"){
+
+      Swal.fire('Agregado!', '', 'success')
+
+      updateDetailAccount()
+      
+     }else{
+      Swal.fire(
+        'Oops!',
+        'Se produjo un error',
+        'warning'
+      )
+     }
+  })
+  .catch(error => {
+    Swal.fire(
+        'Oops!',
+        'Se produjo un error',
+        'warning'
+      )
+    console.error(error)
+
+});
 }
 
 function showModalDeleteDiagnosys(id){
@@ -3282,11 +3524,10 @@ function openModalAddLaboratory(){
 }
 
 function openModalAddImages(){
-  let tb = document.getElementById("tbodyImg").rows.length
-
+  /*let tb = document.getElementById("tbodyImg").rows.length
   if(tb > 0){
-    $('#modalAddImg').modal('show')
-  }
+  }*/
+  $('#modalAddImg').modal('show')
 }
 
 
@@ -3314,8 +3555,6 @@ function printAtention(){
 
   let positionTableDiag = 73
 
-  const firstTableHeight = arrayDiag().length * 10;
-  const textYPositionDiag = firstTableHeight + positionTableDiag + 12;
 
   // Obtener componentes individuales (opcional)
     let año = fechaHoraActual.getFullYear();
@@ -3323,7 +3562,7 @@ function printAtention(){
     let dia = fechaHoraActual.getDate();
     let horas = fechaHoraActual.getHours();
     let minutos = fechaHoraActual.getMinutes();
-    let segundos = fechaHoraActual.getSeconds();
+
     let fechaActual = `${dia < 10 ? '0' + dia : dia}/${mes < 10 ? '0' + mes : mes}/${año}`;
   
     const ampm = horas >= 12 ? 'pm' : 'am';
@@ -3353,6 +3592,7 @@ function printAtention(){
   doc.text(7, 59, 'Servicio egreso : '+servE)
   doc.text(160, 59, 'Fecha Alta : '+fa)
   doc.setFont(undefined, 'bold')
+
   doc.text(93, 68, 'DIAGNOSTICOS')
    doc.autoTable({
     head: [['Clasificación','Código','Descripción']],
@@ -3366,6 +3606,7 @@ function printAtention(){
    margin: {top: positionTableDiag},
     })
 
+
   doc.text(91, doc.lastAutoTable.finalY+10, 'PROCEDIMIENTOS')
   doc.autoTable({
     startY: doc.lastAutoTable.finalY + 15,
@@ -3377,12 +3618,13 @@ function printAtention(){
    alternateRowStyles: {fillColor : [255, 252, 242]}, 
    tableLineColor: [216, 166, 0], 
    tableLineWidth: 0.1,
-   margin: {top: positionTableDiag},
+   margin: {top: 10},
     })
   doc.setFont(undefined, 'normal')
   doc.text(138, doc.lastAutoTable.finalY+5, 'Sub Total de procedimientos : S/'+totalPro)
 
   doc.setFont(undefined, 'bold')
+
   doc.text(93, doc.lastAutoTable.finalY+10, 'LABORATORIO')
   doc.autoTable({
     startY: doc.lastAutoTable.finalY + 15,
@@ -3394,13 +3636,14 @@ function printAtention(){
    alternateRowStyles: {fillColor : [255, 252, 242]}, 
    tableLineColor: [216, 166, 0], 
    tableLineWidth: 0.1,
-   margin: {top: positionTableDiag},
+   margin: {top: 10},
     })
   doc.setFont(undefined, 'normal')
   doc.text(143, doc.lastAutoTable.finalY+5, 'Sub Total de laboratorio : S/'+totalLab)
 
 
   doc.setFont(undefined, 'bold')
+
   doc.text(96, doc.lastAutoTable.finalY+10, 'IMÁGENES')
   doc.autoTable({
     startY: doc.lastAutoTable.finalY + 15,
@@ -3412,12 +3655,14 @@ function printAtention(){
    alternateRowStyles: {fillColor : [255, 252, 242]}, 
    tableLineColor: [216, 166, 0], 
    tableLineWidth: 0.1,
-   margin: {top: positionTableDiag},
+   margin: {top: 10},
     })
   doc.setFont(undefined, 'normal')
   doc.text(146, doc.lastAutoTable.finalY+5, 'Sub Total de imágenes : S/'+totalImg)
 
+
   doc.setFont(undefined, 'bold')
+ 
   doc.text(93, doc.lastAutoTable.finalY+10, 'MEDICAMENTOS')
   doc.autoTable({
     startY: doc.lastAutoTable.finalY + 15,
@@ -3429,12 +3674,14 @@ function printAtention(){
     alternateRowStyles: {fillColor : [255, 243, 247]}, 
     tableLineColor: [172, 0, 57], 
    tableLineWidth: 0.1,
-   margin: {top: positionTableDiag},
+   margin: {top: 10},
     })
   doc.setFont(undefined, 'normal')
   doc.text(141, doc.lastAutoTable.finalY+5, 'Sub Total de medicamentos : S/'+totalMed)
 
   doc.setFont(undefined, 'bold')
+
+
   doc.text(96, doc.lastAutoTable.finalY+10, 'INSUMOS')
   doc.autoTable({
     startY: doc.lastAutoTable.finalY + 15,
@@ -3446,7 +3693,7 @@ function printAtention(){
    alternateRowStyles: {fillColor : [255, 243, 247]}, 
    tableLineColor: [172, 0, 57], 
    tableLineWidth: 0.1,
-   margin: {top: positionTableDiag},
+   margin: {top: 10},
     })
   doc.setFont(undefined, 'normal')
   doc.text(146, doc.lastAutoTable.finalY+5, 'Sub Total de insumos : S/'+totalIns)

@@ -92,8 +92,7 @@
        style="background-color: rgb(73, 1, 141);color: white;" id="btn-package" >
        <i class="bi bi-file-earmark-zip-fill"></i>
         &nbsp;Consultar paquete de trama</button>&nbsp;
-       <button class="btn btn-secondary" onclick="postTrama(0)" id="btn-send-debug" ><i class="bi bi-bug-fill"></i>&nbsp;Enviar trama a pruebas</button>&nbsp;
-       <button class="btn btn-success" onclick="postTrama(1)" id="btn-send" ><i class="bi bi-send-fill"></i>&nbsp;Enviar trama a produccion</button>&nbsp;
+       <button class="btn btn-success" onclick="postTrama(0)" id="btn-send-debug" ><i class="bi bi-send-check-fill"></i>&nbsp;Enviar trama</button>&nbsp;
        <button class="btn btn-light" style="background-color: #607300;color: white;" onclick="validateCatalog()" id="btn-validate" ><i class="bi bi-file-earmark-post-fill"></i>&nbsp;Validación de catálogo</button>&nbsp;
        <a><div class="loaderSmall" id="loader"></div></a>
 
@@ -310,7 +309,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <center style="margin-top: 20px;"><h1><b>Trama enviada a pruebas!</b></h1></center>
+        <center style="margin-top: 20px;"><h1><b>Trama enviada!</b></h1></center>
         <br>
         <h5><b>Código de respuesta :</b></h5>&nbsp;<label id="cod-resp"></label><p></p>
         <h5><b>Mensaje :</b></h5>&nbsp;<label id="mes-resp"></label><p></p>

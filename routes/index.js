@@ -619,18 +619,19 @@ router.post("/send-trama", function (req, res,next) {
   });
 });
 
-router.post("/send-trama-debug", function (req, res,next) {
-
+router.post("/send-trama-debug", async function (req, res, next) {
   const data = req.body;
-
-  sql.sendTramaDebug(data).then((result) => {
-    if(result[0].length>0){
+  try {
+    const result = await sql.sendTramaDebug(data);
+    if (result[0].length > 0) {
       res.json(result[0]);
-    }else{
-      res.json({error:"sin datos"})
+    } else {
+      res.json({ error: "sin datos" });
     }
-   
-  });
+  } catch (error) {
+    console.error("Error sending trama:", error);
+    res.status(500).json({ error: "Error sending trama" });
+  }
 });
 
 router.get("/get-fua-by-num-and-lote/:a/:b", function (req, res,next) {
@@ -1640,6 +1641,18 @@ router.post("/insert-mov-laboratory-saludpol", function (req, res,next) {
   });
 });
 
+router.post("/insert-mov-images-saludpol", function (req, res,next) {
+  
+  let data = req.body
+
+  sql.add_mov_images_saludpol(data).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({success:"error"})
+    }
+  });
+});
 
 router.get("/search-fua-by-num-size/:a/:b", function (req, res, next) {
   let size = req.params.a 

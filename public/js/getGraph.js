@@ -370,13 +370,18 @@ function yearLater(){
         width: '100%'
       });
 
+
       zingchart.click = function(data){ 
         let year = document.getElementById("dp_graph").value
-        let monthIndex = parseInt((data["targetid"]).split("node-")[1])
-        console.log(year,monthIndex)
-        if(monthIndex >= 0){
-          showCalendar(year, monthIndex);
+        let id = data["id"]
+        if(id == "myChart"){
+          let monthIndex = parseInt((data["targetid"]).split("node-")[1])
+          console.log(year,monthIndex)
+          if(monthIndex >= 0){
+            showCalendar(year, monthIndex);
+          }
         }
+       
        // alert("MES : " + arrayMonths[monthIndex]); 
    }
 

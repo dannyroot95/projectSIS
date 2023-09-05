@@ -210,11 +210,12 @@ router.get("/production_ins_med/:x/:y", function (req, res,next) {
   });
 });
 
-router.get("/discharge_control/:x/:y", function (req, res,next) {
+router.get("/discharge_control/:x/:y/:z", function (req, res,next) {
   let f_init = req.params.x;
   let f_fin = req.params.y;
+  let font = req.params.z
 
-  sql.discharge_control(f_init,f_fin).then((result) => {
+  sql.discharge_control(f_init,f_fin,font).then((result) => {
     if(result[0].length>0){
       res.json(result[0]);
     }else{
@@ -1789,6 +1790,12 @@ router.get("/update-service-out/:a/:b", function (req, res, next) {
   let idService = req.params.a 
   let account = req.params.b 
   sql.update_service_out(idService,account).then((result) => {
+    res.json(result[0]);
+  });
+});
+
+router.get("/get-type-finance", function (req, res, next) {
+  sql.get_type_finance().then((result) => {
     res.json(result[0]);
   });
 });

@@ -78,6 +78,18 @@ console.log("error :" + error);
     }
   }
 
+  async function get_type_finance() {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request().query(`SELECT * FROM SIGH..FuentesFinanciamiento`);
+      return res.recordsets;
+    } catch (error) {
+      console.log("error :" + error);
+    }finally {
+      sql.close();
+    }
+  }
+
   async function getdata_by_num_doc(num) {
     const c = num
     try {
@@ -247,13 +259,14 @@ console.log("error :" + error);
     }
   }
 
-  async function discharge_control(f_init,f_fin) {
+  async function discharge_control(f_init,f_fin,font) {
 
     try {
       let pool = await sql.connect(config);
       let res = await pool.request()
       .input('fecha_in',f_init)
       .input('fecha_out',f_fin)
+      .input('fuente',font)
       .execute(`CONTROL_DE_ALTAS`) 
       return res.recordsets
     } catch (error) {
@@ -1606,5 +1619,6 @@ module.exports = {
   search_service:search_service,
   update_service_in:update_service_in,
   update_service_out:update_service_out,
-  delete_images_saludpol:delete_images_saludpol
+  delete_images_saludpol:delete_images_saludpol,
+  get_type_finance:get_type_finance
 };

@@ -4,6 +4,7 @@ var allData = []
 
 var arrayInc = []
 createDatatable()
+getTypeFinance()
 
 function createDatatable(){
 
@@ -40,11 +41,11 @@ function search(){
 
     let f1 = document.getElementById("d-init").value
     let f2 = document.getElementById("d-final").value
-
+    let font = document.getElementById("inputGroupSelectFinance").value
 
     if(f1 != "" && f2 != ""){
 
-        getData(f1,f2)
+        getData(f1,f2,font)
 
     }else{
         Swal.fire(
@@ -56,7 +57,7 @@ function search(){
 
 }
 
-function getData(f1,f2){
+function getData(f1,f2,font){
 
     controller = new AbortController();
     signal = controller.signal;
@@ -65,7 +66,7 @@ function getData(f1,f2){
     document.getElementById("btn-cancel").style = "display:block;"
     loader.style = "display:block;"
 
-    fetch(`${url}/discharge_control/${f1}/${f2}`,{
+    fetch(`${url}/discharge_control/${f1}/${f2}/${font}`,{
         method: 'get',
         signal: signal,
         headers: {
@@ -97,7 +98,7 @@ function insertData(data){
         arrayInc.push([d.Ncuenta,d.Asegurado,d.HC,d.FF,d.F_ingreso,d.F_egreso,d.F_E_Administrativo,d.Origen,d.Servicio_egreso,d.E_cuenta,d.Usuario,d.Nombre_usuario,d.F_ultima_receta,d.TotalValorizado])
 
         vTotal += parseFloat(d.TotalValorizado)
-
+     
         allData.push({
 
             'Cuenta':d.Ncuenta,
@@ -227,3 +228,26 @@ function cancel(){
 
   }
 
+function getTypeFinance(){
+
+    fetch(`${url}/get-type-finance`,{
+        method: 'get',
+        headers: {
+          'Accept': 'application/json'
+        }
+    })
+      .then(response => response.json())
+      .then(data => {
+        insertTypeFinance(data)
+      }).catch(err => {
+          console.log(err)
+      }); 
+}
+
+function insertTypeFinance(data){
+    $("#inputGroupSelectFinance").html(data.map((d) => {
+              return  `<option value="${d.IdFuenteFinanciamiento}">${d.Descripcion}</option>`;
+          })
+          .join("")
+      );
+}

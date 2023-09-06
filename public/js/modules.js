@@ -41,8 +41,10 @@ $('document').ready(function () {
           plot_saludpol()
         }else if (direccion == '#catalogo') {
           catalog()
-        }else if (direccion == '#estadisticas') {
+        }else if (direccion == '#estadisticas-atenciones') {
           graph()
+        }else if (direccion == '#estadisticas-caja') {
+          box()
         }else {
           routeErrE();
         }
@@ -116,8 +118,12 @@ $('document').ready(function () {
     contentModulo.innerHTML = urlModule("/content/catalogo.html");
   }
   function graph() {
-    window.location.hash = "#estadisticas"
-    contentModulo.innerHTML = urlModule("/content/grafico.html");
+    window.location.hash = "#estadisticas-atenciones"
+    contentModulo.innerHTML = urlModule("/content/grafico-atenciones.html");
+  }
+  function box() {
+    window.location.hash = "#estadisticas-caja"
+    contentModulo.innerHTML = urlModule("/content/grafico-caja.html");
   }
   function routeErrE() {
     console.log("ruta error")

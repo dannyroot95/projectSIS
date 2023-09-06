@@ -2,11 +2,13 @@
 var controller 
 var signal 
 var allData = []
+getTypeFinance()
 
 function search(){
 
     let d_init = document.getElementById("d-init").value
     let d_final = document.getElementById("d-final").value
+    let font = document.getElementById("inputGroupSelectFinance").value
 
     if(d_init != "" && d_final != ""){
 
@@ -17,7 +19,7 @@ function search(){
         controller = new AbortController();
         signal = controller.signal;
 
-        fetch(`${url}/production/${d_init}/${d_final}`,{
+        fetch(`${url}/production/${d_init}/${d_final}/${font}`,{
             method: 'get',
             signal: signal,
             headers: {
@@ -186,3 +188,27 @@ function exportToExcel(){
     document.getElementById("btn-cancel").style = "display:none;"
   
   }
+
+  function getTypeFinance(){
+
+    fetch(`${url}/get-type-finance`,{
+        method: 'get',
+        headers: {
+          'Accept': 'application/json'
+        }
+    })
+      .then(response => response.json())
+      .then(data => {
+        insertTypeFinance(data)
+      }).catch(err => {
+          console.log(err)
+      }); 
+}
+
+function insertTypeFinance(data){
+    $("#inputGroupSelectFinance").html(data.map((d) => {
+              return  `<option value="${d.IdFuenteFinanciamiento}">${d.Descripcion}</option>`;
+          })
+          .join("")
+      );
+}

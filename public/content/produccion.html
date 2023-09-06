@@ -19,7 +19,7 @@
     
     <h2>Producción</h2>
     <p></p>
-    <div class="input-group mb-3" style="width: 60%;">
+    <div class="input-group mb-3" style="width: 80%;">
       <div class="input-group-prepend">
         <span class="input-group-text">Fecha de inicio</span>
       </div>
@@ -28,6 +28,13 @@
           <span class="input-group-text">Fecha final</span>
         </div>
         <input type="date" class="form-control" id="d-final">
+
+        <div class="input-group-prepend">
+          <label class="input-group-text">Fuente de financiamiento</label>
+        </div>
+        <select class="custom-select" id="inputGroupSelectFinance">
+        </select>
+
         <button class="btn btn-primary" id="btn-search" onclick="search()">Buscar</button>
         <button class="btn btn-danger" style="display: none;" id="btn-cancel" onclick="cancel()">Cancelar</button>
         <button class="btn btn-success" style="display: none;" id="btn-xls" onclick="exportToExcel()"><i class='bx bxs-file-doc'></i>&nbsp;Exportar</button>

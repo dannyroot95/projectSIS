@@ -149,11 +149,12 @@ router.get("/status_atention_pro/:n", function (req, res,next) {
   });
 });
 
-router.get("/production/:x/:y", function (req, res,next) {
+router.get("/production/:x/:y/:z", function (req, res,next) {
   let f_init = req.params.x;
   let f_fin = req.params.y;
+  let font = req.params.z;
 
-  sql.production(f_init,f_fin).then((result) => {
+  sql.production(f_init,f_fin,font).then((result) => {
 
     if(result[0].length>0){
       res.json(result[0]);
@@ -1026,14 +1027,20 @@ function getTypeUser(value){
 
 
     <li>
-    <a href="#estadisticas">
-    <i class='bx bx-line-chart'></i>
-      <span class="link_name">Estadisticas</span>
-    </a>
-    <ul class="sub-menu blank">
-      <li><a class="link_name" href="#estadisticas">Estadisticas</a></li>
+    <div class="iocn-link">
+      <a>
+        <i class='bx bx-line-chart'></i>
+        <span class="link_name">Estadisticas</span>
+      </a>
+      <i class='bx bxs-chevron-down arrow' ></i>
+    </div>
+    <ul class="sub-menu">
+      <li><a class="link_name">Estadisticas</a></li>
+      <li><a href="#estadisticas-atenciones">Atenciones</a></li>
+      <li><a href="#estadisticas-caja">Caja</a></li>
     </ul>
-     </li>
+  </li>
+
 
 
   </ul>
@@ -1162,14 +1169,19 @@ function getTypeUser(value){
     </li>
 
     <li>
-    <a href="#estadisticas">
-    <i class='bx bx-line-chart'></i>
-      <span class="link_name">Estadisticas</span>
-    </a>
-    <ul class="sub-menu blank">
-      <li><a class="link_name" href="#estadisticas">Estadisticas</a></li>
+    <div class="iocn-link">
+      <a>
+        <i class='bx bx-line-chart'></i>
+        <span class="link_name">Estadisticas</span>
+      </a>
+      <i class='bx bxs-chevron-down arrow' ></i>
+    </div>
+    <ul class="sub-menu">
+      <li><a class="link_name">Estadisticas</a></li>
+      <li><a href="#estadisticas-atenciones">Atenciones</a></li>
+      <li><a href="#estadisticas-caja">Caja</a></li>
     </ul>
-     </li>
+  </li>
 
 
   </ul>
@@ -1763,6 +1775,17 @@ router.get("/delete-diagnosys/:a/:b", function (req, res, next) {
 router.get("/get-graph/:a", function (req, res, next) {
   let year = req.params.a 
   sql.get_graph(year).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
+router.get("/get-graph-box/:a", function (req, res, next) {
+  let year = req.params.a 
+  sql.get_graph_box(year).then((result) => {
     if(result[0].length>0){
       res.json(result[0]);
     }else{

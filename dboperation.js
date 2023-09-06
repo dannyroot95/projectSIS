@@ -16,8 +16,6 @@ const authProduction = 'DsutgQ3U'
 
 //requestSeachPackageTramaSOAP()
 
-
-
 async function getPackageTrama(anio,month,n_send) {
   try {
    
@@ -231,13 +229,14 @@ console.log("error :" + error);
     }
   }
 
-  async function production(f_init,f_fin) {
+  async function production(f_init,f_fin,fuente) {
 
     try {
       let pool = await sql.connect(config);
       let res = await pool.request()
       .input('f_ini',f_init)
       .input('f_fin',f_fin)
+      .input('fuente',fuente)
       .execute(`PRODUCCION`) 
       return res.recordsets
     } catch (error) {
@@ -1472,6 +1471,18 @@ console.log("error :" + error);
        return [[{success:"error"}]]
     }
   }
+
+  async function get_graph_box(year) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('year',year)
+      .execute(`GRAFICO_CAJA`) 
+      return res.recordsets
+    } catch (error) {
+       return [[{success:"error"}]]
+    }
+  }
   
   async function search_service(name) {
     const n = name
@@ -1616,6 +1627,7 @@ module.exports = {
   add_mov_laboratory_saludpol:add_mov_laboratory_saludpol,
   add_mov_images_saludpol:add_mov_images_saludpol,
   get_graph:get_graph,
+  get_graph_box:get_graph_box,
   search_service:search_service,
   update_service_in:update_service_in,
   update_service_out:update_service_out,

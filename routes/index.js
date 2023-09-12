@@ -1823,6 +1823,24 @@ router.get("/get-type-finance", function (req, res, next) {
   });
 });
 
+router.post("/update-dx-med-ins", function (req, res,next) {
+  
+  let d = req.body
+
+  let idReceta = d.idReceta
+  let idItem = d.idItem
+  let dx = d.dx
+
+
+  sql.update_dx_med_ins(idReceta,idItem,dx).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({success:"error"})
+    }
+  });
+});
+
 module.exports = router;
 
 

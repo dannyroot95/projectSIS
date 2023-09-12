@@ -67,9 +67,9 @@ if(inputDNI != null){
             document.getElementById("dni").disabled = false
       }else{
         let dniF = (data[0][0].DNI).trim()
-        let userF = (data[0][0].Usuario).trim()
+        let userF = (data[0][0].Usuario).trim().toLowerCase()
 
-        if(dniF == dni && userF == user){
+        if(dniF == dni && userF == user.toLowerCase()){
           let x = data[0][0]
           let content = data[1].content
           document.getElementById("btn-login").style = "display:block;"
@@ -120,7 +120,6 @@ if(inputDNI != null){
 
 
   function setContent(content,x){
-
  
     var scriptElement = document.createElement('script');
     scriptElement.src = '/js/script.js';

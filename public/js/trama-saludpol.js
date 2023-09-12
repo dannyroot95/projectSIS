@@ -1,3 +1,4 @@
+//const { Date } = require("mssql")
 
 var trama1 = ``
 var trama2 = ``
@@ -2188,7 +2189,7 @@ function getDataClientSaludpol(d){
                       <td>${diag_med}</td>
                       <td>${d.PrecioUnidad}</td>
                       <td>${d.Precio}</td>
-                      <td><button class="btn btn-warning" style="background-color:#ac0039;border-color:#ac0039;color:white;"><i class="bi bi-pencil-square"></i></button></td>
+                      <td><button class="btn btn-warning" onclick="optionMedical('${encodeURIComponent(JSON.stringify(d))}')" style="background-color:#ac0039;border-color:#ac0039;color:white;"><i class="bi bi-pencil-square"></i></button></td>
                       </tr>`;
 
                   })
@@ -2210,7 +2211,7 @@ function getDataClientSaludpol(d){
                       <td>${diag_med}</td>
                       <td>${d.PrecioUnidad}</td>
                       <td>${d.Precio}</td>
-                      <td><button class="btn btn-warning" style="background-color:#ac0039;border-color:#ac0039;color:white;"><i class="bi bi-pencil-square"></i></button></td>
+                      <td><button class="btn btn-warning" onclick="optionMedical('${encodeURIComponent(JSON.stringify(d))}')" style="background-color:#ac0039;border-color:#ac0039;color:white;"><i class="bi bi-pencil-square"></i></button></td>
                       </tr>`;
 
                   })
@@ -3952,5 +3953,76 @@ function updateService(id,v){
   }
 
   
+
+}
+
+function optionMedical(d){
+
+  d = JSON.parse(decodeURIComponent(d))
+
+  $('#modalMedical').modal('show')
+
+  document.getElementById("med-idReceta").value = d.idReceta
+  document.getElementById("med-idItem").value = d.idItem
+  document.getElementById("med-dx").value = d.dx
+
+}
+
+function updateDX(){
+
+  let idReceta = document.getElementById("med-idReceta").value
+  let idItem = document.getElementById("med-idItem").value
+  let dx =  document.getElementById("med-dx").value 
+
+  if(dx != ""){
+    fetchUpdateDX(idReceta,idItem,dx)
+  }else{
+    Swal.fire(
+      'Oops!',
+      'Ingrese el código DX de un diganostico!',
+      'info'
+    );
+  }
+
+}
+
+function fetchUpdateDX(idReceta,idItem,dx){
+
+  let x = {
+    idReceta:idReceta,
+    idItem:idItem,
+    dx:dx
+  }
+  
+  fetch(`${url}/update-dx-med-ins`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(x)
+  })
+            .then(response => response.json())
+            .then(data => {
+            
+
+              let responseX = data[0]
+              if(responseX.success == "actualizado"){
+                Swal.fire(
+                  'Muy bien!',
+                  'DX actualizado!',
+                  'success'
+                );
+                updateDetailAccount()
+              }else{
+                Swal.fire(
+                  'Oops!',
+                  'Error al actualizar DX!',
+                  'error'
+                );
+              }
+
+            }).catch(err =>{
+                console.log(err)
+            } );
 
 }

@@ -1538,6 +1538,21 @@ console.log("error :" + error);
     }
   }
 
+  async function update_dx_med_ins(idReceta,idItem,dx) {
+
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('IDRECETA',idReceta)
+      .input('IDITEM',idItem)
+      .input('DX',dx)
+      .execute(`ACTUALIZAR_DX_MED_INS`) 
+      return [[{success:"actualizado"}]]
+    } catch (error) {
+      return [[{success:"error"}]]
+    }
+  }
+
 
 
 module.exports = {
@@ -1632,5 +1647,6 @@ module.exports = {
   update_service_in:update_service_in,
   update_service_out:update_service_out,
   delete_images_saludpol:delete_images_saludpol,
-  get_type_finance:get_type_finance
+  get_type_finance:get_type_finance,
+  update_dx_med_ins:update_dx_med_ins
 };

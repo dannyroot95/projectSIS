@@ -881,6 +881,47 @@
 </div>
     
 
+
+    <!-- Modal -->
+    <div class="modal fade" style="background-color: #ffffff8f;" id="modalMedical" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-4" >Detalle de medicamento</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+           <center>
+
+            <div class="input-group mb-3" style="width: 50%;">
+              <div class="input-group-prepend">
+                <span class="input-group-text" style="font-weight: bold;" id="basic-addon1">ID receta</span>
+              </div>
+              <input type="number" id="med-idReceta" class="form-control" disabled style="color: black;">
+            </div>
+            
+            <div class="input-group mb-3" style="width: 50%;">
+              <div class="input-group-prepend">
+                <span class="input-group-text" style="font-weight: bold;" id="basic-addon1">Item</span>
+              </div>
+              <input type="number" id="med-idItem" class="form-control" disabled style="color: black;">
+            </div>
+         
+            <div class="input-group mb-3" style="width: 50%;">
+              <div class="input-group-prepend">
+                <span class="input-group-text" style="font-weight: bold;" id="basic-addon1">Diagnostico</span>
+              </div>
+              <input type="text" id="med-dx" class="form-control" style="color: black;">
+              <button class="btn btn-success" onclick="updateDX()"><i class="bi bi-arrow-down-up"></i>&nbsp;Actualizar</button>
+            </div>
+         
+          </center>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
      <script>
 
      for(let i = 1 ; i<= 24 ; i++ ){

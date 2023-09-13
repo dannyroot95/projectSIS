@@ -1704,7 +1704,9 @@ function showDetailModal(d){
   document.getElementById("d-lote").innerHTML = d.A3
   document.getElementById("d-account").innerHTML = d.A1
   document.getElementById("d-name").innerHTML = d.A26+" "+d.A27+" "+d.A28
-  document.getElementById("d-atention").innerHTML = d.A42
+
+
+  document.getElementById("fua-id-ate").value = d.A42
 
   fetch(`${url}/affiliate-by-name/${d.A26}/${d.A27}/${d.A28}`,{
     method: 'get',

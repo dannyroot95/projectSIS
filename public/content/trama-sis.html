@@ -372,7 +372,7 @@
         <label>Cuenta :</label>&nbsp;<label id="d-account"></label>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <label>Nombres :</label>&nbsp;<label id="d-name"></label><p></p>
-        <label>Cod.Atención :</label>&nbsp;<label id="d-atention"></label>
+      <p></p>
 
         <table class="table table-responsive table-hover table-bordered display" id="tb-data-d">
           <thead>
@@ -409,23 +409,28 @@
         <input type="text" class="form-control" id="afi-siasis">
         <span class="input-group-text" id="basic-addon1">Código</span>
         <input type="text" class="form-control" id="afi-code">
+        <button style="float: right;margin-bottom: 20px;" type="button" onclick="updateAfiliation()" class="btn btn-primary">Actualizar</button>
       </div>
         
        <p></p>
 
-       <button style="float: right;margin-bottom: 20px;" type="button" onclick="updateAfiliation()" class="btn btn-primary">Actualizar</button>
-
-      
+       
        <div class="input-group mb-3">
         <span class="input-group-text" id="basic-addon1">Tipo de documento digitador</span>
         <input type="text" class="form-control" id="afi-type-dig">
         <span class="input-group-text" id="basic-addon1">N° de documento digitador</span>
         <input type="text" class="form-control" id="afi-num-dig">
+        <button style="float: right;" type="button" onclick="updateDNIDigitador()" class="btn btn-primary">Actualizar</button>
       </div>
 
       <p></p>
 
-      <button style="float: right;" type="button" onclick="updateDNIDigitador()" class="btn btn-primary">Actualizar</button>
+            
+      <div class="input-group mb-3" style="width: 50%;">
+        <span class="input-group-text" id="basic-addon1">Prestación principal de la atención</span>
+        <input type="text" class="form-control" id="fua-id-ate">
+        <button style="float: right;" type="button" onclick="updateAtePrincipal()" class="btn btn-primary">Actualizar</button>
+      </div>
 
       </div>
       <div class="modal-footer">

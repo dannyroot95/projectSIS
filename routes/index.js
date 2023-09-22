@@ -1841,6 +1841,82 @@ router.post("/update-dx-med-ins", function (req, res,next) {
   });
 });
 
+router.get("/update-cod-ate-fua/:a/:b", function (req, res, next) {
+  let account = req.params.a 
+  let cod = req.params.b
+  sql.update_cod_ate_fua(account,cod).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
+router.get("/value-production-atention/:a/:b/:c", function (req, res, next) {
+  let account = req.params.a 
+  let ff = req.params.b
+  let nf = req.params.c
+  sql.value_production_account(account,ff,nf).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
+router.get("/update-type-atention-fua/:a/:b", function (req, res, next) {
+  let type = req.params.a 
+  let account = req.params.b
+  sql.update_type_atention_fua(type,account).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
+router.get("/update-dni-patient-fua/:a/:b/:c", function (req, res, next) {
+  let type = req.params.a 
+  let dni = req.params.b
+  let account = req.params.c
+  sql.update_dni_fua(type,dni,account).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
+router.get("/query-no-atention/:a", function (req, res, next) {
+  let account = req.params.a 
+  sql.queryAtentionSaludpol(account).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
+router.get("/update-date-atention-saludpol/:a/:b/:c/:d/:e", function (req, res, next) {
+  let account = req.params.a 
+  let f1 = req.params.b 
+  let h1 = req.params.c 
+  let f2 = req.params.d 
+  let h2 = req.params.e 
+  sql.updateDateAtentionSaludpol(account,f1,f2,h1,h2).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
 module.exports = router;
 
 

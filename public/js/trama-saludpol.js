@@ -6,6 +6,7 @@ var trama3 = ``
 var trama4 = ``
 let allData = []
 let report = []
+let report2 = []
 
 
 createDatatable()
@@ -518,10 +519,12 @@ function fetchTrama1(){
 
 }
 
+
 function insertDataTrama1(data){
 
   let ctx = 0
   report = []
+  report2 = []
 
   $('#tb-data-1').DataTable().destroy()
   $("#tbody").html(data.map((d) => {
@@ -533,7 +536,9 @@ function insertDataTrama1(data){
       color = "#FFDFE7"
     }
 
-    fetchReportSaludpol(d.CAMPO2)
+    report2.push(d.CAMPO2)
+
+    //fetchReportSaludpol(d.CAMPO2)
 
     let female = `<center><i style="color: #ff2f41;font-size: 20px;font-weight: bolder;" class="bi bi-gender-female"></i>&nbsp;${d.CAMPO8}</center>`
     let male = `<center><i style="color: #001173;font-size: 20px;font-weight: bolder;" class="bi bi-gender-male"></i>&nbsp;${d.CAMPO8}</center>`
@@ -582,6 +587,119 @@ function insertDataTrama1(data){
 
 }
 
+async function fetchWithInterval(urls) {
+  for (const id of urls) {
+    try {
+      // Realiza la solicitud fetch con el ID actual
+      const response = await fetch(`${url}/report-saludpol/${id}`); // Reemplaza "URL_BASE" con la URL base de tu API
+      
+      if (response.ok) {
+        // Procesa la respuesta como desees
+        const data = await response.json();
+        
+        for (var i = 0; i < data.length; i++) {
+          var item = data[i];
+          var newItem = {
+            "Prestacion": convertBlank(item.prestacion),
+            "N°_Autorizacion": convertBlank(item.Autorizacion),
+            "Cuenta": convertBlank(item.idCuentaAtencion),
+            "Nombres": convertBlank(item.Nombres),
+            "DNI": convertBlank(item.dni),
+            "Sexo": convertBlank(item.sexo),
+            "Historia": convertBlank(item.HC),
+            "Fecha Ingreso": convertBlank(item.fIngreso),
+            "Fecha Egreso": convertBlank(item.fEgreso),
+            "Medico": convertBlank(item.medico),
+            "Servicio": convertBlank(item.ServicioIngreso),
+            "Dias_hosp": convertBlank(item.dias_hosp),
+            "Dx": convertBlank(item.dx),
+            "Diagnostico": convertBlank(item.diagnostico),
+            "Tipo de consumo": convertBlank(item.tipo),
+            "Codigo": convertBlank(item.Codigo),
+            "Consumo": convertBlank(item.Nombre),
+            "Cantidad": convertBlank(item.Cantidad),
+            "Precio_Unitario": convertBlank('S/'+item.PrecioUnitario),
+            "Precio_Total": convertBlank('S/'+item.Precio),
+            'Verificacion_convenios':""
+        }
+        
+        report.push(newItem);
+      }
+
+      } else {
+        console.error(`Error al hacer la solicitud para ID ${id}:`, response.status);
+      }
+    } catch (error) {
+      console.error(`Error al hacer la solicitud para ID ${id}:`, error);
+    }
+
+    // Espera 3 segundos antes de la próxima solicitud
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+  }
+}
+
+
+async function fetchSequentially() {
+
+  let ctx = 0
+  disableButtons()
+  loader.style = "display:block;"
+
+  for (const id of report2) {
+    try {
+      // Realiza la solicitud fetch con el ID actual
+      const response = await fetch(`${url}/report-saludpol/${id}`); // Reemplaza "URL_BASE" con la URL base de tu API
+
+      if (response.ok) {
+        // Procesa la respuesta como desees
+        const data = await response.json();
+
+        ctx++
+
+        for (var i = 0; i < data.length; i++) {
+          var item = data[i];
+          var newItem = {
+            "Prestacion": convertBlank(item.prestacion),
+            "N°_Autorizacion": convertBlank(item.Autorizacion),
+            "Cuenta": convertBlank(item.idCuentaAtencion),
+            "Nombres": convertBlank(item.Nombres),
+            "DNI": convertBlank(item.dni),
+            "Sexo": convertBlank(item.sexo),
+            "Historia": convertBlank(item.HC),
+            "Fecha Ingreso": convertBlank(item.fIngreso),
+            "Fecha Egreso": convertBlank(item.fEgreso),
+            "Medico": convertBlank(item.medico),
+            "Servicio": convertBlank(item.ServicioIngreso),
+            "Dias_hosp": convertBlank(item.dias_hosp),
+            "Dx": convertBlank(item.dx),
+            "Diagnostico": convertBlank(item.diagnostico),
+            "Tipo de consumo": convertBlank(item.tipo),
+            "Codigo": convertBlank(item.Codigo),
+            "Consumo": convertBlank(item.Nombre),
+            "Cantidad": convertBlank(item.Cantidad),
+            "Precio_Unitario": convertBlank('S/'+item.PrecioUnitario),
+            "Precio_Total": convertBlank('S/'+item.Precio),
+            'Verificacion_convenios':""
+        }
+        
+        report.push(newItem);
+        }
+
+      } else {
+        console.error(`Error al hacer la solicitud para ID ${id}:`, response.status);
+      }
+    } catch (error) {
+      console.error(`Error al hacer la solicitud para ID ${id}:`, error);
+    }
+  }
+
+  if(report2.length == ctx){
+    enableButtons()
+    exportToExcel2()
+    loader.style = "display:none;"
+  }
+
+}
 
 
 function insertDataTrama2(data){
@@ -1311,46 +1429,48 @@ function isDataNull(data){
   return x
 }
 
-function fetchReportSaludpol(n){
-
-  fetch(`${url}/report-saludpol/${n}`)
-            .then(response => response.json())
-            .then(data => {
-               console.log(data)
-              for (var i = 0; i < data.length; i++) {
-                var item = data[i];
-                var newItem = {
-                  "Prestacion": convertBlank(item.prestacion),
-                  "N°_Autorizacion": convertBlank(item.Autorizacion),
-                  "Cuenta": convertBlank(item.idCuentaAtencion),
-                  "Nombres": convertBlank(item.Nombres),
-                  "DNI": convertBlank(item.dni),
-                  "Sexo": convertBlank(item.sexo),
-                  "Historia": convertBlank(item.HC),
-                  "Fecha Ingreso": convertBlank(item.fIngreso),
-                  "Fecha Egreso": convertBlank(item.fEgreso),
-                  "Medico": convertBlank(item.medico),
-                  "Servicio": convertBlank(item.ServicioIngreso),
-                  "Dias_hosp": convertBlank(item.dias_hosp),
-                  "Dx": convertBlank(item.dx),
-                  "Diagnostico": convertBlank(item.diagnostico),
-                  "Tipo de consumo": convertBlank(item.tipo),
-                  "Codigo": convertBlank(item.Codigo),
-                  "Consumo": convertBlank(item.Nombre),
-                  "Cantidad": convertBlank(item.Cantidad),
-                  "Precio_Unitario": convertBlank('S/'+item.PrecioUnitario),
-                  "Precio_Total": convertBlank('S/'+item.Precio),
-                  'Verificacion_convenios':""
-              }
-              
-              report.push(newItem);
-            }
-
-            }).catch(err =>{
-                console.log(err)
-            } );
-          
-}
+/*
+function fetchReportSaludpol(n) {
+  return new Promise((resolve, reject) => {
+    fetch(`${url}/report-saludpol/${n}`)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        const report = [];
+        for (var i = 0; i < data.length; i++) {
+          var item = data[i];
+          var newItem = {
+            "Prestacion": convertBlank(item.prestacion),
+            "N°_Autorizacion": convertBlank(item.Autorizacion),
+            "Cuenta": convertBlank(item.idCuentaAtencion),
+            "Nombres": convertBlank(item.Nombres),
+            "DNI": convertBlank(item.dni),
+            "Sexo": convertBlank(item.sexo),
+            "Historia": convertBlank(item.HC),
+            "Fecha Ingreso": convertBlank(item.fIngreso),
+            "Fecha Egreso": convertBlank(item.fEgreso),
+            "Medico": convertBlank(item.medico),
+            "Servicio": convertBlank(item.ServicioIngreso),
+            "Dias_hosp": convertBlank(item.dias_hosp),
+            "Dx": convertBlank(item.dx),
+            "Diagnostico": convertBlank(item.diagnostico),
+            "Tipo de consumo": convertBlank(item.tipo),
+            "Codigo": convertBlank(item.Codigo),
+            "Consumo": convertBlank(item.Nombre),
+            "Cantidad": convertBlank(item.Cantidad),
+            "Precio_Unitario": convertBlank('S/'+item.PrecioUnitario),
+            "Precio_Total": convertBlank('S/'+item.Precio),
+            'Verificacion_convenios': ""
+          };
+          report.push(newItem);
+        }
+        resolve(report);
+      })
+      .catch(err => {
+        reject(err);
+      });
+  });
+}*/
 
 function convertBlank(value){
   x = value
@@ -1369,7 +1489,7 @@ function exportToExcel2(){
 
   Swal.fire({
       title: 'En breves se descargará el archivo!',
-      timer: 5000,
+      timer: 3000,
       timerProgressBar: true,
       didOpen: () => {
         Swal.showLoading()
@@ -3517,11 +3637,7 @@ function updateDetailAccount(){
 }
 
 function openModalAddLaboratory(){
-    let tb = document.getElementById("tbodyLab").rows.length
-
-    if(tb > 0){
-      $('#modalAddLab').modal('show')
-    }
+    $('#modalAddLab').modal('show')
 }
 
 function openModalAddImages(){
@@ -4026,3 +4142,122 @@ function fetchUpdateDX(idReceta,idItem,dx){
             } );
 
 }
+
+function showModalEditAtention(){
+  $('#modalEditAtention').modal('show')
+}
+
+function fetchQueryNoAtention(){
+  let account = document.getElementById("no-ate-account").value
+
+  if(account != ""){
+    fetch(`${url}/query-no-atention/${account}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+              .then(response => response.json())
+              .then(data => {
+            
+                let d = data[0]
+        
+                document.getElementById("no-ate-name").innerHTML = d.nombres
+                document.getElementById("no-ate-age").innerHTML = d.edad
+                document.getElementById("no-ate-dni").innerHTML = d.NroDocumento
+                document.getElementById("no-ate-gender").innerHTML = d.sexo
+                document.getElementById("no-ate-service").innerHTML = d.TipoServicio
+                document.getElementById("no-ate-account-q").innerHTML = d.IdCuentaAtencion
+                document.getElementById("no-ate-id-patient").innerHTML = d.idPaciente
+                document.getElementById("no-ate-auth").innerHTML = d.carta
+
+                document.getElementById("no-ate-in-date").value = (d.FechaIngreso).split("T")[0];
+                document.getElementById("no-ate-in-hour").value = d.horaIngreso
+  
+                document.getElementById("no-ate-out-date").value = (d.FechaEgreso).split("T")[0];
+                document.getElementById("no-ate-out-hour").value = d.horaEgreso
+
+              }).catch(err =>{
+                Swal.fire(
+                  'Oops!',
+                  'Ocurrió un error!',
+                  'error'
+                );
+              } );
+  }else{
+    Swal.fire(
+      'Oops!',
+      'Ingrese un numero de cuenta!',
+      'info'
+    );
+  }
+}
+
+function updateDateAtentionSaludpol(){
+
+  let account = document.getElementById("no-ate-account-q").innerHTML
+  let f1 = document.getElementById("no-ate-in-date").value
+  let f2 = document.getElementById("no-ate-out-date").value
+  let h1 = document.getElementById("no-ate-in-hour").value
+  let h2 = document.getElementById("no-ate-out-hour").value
+
+  if(f1 != "" && f2 != "" && h1 != "" && h2 != ""){
+    fetch(`${url}/update-date-atention-saludpol/${account}/${f1}/${h1}/${f2}/${h2}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+              .then(response => response.json())
+              .then(data => {
+            
+                let success = data[0].success
+        
+                if(success == "actualizado"){
+                  Swal.fire(
+                    'Muy bien!',
+                    'Datos actualizados!',
+                    'success'
+                  );
+                }else{
+                  Swal.fire(
+                    'Oops!',
+                    'Ocurrió un error!',
+                    'error'
+                  );
+                }
+
+              }).catch(err =>{
+                Swal.fire(
+                  'Oops!',
+                  'Ocurrió un error!',
+                  'error'
+                );
+              } );
+  }else{
+    Swal.fire(
+      'Oops!',
+      'Complete los campos!',
+      'info'
+    );
+  }
+
+}
+
+$('#modalEditAtention').on('hidden.bs.modal', function (e) {
+  document.getElementById("no-ate-account").value = ""
+  document.getElementById("no-ate-name").innerHTML = ""
+  document.getElementById("no-ate-age").innerHTML = ""
+  document.getElementById("no-ate-dni").innerHTML = ""
+  document.getElementById("no-ate-gender").innerHTML = ""
+  document.getElementById("no-ate-service").innerHTML = ""
+  document.getElementById("no-ate-account").innerHTML = ""
+  document.getElementById("no-ate-id-patient").innerHTML = ""
+  document.getElementById("no-ate-auth").innerHTML = ""
+
+  document.getElementById("no-ate-in-date").value = ""
+  document.getElementById("no-ate-out-date").value = ""
+  document.getElementById("no-ate-in-hour").value = ""
+  document.getElementById("no-ate-out-hour").value = ""
+
+})

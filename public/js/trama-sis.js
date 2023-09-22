@@ -902,6 +902,27 @@ function validateDataATE(d){
       log = log+warning+"\n\n"
     }
 
+    if(d["A21"] == ""){
+      ctx++
+      c++
+      let warning = `${c}.- EL CAMPO ATE#21 (REGISTRO DEL ASEGURADO) DEBE SER UN CAMPO HASTA 10 DIGITOS -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
+      log = log+warning+"\n\n"
+    }
+
+    if(d["A40"] != "" && d["A34"] == "1" && d["A43"] == "1"){
+      ctx++
+      c++
+      let warning = `${c}.- EL CAMPO ATE#40 (IPRESS DE REFERENCIA) DEBE SER VACIO SEGUN EL CAMPO ATE#34 (TIPO DE ATENCION) Y AL CAMPO ATE43 (ORIGEN DE PERSONAL) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
+      log = log+warning+"\n\n"
+    }
+
+    if(d["A24"] == "8" && d["A25"].length < 10){
+      ctx++
+      c++
+      let warning = `${c}.- EL CAMPO ATE#25 (NRO DE DOCUMENTO DEL ASEGURADO) DEBE SER DE 10 DIGITOS DE ACUERDO AL CAMPO #ATE24 (TIPO DE DOCUMENTO DEL ASEGURADO) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
+      log = log+warning+"\n\n"
+    }
+
    return counter(ctx,d)
 
 }
@@ -1705,8 +1726,11 @@ function showDetailModal(d){
   document.getElementById("d-account").innerHTML = d.A1
   document.getElementById("d-name").innerHTML = d.A26+" "+d.A27+" "+d.A28
 
-
   document.getElementById("fua-id-ate").value = d.A42
+  document.getElementById("inputGroupSelectTypeAte").value = d.A34
+
+  document.getElementById("inputGroupSelectTypeDni").value = d.A24
+  document.getElementById("fua-patient-dni").value = d.A25
 
   fetch(`${url}/affiliate-by-name/${d.A26}/${d.A27}/${d.A28}`,{
     method: 'get',
@@ -1968,6 +1992,140 @@ function fetchValidateCatalog(jsonData){
       )
     console.error(error)
 });
+}
+
+function updateAtePrincipal(){
+
+  let account = document.getElementById("d-account").innerHTML
+  let cod = document.getElementById("fua-id-ate").value
+
+  if(cod != "" && cod != "0"){
+
+    fetch(`${url}/update-cod-ate-fua/${account}/${cod}`,{
+      method: 'get',
+      headers: {
+        'Accept': 'application/json'
+      }
+  })
+    .then(response => response.json())
+    .then(data => {
+
+      let x = data[0]
+      if(x.success == "actualizado"){
+        Swal.fire(
+          'Muy bien!',
+          'Codigo actualizado!',
+          'success'
+        )
+      }else{
+        Swal.fire(
+          'Oops!',
+          'Se produjo un error, intentelo nuevamente',
+          'info'
+        )
+      }
+   
+  
+    }).catch(error => {
+      Swal.fire(
+          'Oops!',
+          'Se produjo un error',
+          'warning'
+        )
+  });
+
+  }
+}
+
+
+function updateTypeAte(){
+
+  let type = document.getElementById("inputGroupSelectTypeAte").value
+  let account = document.getElementById("d-account").innerHTML
+
+  fetch(`${url}/update-type-atention-fua/${type}/${account}`,{
+    method: 'get',
+    headers: {
+      'Accept': 'application/json'
+    }
+})
+  .then(response => response.json())
+  .then(data => {
+    let x = data[0]
+    if(x.success == "actualizado"){
+      Swal.fire(
+        'Muy bien!',
+        'Tipo de atención actualizado!',
+        'success'
+      )
+    }else{
+      Swal.fire(
+        'Oops!',
+        'Se produjo un error, intentelo nuevamente',
+        'info'
+      )
+    }
+ 
+
+  }).catch(error => {
+    Swal.fire(
+        'Oops!',
+        'Se produjo un error',
+        'warning'
+      )
+});
+}
+
+
+function updateDniPatient(){
+
+  let type = document.getElementById("inputGroupSelectTypeDni").value
+  let dni = document.getElementById("fua-patient-dni").value
+  let account = document.getElementById("d-account").innerHTML
+
+  if(dni != ""){
+
+    
+  fetch(`${url}/update-dni-patient-fua/${type}/${dni}/${account}`,{
+    method: 'get',
+    headers: {
+      'Accept': 'application/json'
+    }
+})
+  .then(response => response.json())
+  .then(data => {
+    let x = data[0]
+    if(x.success == "actualizado"){
+      Swal.fire(
+        'Muy bien!',
+        'Documento actualizado!',
+        'success'
+      )
+    }else{
+      Swal.fire(
+        'Oops!',
+        'Se produjo un error, intentelo nuevamente',
+        'info'
+      )
+    }
+ 
+
+  }).catch(error => {
+    Swal.fire(
+        'Oops!',
+        'Se produjo un error',
+        'warning'
+      )
+});
+
+  }else{
+    Swal.fire(
+      'Oops!',
+      'Ingrese el número de documento!',
+      'info'
+    )
+  }
+
 
 
 }

@@ -392,6 +392,9 @@
         <br>
         
         <!--inputs-->
+        <hr size="2px" color="black" />
+        <h4>Afiliación</h4>
+        <p></p>
 
         <div class="input-group mb-3">
           <span class="input-group-text" id="basic-addon1">Afiliacion Disa</span>
@@ -413,7 +416,9 @@
       </div>
         
        <p></p>
-
+       <hr size="2px" color="black" />
+       <h4>Digitador</h4>
+       <p></p>
        
        <div class="input-group mb-3">
         <span class="input-group-text" id="basic-addon1">Tipo de documento digitador</span>
@@ -424,13 +429,58 @@
       </div>
 
       <p></p>
-
+      <hr size="2px" color="black" />
+      <h4>Cod.Atención</h4>
+      <p></p>
             
       <div class="input-group mb-3" style="width: 50%;">
         <span class="input-group-text" id="basic-addon1">Prestación principal de la atención</span>
-        <input type="text" class="form-control" id="fua-id-ate">
+        <input type="number" maxlength="3" class="form-control" id="fua-id-ate">
         <button style="float: right;" type="button" onclick="updateAtePrincipal()" class="btn btn-primary">Actualizar</button>
       </div>
+
+      <p></p>
+      <hr size="2px" color="black" />
+      <h4>Tipo de Atención</h4>
+      <p></p>
+
+      <div class="input-group mb-3" style="width: 50%;">
+        <span class="input-group-text" id="basic-addon1">Seleccione el tipo de atención</span>
+        
+        <select class="custom-select" id="inputGroupSelectTypeAte">
+          <option value="0">Sin tipo</option>
+          <option value="1">Ambulatotio</option>
+          <option value="2">Referencia</option>
+          <option value="3">Emergencia</option>
+        </select>
+
+        <button style="float: right;" type="button" onclick="updateTypeAte()" class="btn btn-primary">Actualizar</button>
+      </div>
+
+      <p></p>
+      <hr size="2px" color="black" />
+      <h4>DNI de paciente</h4>
+      <p></p>
+
+      <div class="input-group mb-3" style="width: 70%;">
+        <span class="input-group-text" id="basic-addon1">Tipo de documento</span>
+        
+        <select class="custom-select" id="inputGroupSelectTypeDni">
+          <option value="1">DNI</option>
+          <option value="2">Carnet Extranjeria</option>
+          <option value="3">Pasaporte</option>
+          <option value="4">Documento de Identidad extranjero</option>
+          <option value="5">Código recién Nacido</option>
+          <option value="6">Código Temporal para FFAA y PNP</option>
+          <option value="7">C.I.U</option>
+          <option value="8">Madre: TipoDoc+ DNI+N°Hijo</option>
+          <option value="9">Madre: Autogenerado+N°Hijo</option>
+          <option value="10">Sin registro madre/tutor</option>
+        </select>
+        <input type="number" maxlength="10" class="form-control" id="fua-patient-dni">
+        <button style="float: right;" type="button" onclick="updateDniPatient()" class="btn btn-primary">Actualizar</button>
+      </div>
+
 
       </div>
       <div class="modal-footer">

@@ -65,8 +65,8 @@
       <button style="display: none;" class="btn btn-dark" id="btn-trama" onclick="buildTrama()" ><i class="bi bi-bounding-box"></i>&nbsp;Generar trama</button>
       <button style="display: none;" class="btn btn-dark" id="btn-upload-trama"><i class="bi bi-upload"></i><a target="_blank" style="color: white;text-decoration:none; " href="https://app-gtips.saludpol.gob.pe:38071/app-gtips/">&nbsp;Subir trama</a></button>
       <button style="display: none;" class="btn btn-danger" id="btn-obs" onclick="obtenerDatos()" ><i class="bi bi-exclamation-triangle"></i>&nbsp;Observar atenciones</button>
-      <button style="display: none;" class="btn btn-success" id="btn-report" onclick="exportToExcel2()" ><i class="bi bi-file-earmark-spreadsheet-fill"></i>&nbsp;Generar reporte</button>
-      <button style="display: none; background-color: #49002b;border-color: #49002b;" class="btn btn-success" id="btn-no-ate" onclick="" ><i class="bi bi-eye-slash-fill"></i>&nbsp;Atenciones no figuradas</button>
+      <button style="display: none;" class="btn btn-success" id="btn-report" onclick="fetchSequentially()" ><i class="bi bi-file-earmark-spreadsheet-fill"></i>&nbsp;Generar reporte</button>
+      <button style="display: none; background-color: #49002b;border-color: #49002b;" class="btn btn-success" id="btn-no-ate" onclick="showModalEditAtention()" ><i class="bi bi-eye-slash-fill"></i>&nbsp;Atenciones no figuradas</button>
     </div>
 
       
@@ -921,6 +921,74 @@
       </div>
     </div>
 
+    <!---->
+
+    <div class="modal fade" style="background-color: #ffffff8f;" id="modalEditAtention" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-4" >Consultar atención</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+           
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><b>Número de cuenta</b></span>
+              </div>
+              <input type="number" maxlength="8" id="no-ate-account" class="form-control">
+              <button class="btn btn-primary" onclick="fetchQueryNoAtention()"><i class="bi bi-search"></i>&nbsp;Buscar</button>
+            </div>
+            
+            <br>
+
+            <label><b>Nombres :</b>&nbsp;</label><label id="no-ate-name"></label>
+            &nbsp;&nbsp;&nbsp;
+            <label><b>Edad :</b>&nbsp;</label><label id="no-ate-age"></label>
+            &nbsp;&nbsp;&nbsp;
+            <label><b>DNI :</b>&nbsp;</label><label id="no-ate-dni"></label>
+            &nbsp;&nbsp;&nbsp;
+            <label><b>Sexo :</b>&nbsp;</label><label id="no-ate-gender"></label>
+
+            <br><br>
+
+            <label><b>Servicio :</b>&nbsp;</label><label id="no-ate-service"></label>
+            &nbsp;&nbsp;&nbsp;
+            <label><b>N° Cuenta :</b>&nbsp;</label><label id="no-ate-account-q"></label>
+            &nbsp;&nbsp;&nbsp;
+            <label><b>ID paciente :</b>&nbsp;</label><label id="no-ate-id-patient"></label>
+            &nbsp;&nbsp;&nbsp;
+            <label><b>Doc de Autorización :</b>&nbsp;</label><label id="no-ate-auth"></label>
+
+            <br><br>
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><b>Fecha de ingreso</b></span>
+              </div>
+              <input type="date" id="no-ate-in-date" class="form-control">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><b>Hora de ingreso</b></span>
+              </div>
+              <input type="time" id="no-ate-in-hour" class="form-control">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><b>Fecha de egreso</b></span>
+              </div>
+              <input type="date" id="no-ate-out-date" class="form-control">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><b>Hora de egreso</b></span>
+              </div>
+              <input type="time" id="no-ate-out-hour" class="form-control">
+              <button onclick="updateDateAtentionSaludpol()" class="btn btn-success">Actualizar</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    
+   <!---->
 
      <script>
 

@@ -905,6 +905,7 @@ console.log("error :" + error);
       .input('F1',f1)
       .input('F2',f2)
       .execute(`REGISTRO_TRAMA_SALUDPOL`) 
+      await pool.close();
       return res.recordsets
     } catch (error) {
       console.log("error : " + error);
@@ -920,6 +921,7 @@ console.log("error :" + error);
       .input('F1',f1)
       .input('F2',f2)
       .execute(`REGISTRO_TRAMA_SALUDPOL_EXCLUIDOS`) 
+      await pool.close();
       return res.recordsets
     } catch (error) {
       console.log("error : " + error);
@@ -950,6 +952,7 @@ console.log("error :" + error);
       .input('F1',f1)
       .input('F2',f2)
       .execute(`REGISTRO_TRAMA_SALUDPOL_INCLUIDOS`) 
+      await pool.close();
       return res.recordsets
     } catch (error) {
       console.log("error : " + error);
@@ -998,14 +1001,28 @@ console.log("error :" + error);
   }
 
   async function production_saludpol(account) {
+    let pool;
     try {
-      let pool = await sql.connect(config);
-      let res = await pool.request()
-      .input('idCuentaAtencion',account)
-      .execute(`PRODUCCION_SALUDPOL`) 
-      return res.recordsets
+      pool = await sql.connect(config);
+      const res = await pool.request()
+        .input('idCuentaAtencion', account)
+        .execute('PRODUCCION_SALUDPOL');
+      
+      // Cierra la conexión después de cada solicitud
+      await pool.close();
+  
+      return res.recordsets;
     } catch (error) {
-      console.log("error : " + error);
+      console.log('Error: ' + error);
+    } finally {
+      // Asegúrate de liberar recursos en caso de un error inesperado
+      if (pool) {
+        try {
+          await pool.close();
+        } catch (error) {
+          console.log('Error al cerrar la conexión: ' + error);
+        }
+      }
     }
   }
 
@@ -1553,7 +1570,98 @@ console.log("error :" + error);
     }
   }
 
+  async function update_cod_ate_fua(account,cod){
 
+    try{
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('CUENTA',account)
+      .input('CODIGO',cod)
+      .execute(`ACTUALIZAR_COD_ATENCION_FUA`) 
+      return [[{success:"actualizado"}]]
+    }catch(error){
+      return [[{success:"error"}]]
+    }
+
+  }
+
+  async function value_production_account(account,ff,nf){
+
+    try{
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('idCuentaAtencion',account)
+      .input('ff',ff)
+      .input('nf',nf)
+      .execute(`OBTENER_VALORIZADO_CUENTA_FF`) 
+      return res.recordsets
+    }catch(error){
+      return [[{success:"error"}]]
+    }
+
+  }
+
+
+  async function update_type_atention_fua(type,account){
+
+    try{
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('TIPO',type)
+      .input('CUENTA',account)
+      .execute(`ACTUALIZAR_TIPO_ATENCION_FUA`) 
+      return [[{success:"actualizado"}]]
+    }catch(error){
+      return [[{success:"error"}]]
+    }
+  }
+
+  async function update_dni_fua(type,dni,account){
+
+    try{
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('TIPO',type)
+      .input('DNI',dni)
+      .input('CUENTA',account)
+      .execute(`ACTUALIZAR_DOCUMENTO_PACIENTE`) 
+      return [[{success:"actualizado"}]]
+    }catch(error){
+      return [[{success:"error"}]]
+    }
+  }
+
+  async function queryAtentionSaludpol(account){
+
+    try{
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('CUENTA',account)
+      .execute(`CONSULTA_CUENTA_NO_FIGURADA`) 
+      return res.recordsets
+      
+    }catch(error){
+      return [[{success:"error"}]]
+    }
+  }
+
+  async function updateDateAtentionSaludpol(account,f1,f2,h1,h2){
+
+    try{
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('CUENTA',account)
+      .input('F1',f1)
+      .input('H1',h1)
+      .input('F2',f2)
+      .input('H2',h2)
+      .execute(`ACTUALIZAR_FECHA_CUENTA_SALUDPOL`) 
+      return [[{success:"actualizado"}]]
+      
+    }catch(error){
+      return [[{success:"error"}]]
+    }
+  }
 
 module.exports = {
   getdata: getdata,
@@ -1648,5 +1756,11 @@ module.exports = {
   update_service_out:update_service_out,
   delete_images_saludpol:delete_images_saludpol,
   get_type_finance:get_type_finance,
-  update_dx_med_ins:update_dx_med_ins
+  update_dx_med_ins:update_dx_med_ins,
+  update_cod_ate_fua:update_cod_ate_fua,
+  value_production_account:value_production_account,
+  update_type_atention_fua:update_type_atention_fua,
+  update_dni_fua:update_dni_fua,
+  queryAtentionSaludpol:queryAtentionSaludpol,
+  updateDateAtentionSaludpol:updateDateAtentionSaludpol
 };

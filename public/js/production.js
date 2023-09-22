@@ -64,9 +64,12 @@ function insertData(data){
 
             'N° cuenta':d.cuenta,
             'N° Formato':d.nro_formato,
+            'Fecha de ingreso':'',
             'Fecha de atención':d.f_atencion,
+            'Fecha de egreso.Adm':'',
             'Beneficiario':d.beneficiario,
             'Hist.Clinica':d.hist_clinica,
+            'FF':'',
             'Servicio':d.servicio,
             'Medico':d.medico,
             'Digitador':d.digitador,

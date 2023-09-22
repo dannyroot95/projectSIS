@@ -28,6 +28,7 @@ const calendarCells = document.getElementById("calendarCells");
 const today = new Date();
 let currentMonth = today.getMonth();
 let currentYear = today.getFullYear();
+let arrayValorizado = []
 
 function getMonthName(month) {
   const months = [
@@ -621,6 +622,8 @@ function getAtentionMedicOnly(data, medico) {
 
   // Filtrar los datos por el nombre del médico
   const datosMedico = data.filter(item => item.ApellidosNombres === medico);
+  const idcuentaAtencionIdTipoFinanciamientoArray = [];
+
 
   // Recorrer los datos del médico y sumar los totales por mes y fuente de financiamiento
   datosMedico.forEach(entry => {
@@ -628,13 +631,22 @@ function getAtentionMedicOnly(data, medico) {
       totalesPorMes[mes] += entry.totalatenciones;
       totalAtenciones += entry.totalatenciones;
 
-      const fuenteFin = entry.fuenteFin;
+      const { IdCuentaAtencion, IdTipoFinanciamiento , fuenteFin } = entry;
+    idcuentaAtencionIdTipoFinanciamientoArray.push({ IdCuentaAtencion, IdTipoFinanciamiento , fuenteFin });
 
-      if (!totalesPorFuente[fuenteFin]) {
-          totalesPorFuente[fuenteFin] = 0;
+      const fuenteFinX = entry.fuenteFin;
+
+      if (!totalesPorFuente[fuenteFinX]) {
+          totalesPorFuente[fuenteFinX] = 0;
       }
-      totalesPorFuente[fuenteFin] += entry.totalatenciones;
+      totalesPorFuente[fuenteFinX] += entry.totalatenciones;
   });
+
+  arrayValorizado = []
+  //document.getElementById("div-val").style = "display:block;"
+  //document.getElementById("valorize").innerHTML = ""
+  //valueProductionMedic(idcuentaAtencionIdTipoFinanciamientoArray)
+  console.log(idcuentaAtencionIdTipoFinanciamientoArray)
 
   console.log(totalesPorFuente);
 
@@ -860,3 +872,75 @@ function getMedicsByService(data,service){
 
 // Llamar a la función pasando el nombre del médico
 
+function valueProductionMedic(data) {
+  let t = data.length;
+  let ctx = 0;
+  let promises = [];
+
+  for (let i = 0; i < data.length; i++) {
+    ctx++;
+
+    const obj = data[i];
+
+    let account = obj.IdCuentaAtencion;
+    let ff = obj.IdTipoFinanciamiento;
+    let nf = obj.fuenteFin;
+
+    const promise = fetch(`${url}/value-production-atention/${account}/${ff}/${nf}`)
+      .then(response => response.json())
+      .then(data => {
+        let d = data[0];
+        return d;
+      })
+      .catch(err => {
+        console.log(err);
+        return null;
+      });
+
+    promises.push(promise);
+  }
+
+  Promise.all(promises)
+    .then(arrayValorizado => {
+  
+      if (arrayValorizado.length === t) {
+        console.log(arrayValorizado)
+        const sum = {};
+        // Calcular la suma
+        arrayValorizado.forEach(item => {
+            const nombreFuente = item.nombreFuente;
+            const valorizado = item.valorizado;
+
+            if (sum[nombreFuente] === undefined) {
+                sum[nombreFuente] = 0;
+            }
+
+            sum[nombreFuente] += valorizado;
+        });
+
+        // Mostrar la suma por nombreFuente
+        console.log(sum);
+
+        const label = document.getElementById("valorize");
+        let labelText = "";
+
+        for (const nombreFuente in sum) {
+          if (nombreFuente !== "undefined" && sum[nombreFuente] !== null && sum[nombreFuente] !== undefined) {
+              labelText += `Fuente de financiamiento: ${nombreFuente}  -  Valorización: S/${parseFloat(sum[nombreFuente]).toFixed(2)}<p></p>`;
+          }
+      }
+
+        // Eliminar la última coma y espacio extra si es necesario
+        if (labelText.length > 0) {
+            labelText = labelText.slice(0, -4);
+        }
+
+        label.innerHTML = labelText;
+        document.getElementById("div-val").style = "display:none;"
+
+      } 
+    })
+    .catch(err => {
+      console.log(err);
+    });
+}

@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="/bootstrap/icons/font/bootstrap-icons.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script type="text/javascript" src="/libraries/xlsexport/xls-export.es5.js"></script>
 
     
 </head>
@@ -327,7 +328,12 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <center style="margin-top: 20px;"><h2><b>Validación de catálogo</b></h2></center>
+        <center style="margin-top: 20px;"><h2><b>
+          Validación de catálogo &nbsp;&nbsp;
+          <p></p>
+          <div class="loaderSmall" id="loadCatalog"></div>
+          <button id="btn-catalog" style="display: none;" class="btn btn-success" onclick="exportToExcelCatalog()">Descargar</button>
+        </b></h2></center>
         
         <input type="file" id="excelFile" accept=".xlsx, .xls">
         <br><br>
@@ -371,7 +377,9 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <label>Cuenta :</label>&nbsp;<label id="d-account"></label>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <label>Nombres :</label>&nbsp;<label id="d-name"></label><p></p>
+        <label>Nombres :</label>&nbsp;<label id="d-name"></label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <label>ID paciente :</label>&nbsp;<label id="d-idpatient"></label><p></p>
       <p></p>
 
         <table class="table table-responsive table-hover table-bordered display" id="tb-data-d">
@@ -481,6 +489,32 @@
         <button style="float: right;" type="button" onclick="updateDniPatient()" class="btn btn-primary">Actualizar</button>
       </div>
 
+      <p></p>
+      <hr size="2px" color="black" />
+      <h4>Fecha de nacimiento del paciente</h4>
+      <p></p>
+
+      <div class="input-group mb-3" style="width: 50%;">
+        <span class="input-group-text" id="basic-addon1">Fecha de nacimiento</span>
+        <input type="date" maxlength="3" class="form-control" id="fua-date-birth">
+        <button style="float: right;" type="button" onclick="updateDateBirthday()" class="btn btn-primary">Actualizar</button>
+      </div>
+
+      <p></p>
+      <hr size="2px" color="black" />
+      <h4>Sexo del paciente</h4>
+      <p></p>
+
+
+      <div class="input-group mb-3" style="width: 70%;">
+        <span class="input-group-text" id="basic-addon1">Sexo</span>
+        
+        <select class="custom-select" id="inputGroupSelectSex">
+          <option value="1">Masculino</option>
+          <option value="2">Femenino</option>
+        </select>
+        <button style="float: right;" type="button" onclick="updateSexPatient()" class="btn btn-primary">Actualizar</button>
+      </div>
 
       </div>
       <div class="modal-footer">

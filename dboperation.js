@@ -1663,6 +1663,22 @@ console.log("error :" + error);
     }
   }
 
+  async function updateDateBirthPatient(id,date){
+
+    try{
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('IDPACIENTE',id)
+      .input('FECHA',date)
+      .execute(`ACTUALIZAR_FECHA_NACIMIENTO_PACIENTE`) 
+      return [[{success:"actualizado"}]]
+      
+    }catch(error){
+      console.log(error)
+      return [[{success:"error"+' '+error}]]
+    }
+  }
+
 module.exports = {
   getdata: getdata,
   sendTrama:sendTrama,
@@ -1762,5 +1778,6 @@ module.exports = {
   update_type_atention_fua:update_type_atention_fua,
   update_dni_fua:update_dni_fua,
   queryAtentionSaludpol:queryAtentionSaludpol,
-  updateDateAtentionSaludpol:updateDateAtentionSaludpol
+  updateDateAtentionSaludpol:updateDateAtentionSaludpol,
+  updateDateBirthPatient:updateDateBirthPatient
 };

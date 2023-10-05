@@ -13,6 +13,9 @@ var smi = ``
 var ser = ``
 var rn = ``
 var res = ``
+var duplexAccount = []
+var catalog = []
+let ctxG = 1
 
 yearLater()
 createDatatable()
@@ -599,6 +602,7 @@ function insertDataAtencion(data){
       }
 
       enableButtons()
+      buscarDuplicados(duplexAccount)
 
 }
 
@@ -842,6 +846,8 @@ function validateData(d){
 
 function validateDataATE(d){
 
+  duplexAccount.push(d["A1"])
+
     let ctx = 0
   
     if(d["A17"] == "" && d["A42"] == '056'){
@@ -851,13 +857,7 @@ function validateDataATE(d){
         log = log+warning+"\n\n"
         searchAndUpdateAtentionFromAfiliate(d["A26"],d["A27"],d["A28"])
     }
-    /*
-    if(d["A42"] == '056' && d["A43"] != 2){
-      ctx++
-      c++
-      let warning = `${c}.- EL CAMPO ATE#40 (IPRESS DE REFERENCIA) DEBE SER VACÍO DEACUERDO AL CAMPO ATE#34 (TIPO DE ATENCION 1: AMBULATORIO , 2 :REFERENCIA 3:EMERGENCIA) Y AL CAMPO ATE#43 (ORIGEN DE PERSONAL DEL ESTABLECIMIENTO) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\n\n"
-    }*/
+
     if(d["A20"] == ""){
       ctx++
       c++
@@ -923,8 +923,54 @@ function validateDataATE(d){
       log = log+warning+"\n\n"
     }
 
+    if (d["A41"] != "" && containCharactersNotPermition(d["A41"])) {
+      ctx++
+      c++
+      let warning = `${c}.- EL CAMPO ATE#41 (HOJA DE REFERENCIA) DEBE DE SER UN CAMPO ALFANUMERICO DE HASTA 20 DIGITOS -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
+      log = log+warning+"\n\n"
+    }
+
+      if(d["A72"] == "1" && d["A73"].length > 8){
+      ctx++
+      c++
+      let warning = `${c}.- EL CAMPO ATE#73 (NUMERO DE DOCUMENTO DEL PERSONAL) DEBE CONSIGNAR 8 DIGITOS DE ACUERDO AL CAMPO ATE#72 (TIPO DE DOCUMENTO DEL PERSONAL) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
+      log = log+warning+"\n\n"
+    }
+
+    if ((d["A35"] === "1" || d["A35"] === "2") && d["A50"] === "") {
+      ctx++
+      c++
+      let warning = `${c}.- EL CAMPO ATE#50 (FECHA DE PARTO) DEBE DE CUMPLIR EL FORMATO DD/MM/AAAA Y SER UNA FECHA VALIDA -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
+      log = log+warning+"\n\n"
+    }
+
+    if(d["A24"] == "3" && d["A25"].length < 9){
+      ctx++
+      c++
+      let warning = `${c}.- EL CAMPO ATE#25 (NUMERO DE DOCUMENTO DEL ASEGURADO) DEBE CONSIGNAR 9 DIGITOS DE ACUERDO AL CAMPO ATE#24 (TIPO DE DOCUMENTO DEL ASEGURADO) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
+      log = log+warning+"\n\n"
+    }
+
+    if(!containNumbersDni(d["A24"])){
+      ctx++
+      c++
+      let warning = `${c}.- EL CAMPO ATE#25 (NUMERO DE DOCUMENTO DEL ASEGURADO) DEBE TENER SOLO NÚMEROS -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
+      log = log+warning+"\n\n"
+   }
+
    return counter(ctx,d)
 
+}
+
+function containCharactersNotPermition(value) {
+  // Usamos una expresión regular para verificar si el dato contiene caracteres no permitidos.
+  // La expresión regular /^[0-9.]+$/ coincidirá con cadenas que contengan solo números y un punto decimal.
+  // Si el dato contiene algún otro carácter, la función retornará true; de lo contrario, retornará false.
+  return !/^[0-9.]+$/.test(value);
+}
+
+function containNumbersDni(data){
+ return /^\d+$/.test(data);
 }
 
 function validateDataOnlyValue(v){
@@ -1725,12 +1771,23 @@ function showDetailModal(d){
   document.getElementById("d-lote").innerHTML = d.A3
   document.getElementById("d-account").innerHTML = d.A1
   document.getElementById("d-name").innerHTML = d.A26+" "+d.A27+" "+d.A28
+  document.getElementById("d-idpatient").innerHTML = d.A89
 
   document.getElementById("fua-id-ate").value = d.A42
   document.getElementById("inputGroupSelectTypeAte").value = d.A34
 
   document.getElementById("inputGroupSelectTypeDni").value = d.A24
   document.getElementById("fua-patient-dni").value = d.A25
+  document.getElementById("fua-date-birth").value = (d.A30).split("/")[2]+'-'+(d.A30).split("/")[1]+'-'+(d.A30).split("/")[0]
+  
+  //alert(d.A31)
+
+  if(d.A31 == "1"){
+    document.getElementById("inputGroupSelectSex").value = 1
+  }else{
+    document.getElementById("inputGroupSelectSex").value = 2
+  }
+
 
   fetch(`${url}/affiliate-by-name/${d.A26}/${d.A27}/${d.A28}`,{
     method: 'get',
@@ -1943,8 +2000,7 @@ $(document).ready(function() {
       table.clear();
 
       for (var i = 1; i < jsonData.length; i++) { // Ignorar la primera fila (encabezados)
-        
-        fetchValidateCatalog(jsonData[i])
+        fetchValidateCatalog(jsonData[i],jsonData.length)
       }
 
       table.draw();
@@ -1955,7 +2011,7 @@ $(document).ready(function() {
   });
 });
 
-function fetchValidateCatalog(jsonData){
+function fetchValidateCatalog(jsonData,l){
 
   const [usuario, fecha, descripcion] = jsonData
 
@@ -1974,15 +2030,26 @@ function fetchValidateCatalog(jsonData){
   .then(response => response.json())
   .then(data => {
 
+    ctxG++
+
     var cuenta = data[0].idCuentaAtencion
     var f_ate = data[0].FuaAtencionFecha
     var digitador = (data[0].nombres).toUpperCase()
     var servicio = (data[0].Nombre).toUpperCase()
+
+    catalog.push({Cuenta :cuenta,Descripcion:descripcion,Fecha_de_atencion : f_ate,Servicio : servicio,Digitador : digitador})
    
     table.row.add([usuario, fecha, descripcion,cuenta,fuaData,f_ate,digitador,servicio]);
     table.draw();
     table.columns.adjust().draw();
    
+    document.getElementById("loadCatalog").style = "display:block;"
+    
+    if(l == ctxG){
+      document.getElementById("btn-catalog").style = "display:block;"
+      document.getElementById("loadCatalog").style = "display:none;"
+      ctxG = 1
+    }
 
   }).catch(error => {
     Swal.fire(
@@ -2083,9 +2150,9 @@ function updateDniPatient(){
   let dni = document.getElementById("fua-patient-dni").value
   let account = document.getElementById("d-account").innerHTML
 
-  if(dni != ""){
+  if(dni != ""  &&  type != 10){
 
-    
+ 
   fetch(`${url}/update-dni-patient-fua/${type}/${dni}/${account}`,{
     method: 'get',
     headers: {
@@ -2125,7 +2192,146 @@ function updateDniPatient(){
       'info'
     )
   }
+}
 
+function buscarDuplicados(arr) {
+  const duplicados = [];
 
+  for (let i = 0; i < arr.length; i++) {
+    for (let j = i + 1; j < arr.length; j++) {
+      if (arr[i] === arr[j] && !duplicados.includes(arr[i])) {
+        duplicados.push(arr[i]);
+      }
+    }
+  }
+
+  console.log('duplicados :'+duplicados)
+  return duplicados;
+}
+
+function exportToExcelCatalog(){
+
+  Swal.fire({
+      title: 'En breves se descargará el archivo!',
+      timer: 2000,
+      timerProgressBar: true,
+      didOpen: () => {
+        Swal.showLoading()
+      },
+    })
+
+var fechaActual = new Date();
+
+var dia = fechaActual.getDate();
+var mes = fechaActual.getMonth() + 1; // Los meses comienzan desde 0 (enero es 0)
+var anio = fechaActual.getFullYear();
+
+// Agrega un cero inicial si el día o el mes son menores a 10
+if (dia < 10) {
+    dia = '0' + dia;
+}
+
+if (mes < 10) {
+    mes = '0' + mes;
+}
+
+var actual = +dia + '/' + mes + '/' + anio;
+
+  let xls = new XlsExport(catalog, 'catalogo');
+  xls.exportToXLS(`reporte_catalogo_de_errores_sis_${actual}.xls`)
+}
+
+function validateRuleOfConsistance(){
+
+  let tbAte = document.getElementById("").innerHTML
+  let tbDIA = document.getElementById("").innerHTML
+  let tbProducedure = document.getElementById("").innerHTML
+  let tbIns = document.getElementById("").innerHTML
+  let tbMedicide = document.getElementById("").innerHTML
+  let tbRN = document.getElementById("").innerHTML
+  let tbSMI = document.getElementById("").innerHTML
+
+   if(tbAte){
+
+  }
+
+}
+
+function updateSexPatient(){
+
+  let sex = document.getElementById("inputGroupSelectSex").value
+  let id = document.getElementById("d-idpatient").innerHTML
+
+  fetch(`${url}/update-gender-patient/${sex}/${id}`,{
+    method: 'get',
+    headers: {
+      'Accept': 'application/json'
+    }
+})
+  .then(response => response.json())
+  .then(data => {
+    let x = data[0]
+    if(x.success == "actualizado"){
+      Swal.fire(
+        'Muy bien!',
+        'Genero actualizado!',
+        'success'
+      )
+    }
+  }).catch(error => {
+    console.log(error)
+    Swal.fire(
+        'Oops!',
+        'Se produjo un error',
+        'warning'
+      )
+});
+
+}
+
+function updateDateBirthday(){
+
+  let birth = document.getElementById("fua-date-birth").value
+  let id = document.getElementById("d-idpatient").innerHTML
+
+  if(birth != ""){
+
+    let data = {
+      date : birth+' 00:00:00.000',
+      idPatient : id
+    }
+  
+    fetch(`${url}/update-date-birth-patient`, {
+      method: 'POST', // o 'PUT', 'DELETE', etc.
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data) // data es un objeto con los datos a enviar
+    })
+    .then(response => response.json())
+    .then(data => {
+      let x = data[0]
+      console.log(data)
+      if(x.success == "actualizado"){
+        Swal.fire(
+          'Muy bien!',
+          'Fecha de nacimiento actualizado!',
+          'success'
+        )
+      }
+    }).catch(error => {
+      Swal.fire(
+          'Oops!',
+          'Se produjo un error',
+          'warning'
+        )
+  });
+  }else{
+    Swal.fire(
+      'Oops!',
+      'Ingrese una fecha',
+      'warning'
+    )
+  }
 
 }

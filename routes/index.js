@@ -1080,6 +1080,16 @@ function getTypeUser(value){
         </li>
   
         <li>
+          <a href="#afiliados">
+            <i class='bx bxs-vector'></i>
+            <span class="link_name">Afiliados</span>
+          </a>
+          <ul class="sub-menu blank">
+            <li><a class="link_name" href="#afiliados">Afiliados</a></li>
+          </ul>
+        </li>
+
+        <li>
           <div class="iocn-link">
             <a>
               <i class='bx bx-file'></i>
@@ -1909,6 +1919,22 @@ router.get("/update-date-atention-saludpol/:a/:b/:c/:d/:e", function (req, res, 
   let f2 = req.params.d 
   let h2 = req.params.e 
   sql.updateDateAtentionSaludpol(account,f1,f2,h1,h2).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
+router.post("/update-date-birth-patient", function (req, res, next) {
+ 
+  let v = req.body
+  let birth = v.date
+  let id = parseInt(v.idPatient)
+  console.log(v)
+
+  sql.updateDateBirthPatient(id,birth).then((result) => {
     if(result[0].length>0){
       res.json(result[0]);
     }else{

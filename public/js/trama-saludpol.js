@@ -1935,7 +1935,7 @@ function fetchUpdateGenderPatient(id_patient,gender){
 
   if(code != ""){
 
-    alert(id_atention+" "+code)
+    //alert(id_atention+" "+code)
 
     fetch(`${url}/update-nro-ref-origin/${id_atention}/${code}`)
     .then(response => response.json())

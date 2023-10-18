@@ -15,6 +15,7 @@ var rn = ``
 var res = ``
 var duplexAccount = []
 var catalog = []
+var notFound = []
 let ctxG = 1
 
 yearLater()
@@ -573,7 +574,6 @@ function insertDataAtencion(data){
 
                 
             } else {
-               
                 return `<td class="minText2">${d[param]}</td>`;
             }
         }).join("");
@@ -957,6 +957,7 @@ function validateDataATE(d){
       let warning = `${c}.- EL CAMPO ATE#25 (NUMERO DE DOCUMENTO DEL ASEGURADO) DEBE TENER SOLO NÚMEROS -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
       log = log+warning+"\n\n"
    }
+
 
    return counter(ctx,d)
 
@@ -2241,21 +2242,6 @@ var actual = +dia + '/' + mes + '/' + anio;
   xls.exportToXLS(`reporte_catalogo_de_errores_sis_${actual}.xls`)
 }
 
-function validateRuleOfConsistance(){
-
-  let tbAte = document.getElementById("").innerHTML
-  let tbDIA = document.getElementById("").innerHTML
-  let tbProducedure = document.getElementById("").innerHTML
-  let tbIns = document.getElementById("").innerHTML
-  let tbMedicide = document.getElementById("").innerHTML
-  let tbRN = document.getElementById("").innerHTML
-  let tbSMI = document.getElementById("").innerHTML
-
-   if(tbAte){
-
-  }
-
-}
 
 function updateSexPatient(){
 
@@ -2334,4 +2320,232 @@ function updateDateBirthday(){
     )
   }
 
+}
+
+
+function openModalValidation(){
+  $('#compareModal').modal('show')
+}
+
+function compareSigeps() {
+  const excelFile = document.getElementById('excelFileX').files[0];
+  const txtFile = document.getElementById('txtFileX').files[0];
+  document.getElementById("btn-down").style = "display:none;"
+  let ctxFound = 0;
+  let ctxNoFound = 0;
+
+  if (!excelFile || !txtFile) {
+    alert('Por favor, seleccione ambos archivos.');
+    return;
+  }
+
+  const excelReader = new FileReader();
+  const txtReader = new FileReader();
+
+  excelReader.onload = function () {
+    document.getElementById("loader2").style = "display:block"
+    const excelData = excelReader.result;
+
+    const excelDocuments = {};
+    const workbook = XLSX.read(excelData, { type: 'binary' });
+    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+    const excelJSON = XLSX.utils.sheet_to_json(worksheet);
+
+    excelJSON.forEach(row => {
+      const documentoExcel = row['NRO FORMATO']; // Reemplaza 'DOCUMENTO' con el nombre correcto de la columna del documento en tu archivo Excel
+      if (documentoExcel) {
+        excelDocuments[documentoExcel.split("-")[2]] = true;
+      }
+    });
+
+    txtReader.onload = function () {
+      const txtData = txtReader.result;
+
+      const results = [];
+
+      const txtLines = txtData.split('\n');
+      txtLines.forEach(line => {
+        const parts = line.split('|');
+        if (parts.length >= 4) {
+          const documentoTXT = parts[3];
+          if (documentoTXT in excelDocuments) {
+            ctxFound++;
+            results.push(`FUA ENCONTRADA -> ${documentoTXT}`);
+          } else {
+            ctxNoFound++;
+            results.push(`FUA NO ENCONTRADA -> ${documentoTXT}`);
+            fetchNoFound(documentoTXT)
+          }
+        }
+      });
+
+      if (results.length === 0) {
+        console.log('No se encontraron coincidencias.');
+      } else {
+        //console.log('N° DE FUAS EN SIGEPS -> ' + ctxFound);
+        //console.log('N° NO ENCONTRADAS -> ' + ctxNoFound);
+        results.forEach(result => {
+          //console.log(result);
+        });
+      }
+    };
+
+    txtReader.readAsText(txtFile); // Lee el archivo de texto como texto
+  };
+  excelReader.readAsBinaryString(excelFile); // Lee el archivo Excel como binario
+
+}
+
+$('#compareModal').on('hidden.bs.modal', function (e) {
+  document.getElementById('txtFileX').value = ""
+  document.getElementById('excelFileX').value = ""
+})
+
+async function fetchNoFound(fua){
+
+  const fechaActual = new Date();
+  const lote = (fechaActual.getFullYear().toString()).substring(2);
+  document.getElementById("loader2").style = "display:block"
+
+try {
+  // Realiza la solicitud fetch con el ID actual
+  const response = await fetch(`${url}/get-data-validate-catalog/${lote}/${fua}`); // Reemplaza "URL_BASE" con la URL base de tu API
+
+  if (response.ok) {
+    // Procesa la respuesta como desees
+    const data = await response.json();
+    var cuenta = data[0].idCuentaAtencion
+    var f_ate = data[0].FuaAtencionFecha
+    var digitador = (data[0].nombres).toUpperCase()
+    var servicio = (data[0].Nombre).toUpperCase()
+
+    notFound.push({Cuenta :cuenta,fua:'00002698-'+lote+'-'+fua,Fecha_de_atencion : f_ate,Servicio : servicio,Digitador : digitador})
+    document.getElementById("loader2").style = "display:none;"
+    document.getElementById("btn-down").style = "display:block;"
+
+
+  } else {
+    console.error(`Error al hacer la solicitud para ID ${fua}:`, response.status);
+  }
+} catch (error) {
+  console.error(`Error al hacer la solicitud para ID ${fua}:`, error);
+}
+}
+
+function exportNotFound(){
+  Swal.fire({
+    title: 'En breves se descargará el archivo!',
+    timer: 5000,
+    timerProgressBar: true,
+    didOpen: () => {
+      Swal.showLoading()
+    },
+  })
+
+var fechaActual = new Date();
+
+var dia = fechaActual.getDate();
+var mes = fechaActual.getMonth() + 1; // Los meses comienzan desde 0 (enero es 0)
+var anio = fechaActual.getFullYear();
+
+// Agrega un cero inicial si el día o el mes son menores a 10
+if (dia < 10) {
+  dia = '0' + dia;
+}
+
+if (mes < 10) {
+  mes = '0' + mes;
+}
+
+var actual = +dia + '/' + mes + '/' + anio;
+
+setTimeout(() => {
+  let xls = new XlsExport(notFound, 'catalogo');
+  xls.exportToXLS(`fuas_no_encontrados_en_sigeps_${actual}.xls`);
+}, 5000); 
+
+}
+
+function jsonATE() {
+  var table = $('#tb-data').DataTable(); // Obtén la instancia de la tabla DataTables
+
+  // Define un array para almacenar los objetos JSON
+  var jsonData = [];
+
+  // Itera a través de los datos de la tabla
+  table.rows().data().each(function (rowData) {
+    // Crea un objeto JSON para cada fila
+    var data = {
+      cuenta: rowData[1],
+      disa: rowData[2],
+      lote : rowData[3],
+      fua : rowData[4],
+      udr : rowData[5],
+      renaesIpress : rowData[6],
+      categoriaIpress : rowData[7],
+      nivelIpress : rowData[8],
+      puntoDigitacion : rowData[9],
+      fuaReconsideracion : rowData[10],
+      codigoDisa : rowData[11],
+      loteFuaReconsideracion : rowData[12],
+      nFuaReconsideracion : rowData[13],
+      idConvenio : rowData[14],
+      componenteAsegurado : rowData[15],
+      codigoAfiliado : rowData[16],
+      loteFormatoAfiliado : rowData[17],
+      numFormatoAfiliado : rowData[18],
+      correlativoAfiliado : rowData[19],
+      tipoTabla : rowData[20],
+      idContratoAfiliado : rowData[21],
+      cobertura : rowData[22],
+      grupoPoblacional : rowData[23],
+      tipoDocumento : rowData[24],
+      numDocumento : rowData[25],
+      apellidoPaterno : rowData[26],
+      apellidoMaterno : rowData[27],
+      primerNombre : rowData[28],
+      otrosNombres : rowData[29],
+      fechaNacimiento : rowData[30],
+      sexo : rowData[31],
+      codigoDistrito : rowData[32],
+      historia : rowData[33],
+      tipoAtencion : rowData[34],
+      condicionMaterna : rowData[35],
+      modalidadAtencion : rowData[36],
+      numAutorizacion : rowData[37],
+      montoAutorizado : rowData[38],
+      fechaAtencion : rowData[39],
+      renaes : rowData[40],
+      numHojaReferencia : rowData[41],
+      servicio : rowData[42],
+      origenPersonal : rowData[43],
+      lugarAtencion : rowData[44],
+      destinoAsegurado : rowData[45],
+      fechaIngresoHospitalizacion : rowData[46],
+      fechaAltaHospitalizacion : rowData[47],
+      susaludRenaes : rowData[48],
+      numHojaReferenciaOContra : rowData[49],
+      fechaParto : rowData[50],
+      grupoRiesgo : rowData[51],
+      catalogoIe : rowData[52],
+      nivelEducativo : rowData[53],
+      gradoEducativo : rowData[54],
+      seccionEducativo : rowData[55],
+      turnoEducativo : rowData[56],
+      educacionEspecial : rowData[57],
+      anexoEducacion : rowData[58],
+      fallecimientoAsegurado : rowData[59],
+      ofertaFlexible : rowData[60],
+      etnia : rowData[61],
+      institucionSeguro : rowData[62],
+      seguroIAFAS : rowData[63]
+    };
+    // Agrega el objeto JSON al array
+    jsonData.push(data);
+  });
+  // Convierte el array en formato JSON
+  var jsonStr = JSON.stringify(jsonData);
+
+  // El objeto JSON resultante se encuentra en jsonStr
+  console.log(jsonData);
 }

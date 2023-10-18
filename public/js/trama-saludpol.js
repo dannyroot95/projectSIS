@@ -1543,11 +1543,21 @@ function showModalDetailProcedure(data,index,type){
     let quantity = tabla.rows[filaIndex].cells[columnaIndex].textContent;
   
     document.getElementById("loader-procedure-detail").style = "display:block;"
+
+    let values = {
+      account : account,
+      name : (data.Nombre).trimEnd()
+    }
   
-    fetch(`${url}/get-id-procedure/${account}/${data.Nombre}`)
+    fetch(`${url}/get-id-procedure`, {
+              method: 'POST', // o 'PUT', 'DELETE', etc.
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(values) // data es un objeto con los datos a enviar
+            })
               .then(response => response.json())
               .then(data => {
-               
                 document.getElementById("loader-procedure-detail").style = "display:none;"
                 document.getElementById("id-detail-procedure").innerHTML = procedure
                 document.getElementById("id-detail-code").innerHTML = code
@@ -1569,7 +1579,19 @@ function showModalDetailProcedure(data,index,type){
 
   document.getElementById("loader-procedure-detail").style = "display:block;"
 
-  fetch(`${url}/get-id-laboratory/${account}/${(data.Nombre).trimEnd()}`)
+  let values = {
+    account : account,
+    name : (data.Nombre).trimEnd()
+  }
+
+
+  fetch(`${url}/get-id-laboratory`,{
+            method: 'POST', // o 'PUT', 'DELETE', etc.
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(values) // data es un objeto con los datos a enviar
+          })
             .then(response => response.json())
             .then(data => {
              

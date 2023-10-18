@@ -1405,9 +1405,11 @@ router.get("/report-saludpol/:a", function (req, res,next) {
   });
 });
 
-router.get("/get-id-procedure/:a/:b", function (req, res,next) {
-  let account = req.params.a;
-  let procedure = req.params.b;
+router.post("/get-id-procedure", function (req, res,next) {
+
+  let d = req.body
+  let account = d.account
+  let procedure = d.name
 
   sql.id_procedure(account,procedure).then((result) => {
 
@@ -1419,9 +1421,11 @@ router.get("/get-id-procedure/:a/:b", function (req, res,next) {
   });
 });
 
-router.get("/get-id-laboratory/:a/:b", function (req, res,next) {
-  let account = req.params.a;
-  let procedure = req.params.b;
+router.post("/get-id-laboratory", function (req, res,next) {
+  
+  let d = req.body
+  let account = d.account
+  let procedure = d.name
 
   sql.id_laboratory(account,procedure).then((result) => {
 

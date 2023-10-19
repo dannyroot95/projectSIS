@@ -3,7 +3,9 @@ var params = []
 var params2 = [] 
 var dniResp = 71853201
 var log = ""
+var rclog = ""
 var c = 0
+var c2 = 0
 var atencion = ``
 var diagnostico = ``
 var medicamentos = ``
@@ -854,7 +856,7 @@ function validateDataATE(d){
         ctx++
         c++
         let warning = `${c}.- SIN REGISTRO EN LOS CAMPOS DE AFILIACIÓN -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]} `
-        log = log+warning+"\n\n"
+        log = log+warning+"\r\n\r\n"
         searchAndUpdateAtentionFromAfiliate(d["A26"],d["A27"],d["A28"])
     }
 
@@ -862,100 +864,100 @@ function validateDataATE(d){
       ctx++
       c++
       let warning = `${c}.- EL CAMPO ATE#20 (CONTRATO DEL ASEGURADO) NO DEBE SER VACÍO -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\n\n"
+      log = log+warning+"\r\n\r\n"
     }
     if(d["A81"] == "1" && d["A82"] == "" || d["A81"] == "1" && d["A82"].length != 8){
       ctx++
       c++
       let warning = `${c}.- EL CAMPO ATE#82 (N° DOC DEL DIGITADOR) DEBE TENER 8 DIGITOS DE ACUERDO AL CAMPO ATE#81 (TIPO DE DOCUMENTO DIGITADOR) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\n\n"
+      log = log+warning+"\r\n\r\n"
     }
     if(d["A24"] == ""){
       ctx++
       c++
       let warning = `${c}.- EL CAMPO ATE#24 TIPO DE DOCUMENTO DEL ASEGURADO TIENE UN VALOR NO PERMITIDO -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\n\n"
+      log = log+warning+"\r\n\r\n"
     }
     if(d["A42"].length != 3){
       ctx++
       c++
       let warning = `${c}.- EL CAMPO ATE#42 DEBE SER UN CAMPO ALFANUMÉRICO DE 3 DIGITOS -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\n\n"
+      log = log+warning+"\r\n\r\n"
     }
     if(d["A42"] == '054' && d["A47"] == ''){
       ctx++
       c++
       let warning = `${c}.- SE REQUIERE UNA FECHA DE ALTA DE HOSPITALIZACIÓN -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\n\n"
+      log = log+warning+"\r\n\r\n"
     }
 
     if(d["A34"] == '2' && d["A43"] != '3' && d["A40"] == ''){
       ctx++
       c++
       let warning = `${c}.- EL CAMPO ATE#40 (IPRESS DE REFERENCIA) ES REQUERIDO -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\n\n"
+      log = log+warning+"\r\n\r\n"
     }
     if(d["A18"] == ""){
       ctx++
       c++
       let warning = `${c}.- EL CAMPO ATE#18 (NUMERO DEL CODIGO DE ASEGURADO) DEBE DE SER UN CAMPO ALFANUMERICO DE 8 O 9 DIGITOS -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\n\n"
+      log = log+warning+"\r\n\r\n"
     }
 
     if(d["A21"] == ""){
       ctx++
       c++
       let warning = `${c}.- EL CAMPO ATE#21 (REGISTRO DEL ASEGURADO) DEBE SER UN CAMPO HASTA 10 DIGITOS -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\n\n"
+      log = log+warning+"\r\n\r\n"
     }
 
     if(d["A40"] != "" && d["A34"] == "1" && d["A43"] == "1"){
       ctx++
       c++
       let warning = `${c}.- EL CAMPO ATE#40 (IPRESS DE REFERENCIA) DEBE SER VACIO SEGUN EL CAMPO ATE#34 (TIPO DE ATENCION) Y AL CAMPO ATE43 (ORIGEN DE PERSONAL) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\n\n"
+      log = log+warning+"\r\n\r\n"
     }
 
     if(d["A24"] == "8" && d["A25"].length < 10){
       ctx++
       c++
       let warning = `${c}.- EL CAMPO ATE#25 (NRO DE DOCUMENTO DEL ASEGURADO) DEBE SER DE 10 DIGITOS DE ACUERDO AL CAMPO #ATE24 (TIPO DE DOCUMENTO DEL ASEGURADO) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\n\n"
+      log = log+warning+"\r\n\r\n"
     }
 
     if (d["A41"] != "" && containCharactersNotPermition(d["A41"])) {
       ctx++
       c++
       let warning = `${c}.- EL CAMPO ATE#41 (HOJA DE REFERENCIA) DEBE DE SER UN CAMPO ALFANUMERICO DE HASTA 20 DIGITOS -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\n\n"
+      log = log+warning+"\r\n\r\n"
     }
 
       if(d["A72"] == "1" && d["A73"].length > 8){
       ctx++
       c++
       let warning = `${c}.- EL CAMPO ATE#73 (NUMERO DE DOCUMENTO DEL PERSONAL) DEBE CONSIGNAR 8 DIGITOS DE ACUERDO AL CAMPO ATE#72 (TIPO DE DOCUMENTO DEL PERSONAL) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\n\n"
+      log = log+warning+"\r\n\r\n"
     }
 
     if ((d["A35"] === "1" || d["A35"] === "2") && d["A50"] === "") {
       ctx++
       c++
       let warning = `${c}.- EL CAMPO ATE#50 (FECHA DE PARTO) DEBE DE CUMPLIR EL FORMATO DD/MM/AAAA Y SER UNA FECHA VALIDA -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\n\n"
+      log = log+warning+"\r\n\r\n"
     }
 
     if(d["A24"] == "3" && d["A25"].length < 9){
       ctx++
       c++
       let warning = `${c}.- EL CAMPO ATE#25 (NUMERO DE DOCUMENTO DEL ASEGURADO) DEBE CONSIGNAR 9 DIGITOS DE ACUERDO AL CAMPO ATE#24 (TIPO DE DOCUMENTO DEL ASEGURADO) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\n\n"
+      log = log+warning+"\r\n\r\n"
     }
 
     if(!containNumbersDni(d["A24"])){
       ctx++
       c++
       let warning = `${c}.- EL CAMPO ATE#25 (NUMERO DE DOCUMENTO DEL ASEGURADO) DEBE TENER SOLO NÚMEROS -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\n\n"
+      log = log+warning+"\r\n\r\n"
    }
 
 
@@ -2476,76 +2478,190 @@ function jsonATE() {
   table.rows().data().each(function (rowData) {
     // Crea un objeto JSON para cada fila
     var data = {
-      cuenta: rowData[1],
-      disa: rowData[2],
-      lote : rowData[3],
-      fua : rowData[4],
-      udr : rowData[5],
-      renaesIpress : rowData[6],
-      categoriaIpress : rowData[7],
-      nivelIpress : rowData[8],
-      puntoDigitacion : rowData[9],
-      fuaReconsideracion : rowData[10],
-      codigoDisa : rowData[11],
-      loteFuaReconsideracion : rowData[12],
-      nFuaReconsideracion : rowData[13],
-      idConvenio : rowData[14],
-      componenteAsegurado : rowData[15],
-      codigoAfiliado : rowData[16],
-      loteFormatoAfiliado : rowData[17],
-      numFormatoAfiliado : rowData[18],
-      correlativoAfiliado : rowData[19],
-      tipoTabla : rowData[20],
-      idContratoAfiliado : rowData[21],
-      cobertura : rowData[22],
-      grupoPoblacional : rowData[23],
-      tipoDocumento : rowData[24],
-      numDocumento : rowData[25],
-      apellidoPaterno : rowData[26],
-      apellidoMaterno : rowData[27],
-      primerNombre : rowData[28],
-      otrosNombres : rowData[29],
-      fechaNacimiento : rowData[30],
-      sexo : rowData[31],
-      codigoDistrito : rowData[32],
-      historia : rowData[33],
-      tipoAtencion : rowData[34],
-      condicionMaterna : rowData[35],
-      modalidadAtencion : rowData[36],
-      numAutorizacion : rowData[37],
-      montoAutorizado : rowData[38],
-      fechaAtencion : rowData[39],
-      renaes : rowData[40],
-      numHojaReferencia : rowData[41],
-      servicio : rowData[42],
-      origenPersonal : rowData[43],
-      lugarAtencion : rowData[44],
-      destinoAsegurado : rowData[45],
-      fechaIngresoHospitalizacion : rowData[46],
-      fechaAltaHospitalizacion : rowData[47],
-      susaludRenaes : rowData[48],
-      numHojaReferenciaOContra : rowData[49],
-      fechaParto : rowData[50],
-      grupoRiesgo : rowData[51],
-      catalogoIe : rowData[52],
-      nivelEducativo : rowData[53],
-      gradoEducativo : rowData[54],
-      seccionEducativo : rowData[55],
-      turnoEducativo : rowData[56],
-      educacionEspecial : rowData[57],
-      anexoEducacion : rowData[58],
-      fallecimientoAsegurado : rowData[59],
-      ofertaFlexible : rowData[60],
-      etnia : rowData[61],
-      institucionSeguro : rowData[62],
-      seguroIAFAS : rowData[63]
+      cuenta_1: rowData[1],
+      disa_2: rowData[2],
+      lote_3 : rowData[3],
+      fua_4 : rowData[4],
+      udr_5 : rowData[5],
+      renaesIpress_6 : rowData[6],
+      categoriaIpress_7 : rowData[7],
+      nivelIpress_8 : rowData[8],
+      puntoDigitacion_9 : rowData[9],
+      fuaReconsideracion_10 : rowData[10],
+      codigoDisa_11 : rowData[11],
+      loteFuaReconsideracion_12 : rowData[12],
+      nFuaReconsideracion_13 : rowData[13],
+      idConvenio_14 : rowData[14],
+      componenteAsegurado_15 : rowData[15],
+      codigoAfiliado_16 : rowData[16],
+      loteFormatoAfiliado_17 : rowData[17],
+      numFormatoAfiliado_18 : rowData[18],
+      correlativoAfiliado_19 : rowData[19],
+      tipoTabla_20 : rowData[20],
+      idContratoAfiliado_21 : rowData[21],
+      cobertura_22 : rowData[22],
+      grupoPoblacional_23 : rowData[23],
+      tipoDocumento_24 : rowData[24],
+      numDocumento_25 : rowData[25],
+      apellidoPaterno_26 : rowData[26],
+      apellidoMaterno_27 : rowData[27],
+      primerNombre_28 : rowData[28],
+      otrosNombres_29 : rowData[29],
+      fechaNacimiento_30 : rowData[30],
+      sexo_31 : rowData[31],
+      codigoDistrito_32 : rowData[32],
+      historia_33 : rowData[33],
+      tipoAtencion_34 : rowData[34],
+      condicionMaterna_35 : rowData[35],
+      modalidadAtencion_36 : rowData[36],
+      numAutorizacion_37 : rowData[37],
+      montoAutorizado_38 : rowData[38],
+      fechaAtencion_39 : rowData[39],
+      renaes_40 : rowData[40],
+      numHojaReferencia_41 : rowData[41],
+      servicio_42 : rowData[42],
+      origenPersonal_43 : rowData[43],
+      lugarAtencion_44 : rowData[44],
+      destinoAsegurado_45 : rowData[45],
+      fechaIngresoHospitalizacion_46 : rowData[46],
+      fechaAltaHospitalizacion_47 : rowData[47],
+      susaludRenaes_48 : rowData[48],
+      numHojaReferenciaOContra_49 : rowData[49],
+      fechaParto_50 : rowData[50],
+      grupoRiesgo_51 : rowData[51],
+      catalogoIe_52 : rowData[52],
+      nivelEducativo_53 : rowData[53],
+      gradoEducativo_54 : rowData[54],
+      seccionEducativo_55 : rowData[55],
+      turnoEducativo_56 : rowData[56],
+      educacionEspecial_57 : rowData[57],
+      anexoEducacion_58 : rowData[58],
+      fallecimientoAsegurado_59 : rowData[59],
+      ofertaFlexible_60 : rowData[60],
+      etnia_61 : rowData[61],
+      institucionSeguro_62 : rowData[62],
+      seguroIAFAS_63 : rowData[63],
+      ups_64 : rowData[64],
+      fechaCorteAdministrativo_65 : rowData[65],
+      codigoUdr_66 : rowData[66],
+      loteCodigoAutorizacion_67 : rowData[67],
+      correlativoCodigoAutorizacion_68 : rowData[68],
+      codigoDisaORenaes_69 : rowData[69],
+      loteFuaVinculado_70 : rowData[70],
+      fuaVinculado_71 : rowData[71],
+      tipoDocResponsableAtencion_72 : rowData[72],
+      documentoResponsableAtencion_73 : rowData[73],
+      tipoPersonalSalud_74 : rowData[74],
+      especialidadResponsable_75 : rowData[75],
+      egresado_76 : rowData[76],
+      colegiatura_77 : rowData[77],
+      rne_78 : rowData[78],
+      periodoProduccion_79 : rowData[79],
+      mesProduccion_80 : rowData[80],
+      tipoDocDigitador_81 : rowData[81],
+      documentoDigitador_82 : rowData[82],
+      fechaHoraRegistroAtencion_83 : rowData[83],
+      observacion_84 : rowData[84],
+      versionApp_85 : rowData[85],
+      codigoSiteds_86 : rowData[86],
+      procedimientos : []
     };
     // Agrega el objeto JSON al array
     jsonData.push(data);
   });
-  // Convierte el array en formato JSON
-  var jsonStr = JSON.stringify(jsonData);
-
   // El objeto JSON resultante se encuentra en jsonStr
-  console.log(jsonData);
+  
+  jsonProcedure(jsonData)
 }
+
+
+function jsonProcedure(jsonAte) {
+  var table = $('#tb-data-6').DataTable(); // Obtén la instancia de la tabla DataTables
+  var jsonPro = [];
+
+  table.rows().data().each(function (rowData) {
+    var data = {
+      cuenta_1: rowData[1],
+      codigoCpt_2: rowData[2],
+      codigoCpms_3: rowData[3],
+      correlativoDxPertenece_4: rowData[4],
+      cantidadPrescrita_5: rowData[5],
+      cantidadEntregada_6: rowData[6]
+    };
+    jsonPro.push(data);
+  });
+
+  var combinedData = {};
+
+  // Iterar a través del primer JSON (json1)
+  jsonAte.forEach(function (item) {
+    // Clonar el objeto para no modificar el original
+    var combinedItem = { ...item };
+    // Filtrar los elementos del segundo JSON (json2) que coinciden con la "cuenta_1" del primer JSON
+    var matchingItems = jsonPro
+      .filter(function (subItem) {
+        return subItem.cuenta_1 === item.cuenta_1;
+      })
+      .map(function (subItem) {
+        // Clonar el objeto de procedimientos y excluir el campo "cuenta_1"
+        var procedimientos = { ...subItem };
+        delete procedimientos.cuenta_1;
+        return procedimientos;
+      });
+    // Agregar los elementos coincidentes al campo "procedimientos" del objeto combinado
+    combinedItem.procedimientos = matchingItems;
+    // Almacenar el objeto combinado en el objeto de resultados usando "cuenta_1" como clave
+    combinedData[item.cuenta_1] = combinedItem;
+  });
+  
+  // Obtener un arreglo de los objetos combinados
+  var combinedArray = Object.values(combinedData);
+  
+  c2 = 0
+  rc(combinedArray)
+
+}
+
+
+function rc(array){
+  array.forEach(function (item) {
+    if (item.servicio_42 === '063') {
+      var procedimientos = item.procedimientos;
+
+      // Contadores para verificar la existencia y duplicados de '99295'
+      var existCount = 0;
+      var duplicateCount = 0;
+
+      procedimientos.forEach(function (proc) {
+        if (proc.codigoCpt_2 === '99285') {
+          existCount++;
+          if (existCount > 1) {
+            duplicateCount++;
+          }
+        }
+      });
+
+      if (existCount === 0) {
+        c2++
+        let warning = `${c2}.- RC-01 No existe el código "99285" en los procedimientos. CUENTA : ${item.cuenta_1}  `
+        rclog = rclog+warning+"\r\n\r\n"
+      } else if (existCount === 1 && duplicateCount > 0) {
+        c2++
+        let warning = `${c2}.- RC-01 El código "99285" existe una vez, pero hay duplicados. CUENTA : ${item.cuenta_1}  `
+        rclog = rclog+warning+"\r\n\r\n"
+      }
+    }
+  });
+
+  donwloadRC()
+}
+
+function donwloadRC(){
+
+  // Crear un enlace de descarga dinámico
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(new Blob([rclog], { type: 'text/plain' }));
+  link.download = 'rc.txt';
+  link.click();
+  
+  }

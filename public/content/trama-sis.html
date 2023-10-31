@@ -95,7 +95,7 @@
        <button class="btn btn-success" onclick="postTrama(0)" id="btn-send-debug" ><i class="bi bi-send-check-fill"></i>&nbsp;Enviar trama</button>&nbsp;
        <button class="btn btn-light" style="background-color: #607300;color: white;" onclick="validateCatalog()" id="btn-validate" ><i class="bi bi-file-earmark-post-fill"></i>&nbsp;Validación de catálogo</button>&nbsp;
        <button class="btn btn-light" style="background-color: #003f73;color: white;" onclick="openModalValidation()" id="btn-validate" ><i class="bi bi-arrow-down-up"></i>&nbsp;Comparativo SIGEPS</button>&nbsp;
-       <button class="btn btn-danger" onclick="jsonATE()">RC</button>
+       <button class="btn btn-danger" onclick="jsonATE()"><i class="bi bi-bezier2"></i>&nbsp;RC</button>
        <a><div class="loaderSmall" id="loader"></div></a>
 
     </div>
@@ -627,7 +627,7 @@
       $(item).appendTo('#tr-table-5')
      }
 
-     for(let i = 1 ; i<= 6 ; i++ ){
+     for(let i = 1 ; i<= 7 ; i++ ){
       let item = `<th class="minText" scope="col"><center>${i}</center></th>`
       if(i == 1){
         let x = `<th id="logPRO" class="minText" scope="col"><center>Log</center></th>`

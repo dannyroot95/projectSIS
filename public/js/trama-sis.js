@@ -702,6 +702,7 @@ function insertDataProcedimientos(data){
               <td class="minText2">${it[3]}</td>
               <td class="minText2">${it[4]}</td>
               <td class="minText2">${it[5]}</td>
+              <td class="minText2">${it[6]}</td>
               </tr>`;
           })
           .join("")

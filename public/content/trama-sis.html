@@ -566,6 +566,30 @@
         <button style="float: right;" type="button" onclick="updateSexPatient()" class="btn btn-primary">Actualizar</button>
       </div>
 
+      <p></p>
+      <hr size="2px" color="black" />
+      <h4>Fecha de parto</h4>
+      <p></p>
+
+      <div class="input-group mb-3" style="width: 50%;">
+        <span class="input-group-text" id="basic-addon1">Fecha</span>
+        <input type="date" class="form-control" id="fua-date-pregnancy">
+        <button style="float: right;" type="button" onclick="updateDatePregnancy()" class="btn btn-primary">Actualizar</button>
+      </div>
+
+      
+      <p></p>
+      <hr size="2px" color="black" />
+      <h4>IPRESS de Referencia</h4>
+      <p></p>
+
+
+      <div class="input-group mb-3" style="width: 50%;">
+        <span class="input-group-text" id="basic-addon1">Ipress</span>
+        <input type="text" class="form-control" id="fua-num-ipress">
+        <button style="float: right;" type="button" onclick="updateNumIpress()" class="btn btn-primary">Actualizar</button>
+      </div>
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -670,6 +694,7 @@
     <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
     <script src="/js/utils/constants.js"></script>
     <script src="/js/debugTrama.js"></script>
+    <script src="/js/utils/standartDate.js"></script>
     <script src="/js/trama-sis.js"></script>
   
 </body>

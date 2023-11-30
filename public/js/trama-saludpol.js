@@ -8,6 +8,7 @@ let allData = []
 let report = []
 let report2 = []
 
+alert(btoa("EhfYRwZJFYM="))
 
 createDatatable()
 createDatatable2()
@@ -673,6 +674,7 @@ async function fetchSequentially() {
             "Dias_hosp": convertBlank(item.dias_hosp),
             "Dx": convertBlank(item.dx),
             "Diagnostico": convertBlank(item.diagnostico),
+            "Tipo de atencion": convertBlank(item.atencion),
             "Tipo de consumo": convertBlank(item.tipo),
             "Codigo": convertBlank(item.Codigo),
             "Consumo": convertBlank(item.Nombre),

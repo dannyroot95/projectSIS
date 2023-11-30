@@ -867,12 +867,12 @@ function validateDataATE(d){
       let warning = `${c}.- EL CAMPO ATE#20 (CONTRATO DEL ASEGURADO) NO DEBE SER VACÍO -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
       log = log+warning+"\r\n\r\n"
     }
-    if(d["A81"] == "1" && d["A82"] == "" || d["A81"] == "1" && d["A82"].length != 8){
-      ctx++
-      c++
-      let warning = `${c}.- EL CAMPO ATE#82 (N° DOC DEL DIGITADOR) DEBE TENER 8 DIGITOS DE ACUERDO AL CAMPO ATE#81 (TIPO DE DOCUMENTO DIGITADOR) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\r\n\r\n"
-    }
+    if (d["A81"].trim() === "1" && (d["A82"].trim() === "" || d["A82"].trim().length !== 8)) {
+      ctx++;
+      c++;
+      let warning = `${c}.- EL CAMPO ATE#82 (N° DOC DEL DIGITADOR) DEBE TENER 8 DIGITOS DE ACUERDO AL CAMPO ATE#81 (TIPO DE DOCUMENTO DIGITADOR) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`;
+      log = log + warning + "\r\n\r\n";
+  }
     if(d["A24"] == ""){
       ctx++
       c++
@@ -940,10 +940,24 @@ function validateDataATE(d){
       log = log+warning+"\r\n\r\n"
     }
 
-    if ((d["A35"] === "1" || d["A35"] === "2") && d["A50"] === "") {
+    if (d["A35"] == "1" && d["A50"] == "") {
       ctx++
       c++
       let warning = `${c}.- EL CAMPO ATE#50 (FECHA DE PARTO) DEBE DE CUMPLIR EL FORMATO DD/MM/AAAA Y SER UNA FECHA VALIDA -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
+      log = log+warning+"\r\n\r\n"
+    }
+
+  if (d["A35"] == "2" && d["A50"] == "") {
+      ctx++
+      c++
+      let warning = `${c}.- EL CAMPO ATE#50 (FECHA DE PARTO) DEBE DE CUMPLIR EL FORMATO DD/MM/AAAA Y SER UNA FECHA VALIDA -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
+      log = log+warning+"\r\n\r\n"
+    }
+
+    if (d["A35"] == "0"  && d["A50"].length > 0) {
+      ctx++
+      c++
+      let warning = `${c}.- EL CAMPO ATE#50 (FECHA DE PARTO) DEBE SER VACIO SEGÚN AL CAMPO ATE#35 -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
       log = log+warning+"\r\n\r\n"
     }
 
@@ -951,6 +965,20 @@ function validateDataATE(d){
       ctx++
       c++
       let warning = `${c}.- EL CAMPO ATE#25 (NUMERO DE DOCUMENTO DEL ASEGURADO) DEBE CONSIGNAR 9 DIGITOS DE ACUERDO AL CAMPO ATE#24 (TIPO DE DOCUMENTO DEL ASEGURADO) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
+      log = log+warning+"\r\n\r\n"
+    }
+
+    if(d["A24"] == "1" && d["A25"].length > 8){
+      ctx++
+      c++
+      let warning = `${c}.- EL CAMPO ATE#25 (NUMERO DE DOCUMENTO DEL ASEGURADO) DEBE CONSIGNAR 8 DIGITOS DE ACUERDO AL CAMPO ATE#24 (TIPO DE DOCUMENTO DEL ASEGURADO) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
+      log = log+warning+"\r\n\r\n"
+    }
+
+    if(d["A34"] == "2" && d["A41"] == ""){
+      ctx++
+      c++
+      let warning = `${c}.- EL CAMPO ATE#41 (HOJA DE REFERENCIA) ES REQUERIDO DE ACUERDO AL CAMPO ATE#34 (TIPO DE ATENCION) Y AL CAMPO ATE#43 (TIPO DE PERSONAL) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
       log = log+warning+"\r\n\r\n"
     }
 
@@ -1784,6 +1812,8 @@ function showDetailModal(d){
   document.getElementById("fua-patient-dni").value = d.A25
   document.getElementById("fua-date-birth").value = (d.A30).split("/")[2]+'-'+(d.A30).split("/")[1]+'-'+(d.A30).split("/")[0]
   
+  document.getElementById("fua-num-ipress").value = d.A40
+
   //alert(d.A31)
 
   if(d.A31 == "1"){
@@ -2154,7 +2184,7 @@ function updateDniPatient(){
   let dni = document.getElementById("fua-patient-dni").value
   let account = document.getElementById("d-account").innerHTML
 
-  if(dni != ""  &&  type != 10){
+  if(dni != ""){
 
  
   fetch(`${url}/update-dni-patient-fua/${type}/${dni}/${account}`,{
@@ -2324,6 +2354,102 @@ function updateDateBirthday(){
   }
 
 }
+
+function updateDatePregnancy(){
+
+  let preg = document.getElementById("fua-date-pregnancy").value
+  let id = document.getElementById("d-account").innerHTML
+
+  if(preg != ""){
+
+    let data = {
+      date : date(preg),
+      idCuentaAtencion: id
+    }
+   
+    fetch(`${url}/update-date-pregnancy`, {
+      method: 'POST', // o 'PUT', 'DELETE', etc.
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data) // data es un objeto con los datos a enviar
+    })
+    .then(response => response.json())
+    .then(data => {
+      let x = data[0]
+      console.log(data)
+      if(x.success == "actualizado"){
+        Swal.fire(
+          'Muy bien!',
+          'Fecha de parto actualizada!',
+          'success'
+        )
+      }
+    }).catch(error => {
+      Swal.fire(
+          'Oops!',
+          'Se produjo un error',
+          'warning'
+        )
+  });
+  }else{
+    Swal.fire(
+      'Oops!',
+      'Ingrese una fecha',
+      'warning'
+    )
+  }
+
+}
+
+
+function updateNumIpress(){
+
+  let ipress = document.getElementById("fua-num-ipress").value
+  let id = document.getElementById("d-account").innerHTML
+
+  if(ipress != ""){
+
+    let data = {
+      ipress : ipress,
+      idCuentaAtencion: id
+    }
+   
+    fetch(`${url}/update-num-ipress`, {
+      method: 'POST', // o 'PUT', 'DELETE', etc.
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data) // data es un objeto con los datos a enviar
+    })
+    .then(response => response.json())
+    .then(data => {
+      let x = data[0]
+      console.log(data)
+      if(x.success == "actualizado"){
+        Swal.fire(
+          'Muy bien!',
+          'Código de IPRESS actualizada!',
+          'success'
+        )
+      }
+    }).catch(error => {
+      Swal.fire(
+          'Oops!',
+          'Se produjo un error',
+          'warning'
+        )
+  });
+  }else{
+    Swal.fire(
+      'Oops!',
+      'Ingrese una IPRESS válida',
+      'warning'
+    )
+  }
+
+}
+
 
 
 function openModalValidation(){

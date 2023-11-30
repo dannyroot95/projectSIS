@@ -636,6 +636,37 @@ router.post("/send-trama-debug", async function (req, res, next) {
   }
 });
 
+router.get("/get-afiliate-web-service", async function (req, res, next) {
+  //const data = req.body;
+  try {
+    const result = await sql.getAfiliateWebService();
+    if (result[0].length > 0) {
+      res.json(result[0]);
+    } else {
+      res.json({ error: "sin datos" });
+    }
+  } catch (error) {
+    console.error("Error web service:", error);
+    res.status(500).json({ error: "Error get auth" });
+  }
+});
+
+router.get("/get-afiliate-web-service-data/:a", async function (req, res, next) {
+  //const data = req.body;
+  let auth = req.params.a;
+  try {
+    const result = await sql.getAfiliateWebServiceData(auth);
+    if (result[0].length > 0) {
+      res.json(result[0]);
+    } else {
+      res.json({ error: "sin datos" });
+    }
+  } catch (error) {
+    console.error("Error web service:", error);
+    res.status(500).json({ error: "Error get auth" });
+  }
+});
+
 router.get("/get-fua-by-num-and-lote/:a/:b", function (req, res,next) {
   let fua = req.params.a;
   let lote = req.params.b;
@@ -1939,6 +1970,37 @@ router.post("/update-date-birth-patient", function (req, res, next) {
   console.log(v)
 
   sql.updateDateBirthPatient(id,birth).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
+router.post("/update-date-pregnancy", function (req, res, next) {
+ 
+  let v = req.body
+  let preg = v.date
+  let id = parseInt(v.idCuentaAtencion)
+  console.log(v)
+
+  sql.update_date_pregnancy(id,preg).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
+router.post("/update-num-ipress", function (req, res, next) {
+ 
+  let v = req.body
+  let ipress = v.ipress
+  let id = parseInt(v.idCuentaAtencion)
+
+  sql.updateReferenceIpress(id,ipress).then((result) => {
     if(result[0].length>0){
       res.json(result[0]);
     }else{

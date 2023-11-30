@@ -160,13 +160,11 @@ function deleteSymbols(event) {
 
   function enable(){
     document.getElementById("btn-search").disabled = false
-    document.getElementById("btn-add").disabled = false
     loader.style = "display:none;"
   }
 
   function disabled(){
     document.getElementById("btn-search").disabled = true
-    document.getElementById("btn-add").disabled = true
     loader.style = "display:block;"
   }
 
@@ -239,4 +237,120 @@ function deleteSymbols(event) {
 
     return doc.toUpperCase()
 
+  }
+
+  function searchWebService() {
+    fetch(`${url}/get-afiliate-web-service`)
+      .then(response => response.json())
+      .then(data => {
+        showDataAuth(data[0].server_response)
+        // Accede a la información organizada
+        //console.log('Success:', data[0].success); // 'autorizado'
+        //console.log('Session ID:', data[0].server_response); // El ID de sesión obtenido del XML
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+
+  function showDataAuth(data){
+    var xmlString = data;
+  
+    var parser = new DOMParser();
+    var xmlDoc = parser.parseFromString(xmlString, "text/xml");
+    
+    // Obtener la respuesta SOAP
+    var response = xmlDoc.getElementsByTagName("GetSessionResponse")[0];    
+    // Obtener los elementos de la respuesta
+    var auth = response.getElementsByTagName("GetSessionResult")[0].textContent;
+    searchWebServiceData(auth)
+    console.log(auth)
+  
+  }
+
+  function searchWebServiceData(auth) {
+    fetch(`${url}/get-afiliate-web-service-data/${auth}`)
+      .then(response => response.json())
+      .then(data => {
+        showDataAfiliate(data[0].server_response)
+        // Accede a la información organizada
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+
+
+  function showDataAfiliate(data) {
+    var xmlString = data;
+  
+    // Parsear el XML
+    var parser = new DOMParser();
+    var xmlDoc = parser.parseFromString(xmlString, "text/xml");
+  
+    // Obtener la respuesta SOAP
+    var response = xmlDoc.getElementsByTagName("ConsultarAfiliadoFuaEResult")[0];
+  
+    // Obtener los elementos de la respuesta
+    var idError = response.getElementsByTagName("IdError")[0].textContent;
+    var resultado = response.getElementsByTagName("Resultado")[0].textContent;
+    var tipoDocumento = response.getElementsByTagName("TipoDocumento")[0].textContent;
+    var nroDocumento = response.getElementsByTagName("NroDocumento")[0].textContent;
+    var apePaterno = response.getElementsByTagName("ApePaterno")[0].textContent;
+    var apeMaterno = response.getElementsByTagName("ApeMaterno")[0].textContent;
+    var nombres = response.getElementsByTagName("Nombres")[0].textContent;
+    var fecAfiliacion = response.getElementsByTagName("FecAfiliacion")[0].textContent;
+    var eess = response.getElementsByTagName("EESS")[0].textContent;
+    var descEESS = response.getElementsByTagName("DescEESS")[0].textContent;
+    var eessUbigeo = response.getElementsByTagName("EESSUbigeo")[0].textContent;
+    var descEESSUbigeo = response.getElementsByTagName("DescEESSUbigeo")[0].textContent;
+    var regimen = response.getElementsByTagName("Regimen")[0].textContent;
+    var tipoSeguro = response.getElementsByTagName("TipoSeguro")[0].textContent;
+    var descTipoSeguro = response.getElementsByTagName("DescTipoSeguro")[0].textContent;
+    var contrato = response.getElementsByTagName("Contrato")[0].textContent;
+    var estado = response.getElementsByTagName("Estado")[0].textContent;
+    var tabla = response.getElementsByTagName("Tabla")[0].textContent;
+    var idNumReg = response.getElementsByTagName("IdNumReg")[0].textContent;
+    var genero = response.getElementsByTagName("Genero")[0].textContent;
+    var fecNacimiento = response.getElementsByTagName("FecNacimiento")[0].textContent;
+    var idUbigeo = response.getElementsByTagName("IdUbigeo")[0].textContent;
+    var disa = response.getElementsByTagName("Disa")[0].textContent;
+    var tipoFormato = response.getElementsByTagName("TipoFormato")[0].textContent;
+    var nroContrato = response.getElementsByTagName("NroContrato")[0].textContent;
+    var correlativo = response.getElementsByTagName("Correlativo")[0].textContent;
+    var idPlan = response.getElementsByTagName("IdPlan")[0].textContent;
+    var idGrupoPoblacional = response.getElementsByTagName("IdGrupoPoblacional")[0].textContent;
+    var msgConfidencial = response.getElementsByTagName("MsgConfidencial")[0].textContent;
+  
+    // Hacer lo que necesites con los datos extraídos
+    console.log("IdError:", idError);
+    console.log("Resultado:", resultado);
+    console.log("TipoDocumento:", tipoDocumento);
+    console.log("NroDocumento:", nroDocumento);
+    console.log("ApePaterno:", apePaterno);
+    console.log("ApeMaterno:", apeMaterno);
+    console.log("Nombres:", nombres);
+    console.log("FecAfiliacion:", fecAfiliacion);
+    console.log("EESS:", eess);
+    console.log("DescEESS:", descEESS);
+    console.log("EESSUbigeo:", eessUbigeo);
+    console.log("DescEESSUbigeo:", descEESSUbigeo);
+    console.log("Regimen:", regimen);
+    console.log("TipoSeguro:", tipoSeguro);
+    console.log("DescTipoSeguro:", descTipoSeguro);
+    console.log("Contrato:", contrato);
+    console.log("Estado:", estado);
+    console.log("Tabla:", tabla);
+    console.log("IdNumReg:", idNumReg);
+    console.log("Genero:", genero);
+    console.log("FecNacimiento:", fecNacimiento);
+    console.log("IdUbigeo:", idUbigeo);
+    console.log("Disa:", disa);
+    console.log("TipoFormato:", tipoFormato);
+    console.log("NroContrato:", nroContrato);
+    console.log("Correlativo:", correlativo);
+    console.log("IdPlan:", idPlan);
+    console.log("IdGrupoPoblacional:", idGrupoPoblacional);
+    console.log("MsgConfidencial:", msgConfidencial);
+    // ... Agrega más console.log según sea necesario
   }

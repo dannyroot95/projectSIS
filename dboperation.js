@@ -758,6 +758,102 @@ console.log("error :" + error);
     return Buffer.from(fileData).toString('base64');
   }
 
+
+  async function getAfiliateWebService(){
+
+    let urlWebService = `http://app.sis.gob.pe/sisWSAFI/`
+  
+    try{
+
+      const xmlBody = `
+          <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sis="http://sis.gob.pe/">
+          <soap:Header/>
+          <soap:Body>
+              <sis:GetSession>
+                <!--Optional:-->
+                <sis:strUsuario>HSRPM</sis:strUsuario>
+                <!--Optional:-->
+                <sis:strClave>DsutgQ3U</sis:strClave>
+              </sis:GetSession>
+          </soap:Body>
+        </soap:Envelope>
+    `;
+
+  const headers = {
+    'Content-Type': 'text/xml',
+  };
+
+  const response = await axios.post(urlWebService, xmlBody, { headers });
+
+  return [
+    [
+      {
+        success: "autorizado",
+        server_response: response.data,
+      },
+    ],
+  ];
+
+    }catch(error){
+      throw error;
+    }
+    
+  }
+
+  async function getAfiliateWebServiceData(auth){
+
+    let urlWebService = `http://app.sis.gob.pe/sisWSAFI/`
+  
+    try{
+
+      const xmlBody = `
+      <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sis="http://sis.gob.pe/">
+      <soap:Header/>
+      <soap:Body>
+         <sis:ConsultarAfiliadoFuaE>
+            <sis:intOpcion>1</sis:intOpcion>
+            <!--Optional:-->
+            <sis:strAutorizacion>${auth}</sis:strAutorizacion>
+            <!--Optional:-->
+            <sis:strDni>41857867</sis:strDni>
+            <!--Optional:-->
+            <sis:strTipoDocumento>1</sis:strTipoDocumento>
+            <!--Optional:-->
+            <sis:strNroDocumento>71853201</sis:strNroDocumento>
+            <!--Optional:-->
+            <sis:strDisa>250</sis:strDisa>
+            <!--Optional:-->
+            <sis:strTipoFormato>2</sis:strTipoFormato>
+            <!--Optional:-->
+            <sis:strNroContrato>71853201</sis:strNroContrato>
+            <!--Optional:-->
+            <sis:strCorrelativo></sis:strCorrelativo>
+         </sis:ConsultarAfiliadoFuaE>
+      </soap:Body>
+   </soap:Envelope>
+    `;
+
+  const headers = {
+    'Content-Type': 'text/xml',
+  };
+
+  const response = await axios.post(urlWebService, xmlBody, { headers });
+
+  return [
+    [
+      {
+        success: "success",
+        server_response: response.data,
+      },
+    ],
+  ];
+
+    }catch(error){
+      throw error;
+    }
+    
+  }
+
   async function getFuaByNumAndLote(FUA,LOTE) {
     try {
       let pool = await sql.connect(config);
@@ -1119,6 +1215,21 @@ console.log("error :" + error);
       return [[{success:"actualizado"}]]
     } catch (error) {
        return [[{success:"error"}]]
+    }
+  }
+
+  async function update_date_pregnancy(account,date) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('CUENTA',account)
+      .input('FECHA',date)
+      .execute(`ACTUALIZAR_FECHA_FUA_PARTO`) 
+      return [[{success:"actualizado"}]]
+    } catch (error) {
+      console.log(error)
+       return [[{success:"error"}]]
+    
     }
   }
 
@@ -1607,11 +1718,12 @@ console.log("error :" + error);
     try{
       let pool = await sql.connect(config);
       let res = await pool.request()
-      .input('TIPO',type)
+      .input('TIPO',parseInt(type))
       .input('CUENTA',account)
       .execute(`ACTUALIZAR_TIPO_ATENCION_FUA`) 
       return [[{success:"actualizado"}]]
     }catch(error){
+      console.log(error)
       return [[{success:"error"}]]
     }
   }
@@ -1671,6 +1783,22 @@ console.log("error :" + error);
       .input('IDPACIENTE',id)
       .input('FECHA',date)
       .execute(`ACTUALIZAR_FECHA_NACIMIENTO_PACIENTE`) 
+      return [[{success:"actualizado"}]]
+      
+    }catch(error){
+      console.log(error)
+      return [[{success:"error"+' '+error}]]
+    }
+  }
+
+  async function updateReferenceIpress(id,ipress){
+
+    try{
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('CUENTA',id)
+      .input('IPRESS',ipress)
+      .execute(`ACTUALIZAR_FUA_IPRESS`) 
       return [[{success:"actualizado"}]]
       
     }catch(error){
@@ -1779,5 +1907,9 @@ module.exports = {
   update_dni_fua:update_dni_fua,
   queryAtentionSaludpol:queryAtentionSaludpol,
   updateDateAtentionSaludpol:updateDateAtentionSaludpol,
-  updateDateBirthPatient:updateDateBirthPatient
+  updateDateBirthPatient:updateDateBirthPatient,
+  update_date_pregnancy:update_date_pregnancy,
+  updateReferenceIpress:updateReferenceIpress,
+  getAfiliateWebService:getAfiliateWebService,
+  getAfiliateWebServiceData:getAfiliateWebServiceData
 };

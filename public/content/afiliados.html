@@ -23,15 +23,27 @@
 </head>
 <body>
     
-    <h2>Afiliados&nbsp;<button class="btn btn-dark" id="btn-add" onclick="add()"><i class='bx bx-plus-medical' ></i>Agregar nuevo afiliado</button></h2>
+    <h2>Afiliados</h2>
     <p></p>
 
-        <div class="input-group mb-3" style="width: 40%;">
+        <div class="input-group mb-3" style="width: 75%;">
+          
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Disa</span>
+            </div>
+            <input type="tel" onKeypress='if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;' class="form-control" id="disa">
+
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Tipo formato</span>
+            </div>
+            <input type="tel" onKeypress='if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;' class="form-control" id="tipo-formato">
+            
             <div class="input-group-prepend">
             <span class="input-group-text" id="basic-addon1">N° de formato de afiliación</span>
             </div>
             <input type="tel" onKeypress='if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;' class="form-control" id="nro-formato">
-            <button class="btn btn-success" id="btn-search" onclick="search()"><i class='bx bx-search-alt-2' ></i>Buscar</button>
+            <button class="btn btn-success" id="btn-search" onclick="search()"><i class='bx bx-search-alt-2' ></i>Buscar en galenos</button>
+            <button class="btn btn-danger" id="btn-search" onclick="searchWebService()"><i class='bx bx-search-alt-2' ></i>Buscar en web service</button>
             <a><div class="loaderSmall" id="loader"></div></a>
         </div>
 

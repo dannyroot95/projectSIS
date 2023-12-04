@@ -926,12 +926,13 @@ function validateDataATE(d){
       log = log+warning+"\r\n\r\n"
     }
 
+    /*
     if (d["A41"] != "" && containCharactersNotPermition(d["A41"])) {
       ctx++
       c++
       let warning = `${c}.- EL CAMPO ATE#41 (HOJA DE REFERENCIA) DEBE DE SER UN CAMPO ALFANUMERICO DE HASTA 20 DIGITOS -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
       log = log+warning+"\r\n\r\n"
-    }
+    }*/
 
       if(d["A72"] == "1" && d["A73"].length > 8){
       ctx++
@@ -1801,7 +1802,7 @@ function showDetailModal(d){
 
   document.getElementById("tbodyD").innerHTML = ""
   document.getElementById("d-lote").innerHTML = d.A3
-  document.getElementById("d-account").innerHTML = d.A1
+  document.getElementById("d-account").innerHTML = (d.A1).trimEnd()
   document.getElementById("d-name").innerHTML = d.A26+" "+d.A27+" "+d.A28
   document.getElementById("d-idpatient").innerHTML = d.A89
 
@@ -1814,7 +1815,9 @@ function showDetailModal(d){
   
   document.getElementById("fua-num-ipress").value = d.A40
 
-  //alert(d.A31)
+  if(d.A50 != ""){
+    document.getElementById("fua-date-pregnancy").value = (d.A50).split("/")[2]+'-'+(d.A50).split("/")[1]+'-'+(d.A50).split("/")[0]
+  }
 
   if(d.A31 == "1"){
     document.getElementById("inputGroupSelectSex").value = 1
@@ -2451,6 +2454,31 @@ function updateNumIpress(){
 }
 
 
+function updateNullDatePregnancy() {
+  let account = document.getElementById("d-account").innerHTML
+  fetch(`${url}/update-date-null-pregnancy/${account}`)
+    .then(response => response.json())
+    .then(data => {
+      if(data[0].success == "actualizado"){
+        Swal.fire(
+          'Muy bien!',
+          'Sin fecha de parto!',
+          'success'
+        )
+      }else{
+        Swal.fire(
+          'Oops!',
+          'Ocurrió un error',
+          'warning'
+        )
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+}
+
+//--------------------------------------------------------------RC-------------------------
 
 function openModalValidation(){
   $('#compareModal').modal('show')

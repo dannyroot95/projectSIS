@@ -3,6 +3,7 @@ const sql = require("mssql")
 const fs = require('fs');
 const axios = require('axios');
 const archiver = require('archiver');
+const { Console } = require("console");
 archiver.registerFormat('zip-encrypted', require("archiver-zip-encrypted"));
 const passwordProduction = '7017FuaE47121'; 
 const passwordTest = 'PilotoFUAE123'
@@ -800,9 +801,13 @@ console.log("error :" + error);
     
   }
 
-  async function getAfiliateWebServiceData(auth){
+  async function getAfiliateWebServiceData(auth,disa,tipo,num){
 
     let urlWebService = `http://app.sis.gob.pe/sisWSAFI/`
+    let tipoDoc = tipo
+    if(tipoDoc == "2"){
+      tipoDoc = "1"
+    }
   
     try{
 
@@ -817,15 +822,15 @@ console.log("error :" + error);
             <!--Optional:-->
             <sis:strDni>41857867</sis:strDni>
             <!--Optional:-->
-            <sis:strTipoDocumento>1</sis:strTipoDocumento>
+            <sis:strTipoDocumento>${tipoDoc}</sis:strTipoDocumento>
             <!--Optional:-->
-            <sis:strNroDocumento>71853201</sis:strNroDocumento>
+            <sis:strNroDocumento>${num}</sis:strNroDocumento>
             <!--Optional:-->
-            <sis:strDisa>250</sis:strDisa>
+            <sis:strDisa>${disa}</sis:strDisa>
             <!--Optional:-->
-            <sis:strTipoFormato>2</sis:strTipoFormato>
+            <sis:strTipoFormato>${tipo}</sis:strTipoFormato>
             <!--Optional:-->
-            <sis:strNroContrato>71853201</sis:strNroContrato>
+            <sis:strNroContrato>${num}</sis:strNroContrato>
             <!--Optional:-->
             <sis:strCorrelativo></sis:strCorrelativo>
          </sis:ConsultarAfiliadoFuaE>
@@ -1807,6 +1812,54 @@ console.log("error :" + error);
     }
   }
 
+  async function dateNullPregnancy(account) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request().query(`UPDATE SIGH_EXTERNA..SisFuaAtencion SET FuaFechaParto = NULL WHERE idCuentaAtencion = ${account}`);
+      return [[{success:"actualizado"}]]
+    } catch (error) {
+      console.log("error :" + error);
+    }finally {
+      sql.close();
+    }
+  }
+
+  async function addAfiliate(a) {
+
+    console.log('data :'+a)
+
+    try {
+        let pool = await sql.connect(config);
+        let res = await pool.request()
+            .input('IDSIASIS', parseInt(a.idSiasis))
+            .input('CODIGO', a.Codigo)
+            .input('AFILIACIONDISA', a.AfiliacionDisa)
+            .input('AFILIACIONTIPOFORMATO', a.AfiliacionTipoFormato)
+            .input('AFILIACIONUMEROFORMATO', a.AfiliacionNroFormato)
+            .input('AFILIACIONROINTEGRANTE', a.AfiliacionNroIntegrante)
+            .input('DOCUMENTOTIPO', a.DocumentoTipo)
+            .input('CODIGOESTADSCRIPCION', a.CodigoEstablAdscripcion)
+            .input('AFILIACIONFECHA', a.AfiliacionFecha)
+            .input('PATERNO', a.Paterno)
+            .input('MATERNO', a.Materno)
+            .input('PNOMBRE', a.Pnombre)
+            .input('ONOMBRE', a.Onombres)
+            .input('GENERO', a.Genero)
+            .input('FECHANACIMIENTO', a.Fnacimiento)
+            .input('IDDISTRITODOMICILIO', a.IdDistritoDomicilio)
+            .input('ESTADO', a.Estado)
+            .input('FBAJA', a.Fbaja)
+            .input('DOCUMENTONUMERO', a.DocumentoNumero)
+            .input('MOTIVOBAJA', a.MotivoBaja)
+            .input('FBAJAOK', a.FbajaOK)
+            .execute('AGREGAR_AFILIADO');
+        return [{ success: "actualizado" }];
+    } catch (error) {
+        console.log(error);
+        return [{ success: "error" + ' ' + error.message }];
+    }
+}
+
 module.exports = {
   getdata: getdata,
   sendTrama:sendTrama,
@@ -1911,5 +1964,7 @@ module.exports = {
   update_date_pregnancy:update_date_pregnancy,
   updateReferenceIpress:updateReferenceIpress,
   getAfiliateWebService:getAfiliateWebService,
-  getAfiliateWebServiceData:getAfiliateWebServiceData
+  getAfiliateWebServiceData:getAfiliateWebServiceData,
+  dateNullPregnancy:dateNullPregnancy,
+  addAfiliate:addAfiliate
 };

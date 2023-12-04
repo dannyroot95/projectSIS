@@ -1,11 +1,25 @@
 
-let cache = sessionStorage.getItem("content")
-let user = sessionStorage.getItem("user")
+window.addEventListener('storage', function (event) {
+  if (event.key === 'content' || event.key === 'user') {
+      // Se ejecutará cuando haya cambios en 'content' o 'user' en otras pestañas
+      var storedContent = localStorage.getItem('content');
+      var storedUser = localStorage.getItem('user');
 
+      if (storedContent && storedUser) {
+          var content = JSON.parse(storedContent);
+          var user = JSON.parse(storedUser);
+          setContent(content, user);
+      }
+  }
+});
+
+
+let cache = localStorage.getItem("content")
+let user = localStorage.getItem("user")
 
 if(cache != "" && cache != null){
-    console.log(user)
-    setContentFromCache(cache)
+  console.log(user)
+  setContentFromCache(cache)
 }
 
 function setContentFromCache(content){
@@ -33,8 +47,8 @@ function setContentFromCache(content){
 
   function logout(){
 
-    sessionStorage.removeItem("content")
-    sessionStorage.removeItem("user")
+    localStorage.removeItem("content")
+    localStorage.removeItem("user")
 
     location.reload()
 

@@ -1,6 +1,5 @@
-
 var inputDNI = document.getElementById('dni');
-var inputUser = document.getElementById('user'); // Reemplaza 'mi-input' con el ID real de tu elemento de entrada
+var inputUser = document.getElementById('user'); 
 
 // Agregar un event listener al evento "keypress" en el elemento de entrada
 
@@ -134,11 +133,10 @@ if(inputDNI != null){
     document.head.appendChild(scriptElement);
     document.head.appendChild(scriptElement2);
 
-    sessionStorage.setItem("content",content)
-    sessionStorage.setItem("user",JSON.stringify(x))
+    localStorage.setItem("content", content);
+    localStorage.setItem("user", JSON.stringify(x));
 
     document.getElementById("nameuser").innerHTML = x.Usuario 
     document.getElementById("typeuser").innerHTML = x.Descripcion
 
   }
-

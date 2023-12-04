@@ -651,11 +651,14 @@ router.get("/get-afiliate-web-service", async function (req, res, next) {
   }
 });
 
-router.get("/get-afiliate-web-service-data/:a", async function (req, res, next) {
+router.get("/get-afiliate-web-service-data/:a/:b/:c/:d", async function (req, res, next) {
   //const data = req.body;
   let auth = req.params.a;
+  let disa = req.params.b;
+  let tipo = req.params.c;
+  let num = req.params.d;
   try {
-    const result = await sql.getAfiliateWebServiceData(auth);
+    const result = await sql.getAfiliateWebServiceData(auth,disa,tipo,num);
     if (result[0].length > 0) {
       res.json(result[0]);
     } else {
@@ -2003,6 +2006,29 @@ router.post("/update-num-ipress", function (req, res, next) {
   sql.updateReferenceIpress(id,ipress).then((result) => {
     if(result[0].length>0){
       res.json(result[0]);
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
+router.get("/update-date-null-pregnancy/:a", function (req, res, next) {
+  let account = req.params.a 
+  sql.dateNullPregnancy(account).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
+router.post("/add-afiliate", function (req, res, next) {
+ 
+  let data = req.body
+  sql.addAfiliate(data).then((result) => {
+    if(result[0].success == 'actualizado'){
+      res.json([{success:"actualizado"}])
     }else{
       res.json([{success:"error"}])
     }

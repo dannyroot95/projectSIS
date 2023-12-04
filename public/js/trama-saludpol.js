@@ -8,7 +8,6 @@ let allData = []
 let report = []
 let report2 = []
 
-alert(btoa("EhfYRwZJFYM="))
 
 createDatatable()
 createDatatable2()

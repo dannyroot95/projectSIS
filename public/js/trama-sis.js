@@ -858,7 +858,7 @@ function validateDataATE(d){
         c++
         let warning = `${c}.- SIN REGISTRO EN LOS CAMPOS DE AFILIACIÓN -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]} `
         log = log+warning+"\r\n\r\n"
-        searchAndUpdateAtentionFromAfiliate(d["A26"],d["A27"],d["A28"])
+        //searchAndUpdateAtentionFromAfiliate(d["A26"],d["A27"],d["A28"])
     }
 
     if(d["A20"] == ""){
@@ -941,12 +941,13 @@ function validateDataATE(d){
       log = log+warning+"\r\n\r\n"
     }
 
+    /*
     if (d["A35"] == "1" && d["A50"] == "") {
       ctx++
       c++
       let warning = `${c}.- EL CAMPO ATE#50 (FECHA DE PARTO) DEBE DE CUMPLIR EL FORMATO DD/MM/AAAA Y SER UNA FECHA VALIDA -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
       log = log+warning+"\r\n\r\n"
-    }
+    }*/
 
   if (d["A35"] == "2" && d["A50"] == "") {
       ctx++
@@ -1022,13 +1023,22 @@ function counter(ctx,d){
     let value = ""
 
     if(ctx > 0){
+        d.A29 = containComilla(d.A29)
         value = `<td class="minText2"><button class="btn btn-danger" onclick="showDetailModal('${encodeURIComponent(JSON.stringify(d))}')"><i class="bi bi-eye-fill"></i></button></td>`
     }else{
+        d.A29 = containComilla(d.A29)
         value = `<td class="minText2"><button class="btn btn-success" onclick="showDetailModal('${encodeURIComponent(JSON.stringify(d))}')"><i class="bi bi-file-check"></i></button></td>`
     }
 
     return value
 
+}
+
+function containComilla(val){
+  if(val.includes("'")){
+    val = val.split("'")[0]+val.split("'")[1]
+  }
+  return val
 }
 
 function donwloadLog(){
@@ -1795,10 +1805,17 @@ function showDetailModal(d){
   d = JSON.parse(decodeURIComponent(d))
   $('#modalDetail').modal('show')
 
+
   document.getElementById("afi-disa").value = ''
   document.getElementById("afi-type").value = ''
   document.getElementById("afi-num").value = ''
   document.getElementById("afi-siasis").value = ''
+
+  document.getElementById("d-ape-p").value = d.A26
+  document.getElementById("d-ape-m").value = d.A27
+  document.getElementById("d-name-1").value = d.A28
+  document.getElementById("d-name-2").value = isUndefined((d.A29))
+  document.getElementById("d-name-3").value = isUndefined2((d.A29))
 
   document.getElementById("tbodyD").innerHTML = ""
   document.getElementById("d-lote").innerHTML = d.A3
@@ -2819,4 +2836,93 @@ function donwloadRC(){
   link.download = 'rc.txt';
   link.click();
   
+  }
+
+  function isUndefined(name){
+    let secondaName = name.split(" ")[0]
+    if(secondaName == undefined){
+      secondaName = ""
+    }else if(secondaName == "DE"){
+      secondaName = name.split(" ")[0]+" "+name.split(" ")[1]
+    } 
+    return secondaName
+  }
+
+  function isUndefined2(name){
+    let thirdName = ""
+    if(name.split(" ")[0] == undefined){
+      thirdName = ""
+    }else if(name.split(" ")[0] == "DE"){
+      if(name.split(" ")[2] == undefined){
+        thirdName = ""
+      }else{
+        thirdName = name.split(" ")[2]
+      }
+    }else if(name.split(" ")[1] == undefined){
+      thirdName = ""
+    }else{
+      thirdName = name.split(" ")[1]
+    } 
+    return thirdName
+  }
+
+  function updateFullNamePatient(){
+    let idPaciente = document.getElementById("d-idpatient").innerHTML
+    let paterno = document.getElementById("d-ape-p").value
+    let materno = document.getElementById("d-ape-m").value
+    let nombre1 = document.getElementById("d-name-1").value
+    let nombre2 = document.getElementById("d-name-2").value
+    let nombre3 = document.getElementById("d-name-3").value
+
+    if(paterno != "" && materno != "" && nombre1 != ""){
+
+      let parameters = {
+        idPaciente : idPaciente,
+        paterno : paterno,
+        materno : materno,
+        primerNombre : nombre1,
+        segundoNombre : nombre2,
+        tercerNombre : nombre3
+      }
+      
+    fetch(`${url}/update-fullname-patient`,{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },body: JSON.stringify(parameters)
+  })
+    .then(response => response.json())
+    .then(data => {
+  
+        if(data[0].success == "actualizado"){
+
+            Swal.fire(
+              'Muy bien!',
+              'Datos de paciente actualizado!',
+              'success'
+            )
+            
+        }else{
+          Swal.fire(
+            'Oops!',
+            'Ocurrió un error',
+            'error'
+          )
+        }
+    }).catch(err => {
+        Swal.fire(
+          'Oops!',
+          'Ocurrió un error 404',
+          'error'
+        )
+    }); 
+
+    }else{
+      Swal.fire(
+        'Oops!',
+        'Complete los campos!',
+        'info'
+      )
+    }
+
   }

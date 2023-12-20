@@ -2035,6 +2035,19 @@ router.post("/add-afiliate", function (req, res, next) {
   });
 });
 
+
+router.post("/update-fullname-patient", function (req, res, next) {
+ 
+  let data = req.body
+  sql.updateFullNamePatient(data).then((result) => {
+    if(result[0].success == 'actualizado'){
+      res.json([{success:"actualizado"}])
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
 module.exports = router;
 
 

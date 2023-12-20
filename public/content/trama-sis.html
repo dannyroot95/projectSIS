@@ -35,8 +35,8 @@
       <div class="input-group-prepend">
         <label class="input-group-text" for="inputGroupSelectProductionMonth">Mes de atención</label>
       </div>
+
       <select class="custom-select" id="inputGroupSelectProductionMonth">
-       
         <option value="1">Enero</option>
         <option value="2">Febrero</option>
         <option value="3">Marzo</option>
@@ -54,8 +54,8 @@
       <div class="input-group-prepend">
         <label class="input-group-text" for="inputGroupSelectYearSend2">Año de envío</label>
       </div>
+
       <select class="custom-select" id="inputGroupSelectYearSend2">
-    
       </select>
 
       <div class="input-group-prepend">
@@ -79,8 +79,6 @@
 
 
     </div>
-
-    
     </div>
 
 
@@ -449,6 +447,7 @@
         </table>
         <br>
         
+
         <!--inputs-->
         <hr size="2px" color="black" />
         <h4>Afiliación</h4>
@@ -473,6 +472,29 @@
         <button style="float: right;margin-bottom: 20px;" type="button" onclick="updateAfiliation()" class="btn btn-primary">Actualizar</button>
       </div>
         
+
+      <p></p>
+      <hr size="2px" color="black" />
+      <h4>Nombre de paciente</h4>
+      <p></p>
+
+
+      <div class="input-group mb-3">
+        <span class="input-group-text" id="basic-addon1">A.Paterno</span>
+        <input type="text" class="form-control" id="d-ape-p">
+        <span class="input-group-text" id="basic-addon1">A.Materno</span>
+        <input type="text" class="form-control" id="d-ape-m">
+        <span class="input-group-text" id="basic-addon1">P.Nombre</span>
+        <input type="text" class="form-control" id="d-name-1">
+      </div>
+      <div class="input-group mb-3">
+        <span class="input-group-text" id="basic-addon1">S.Nombre</span>
+        <input type="text" class="form-control" id="d-name-2">
+        <span class="input-group-text" id="basic-addon1">T.Nombre</span>
+        <input type="text" class="form-control" id="d-name-3">
+        <button style="float: right;" type="button" onclick="updateFullNamePatient()" class="btn btn-primary">Actualizar</button>
+      </div>
+
        <p></p>
        <hr size="2px" color="black" />
        <h4>Digitador</h4>

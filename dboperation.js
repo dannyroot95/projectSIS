@@ -18,8 +18,8 @@ const authProduction = 'DsutgQ3U'
 //requestSeachPackageTramaSOAP()
 
 async function getPackageTrama(anio,month,n_send) {
+
   try {
-   
     const xmlRequest = `
       <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v2="http://sis.gob.pe/esb/negocio/registroFuaBatch/v2/">
          <soapenv:Header>
@@ -1860,6 +1860,27 @@ console.log("error :" + error);
     }
 }
 
+
+async function updateFullNamePatient(a) {
+
+  try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+          .input('IDPACIENTE', parseInt(a.idPaciente))
+          .input('PATERNO', a.paterno)
+          .input('MATERNO', a.materno)
+          .input('NOMBRE1', a.primerNombre)
+          .input('NOMBRE2', a.segundoNombre)
+          .input('NOMBRE3', a.tercerNombre)
+          .execute('ACTUALIZAR_NOMBRE_COMPLETO_PACIENTE');
+      return [{ success: "actualizado" }];
+  } catch (error) {
+      console.log(error);
+      return [{ success: "error" + ' ' + error.message }];
+  }
+}
+
+
 module.exports = {
   getdata: getdata,
   sendTrama:sendTrama,
@@ -1966,5 +1987,6 @@ module.exports = {
   getAfiliateWebService:getAfiliateWebService,
   getAfiliateWebServiceData:getAfiliateWebServiceData,
   dateNullPregnancy:dateNullPregnancy,
-  addAfiliate:addAfiliate
+  addAfiliate:addAfiliate,
+  updateFullNamePatient:updateFullNamePatient
 };

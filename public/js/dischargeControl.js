@@ -95,26 +95,29 @@ function insertData(data){
 
     $("#tbody").html(data.map((d) => {
 
-        arrayInc.push([d.Ncuenta,d.Asegurado,d.HC,d.FF,d.F_ingreso,d.F_egreso,d.F_E_Administrativo,d.Origen,d.Servicio_egreso,d.E_cuenta,d.Usuario,d.Nombre_usuario,d.F_ultima_receta,d.TotalValorizado])
+        arrayInc.push([d.Ncuenta,d.Asegurado,d.HC,d.FF,d.F_ingreso,d.F_egreso,d.F_E_Administrativo,d.Origen,d.Servicio_egreso,d.E_cuenta,d.medico,d.Nombre_usuario,d.F_ultima_receta,d.TotalValorizado])
 
         vTotal += parseFloat(d.TotalValorizado)
      
         allData.push({
 
             'Cuenta':d.Ncuenta,
-            'Asegurado':d.Asegurado,
-            'HC':d.HC,
             'FF':d.FF,
             'Fecha de ingreso':isNulledDate(d.F_ingreso),
             'Fecha de egreso':isNulledDate(d.F_egreso),
             'Fecha de egreso administrativo':isNulledDate(d.F_E_Administrativo),
-            'FUA':d.FUA,
+            'Asegurado':isNulledString(d.Asegurado),
+            'FUA':isNulledString(d.FUA),
+            'HC':isNulledString(d.HC),
+            'Codigo prestacional':isNulledString(d.prestacion),
+            'Medico':d.medico,
+            'DNI-Digitador':isNulledString(d.dni_digitador),
+            'U.Digitador':isNulledString(d.Usuario),
+            'Digitador':isNulledString(d.Nombre_usuario),
             'Origen':d.Origen,
-            'Servicio de egreso':typeService(d.Servicio_egreso),
+            'UPS':(d.Servicio_egreso),
             'Estado':d.E_cuenta,
-            'Usuario':d.Usuario,
-            'Nombre de usuario':d.Nombre_usuario,
-            'Fecha de ultima receta':d.F_ultima_receta,
+            'Fecha de ultima receta':isNulledDateWithHour(d.F_ultima_receta),
             'Valorizado':d.TotalValorizado
 
         })
@@ -123,21 +126,25 @@ function insertData(data){
               return `
 
               <tr style="cursor: pointer;">
-              <td class="minText2">${d.Ncuenta}</td>
-              <td class="minText2">${d.Asegurado}</td>
-              <td class="minText2">${d.HC}</td>
-              <td class="minText2">${d.FF}</td>
-              <td class="minText2">${isNulledDate(d.F_ingreso)}</td>
-              <td class="minText2">${isNulledDate(d.F_egreso)}</td>
-              <td class="minText2">${isNulledDate(d.F_E_Administrativo)}</td>
-              <td class="minText2">${isNulledString(d.FUA)}</td>
-              <td class="minText2">${isNulledString(d.Origen)}</td>
-              <td class="minText2">${typeService(d.Servicio_egreso)}</td>
-              <td class="minText2">${statusAccount(d.E_cuenta)}</td>
-              <td class="minText2">${isNulledString(d.Usuario)}</td>
-              <td class="minText2">${isNulledString(d.Nombre_usuario)}</td>
-              <td class="minText2">${isNulledDate(d.F_ultima_receta)}</td>
-              <td class="minText2"><b style="color:green;">S/${d.TotalValorizado}</b></td>
+              <td class="minText4"><button style="width:30px;height:30px;" class="btn btn-dark"><i style="margin-left:-6px;" class="bi bi-eye-fill"></i></button></td>
+              <td class="minText4">${d.Ncuenta}</td>
+              <td class="minText4">${d.FF}</td>
+              <td class="minText4">${isNulledDate(d.F_ingreso)}</td>
+              <td class="minText4">${isNulledDate(d.F_egreso)}</td>
+              <td class="minText4">${isNulledDate(d.F_E_Administrativo)}</td>
+              <td class="minText4">${d.Asegurado}</td>
+              <td class="minText4">${isNulledString(d.FUA)}</td>
+              <td class="minText4">${d.HC}</td>
+              <td class="minText4">${isNulledString(d.prestacion)}</td>
+              <td class="minText4">${isNulledString(d.medico)}</td>
+              <td class="minText4">${isNulledString(d.dni_digitador)}</td>
+              <td class="minText4">${isNulledString(d.Usuario)}</td>
+              <td class="minText4">${isNulledString(d.Nombre_usuario)}</td>
+              <td class="minText4">${isNulledString(d.Origen)}</td>
+              <td class="minText4">${(d.Servicio_egreso)}</td>
+              <td class="minText4">${statusAccount(d.E_cuenta)}</td>
+              <td class="minText4">${isNulledDateWithHour(d.F_ultima_receta)}</td>
+              <td class="minText4"><b style="color:green;">S/${d.TotalValorizado}</b></td>
               </tr>`;
           })
           .join("")
@@ -170,9 +177,23 @@ function cancel(){
     let x = val
 
     if(x == null || x == ""){
-        x = "<b>Sin datos</b>"
+        x = `<b style="color:red;">Sin datos</b>`
     }else{
         x = date(x)
+    }
+
+    return x
+
+  }
+
+  function isNulledDateWithHour(val){
+
+    let x = val
+
+    if(x == null || x == ""){
+        x = `<b style="color:red;">Sin datos</b>`
+    }else{
+        x = dateWithHour(x)
     }
 
     return x
@@ -184,7 +205,7 @@ function cancel(){
     let x = val
 
     if(x == null || x == ""){
-        x = "<b>Sin datos</b>"
+        x = `<b style="color:red;">Sin datos</b>`
     }
 
     return x

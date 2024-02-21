@@ -59,94 +59,52 @@ function add(){
 
 function insertData(data){
     enable()
+    let ctx = 0
     document.getElementById("tbody").innerHTML = ""
     $("#tbody").html(data.map((d) => {
+      ctx++
               return `
               <tr>
-              <th><center>Nombres</center></th>
-              <td><center>${d.Paterno+' '+isNulled(d.Materno)+' '+d.Pnombre+' '+isNulled(d.Onombres).toUpperCase()}</center></td>
-              </tr>
-              
-              <tr>
-              <th><center>ID Siasis</center></th>
-              <td><center>${d.idSiasis}</center></td>
-              </tr>
+              <td><center><button onclick="deleteAfiliate('${d.idSiasis}',${ctx})" class="btn btn-danger minText5">X</button></center></td>
 
-              <tr>
-              <th><center>Afiliación disa</center></th>
-              <td><center>${d.AfiliacionDisa}</center></td>
-              </tr>
+              <td class="minText5"><center>${ctx}</center></td>
 
-              <tr>
-              <th><center>Afiliación tipo</center></th>
-              <td><center>${d.AfiliacionTipoFormato}</center></td>
-              </tr>
-              
-              <tr>
-              <th><center>Afiliación N° formato</center></th>
-              <td><center>${d.AfiliacionNroFormato}</center></td>
-              </tr>
+              <td class="minText5"><center>${isEqualData('0',d.idSiasis,d.AfiliacionNroFormato)}</center></td>
 
-              <tr>
-              <th><center>Correlativo</center></th>
-              <td><center>${hasCorrelative(d.AfiliacionNroIntegrante)}</center></td>
+              <td class="minText5"><center>${d.AfiliacionDisa}</center></td>
+
+              <td class="minText5"><center>${d.AfiliacionTipoFormato}</center></td>
+
+              <td class="minText5"><center>${isEqualData('1',d.idSiasis,d.AfiliacionNroFormato)}</center></td>
+
+              <td class="minText5">
+              <center>${d.Paterno+' '+isNulled(d.Materno)+' '
+              +d.Pnombre+' '+
+              isNulled(d.Onombres).toUpperCase()}</center></td>
+           
+              <td class="minText5"><center>${typeDoc(d.DocumentoTipo)}</center></td>
+   
+              <td class="minText5"><center>${isNulledString(d.DocumentoNumero)}</center></td>
+
+              <td class="minText5"<center>${hasCorrelative(d.AfiliacionNroIntegrante)}</center></td>
+       
+              <td class="minText5"><center>${isNulled(d.CodigoEstablAdscripcion)}</center></td>
+            
+              <td class="minText5"><center>${date(d.AfiliacionFecha)}</center></td>
+
+              <td class="minText5"><center>${date(d.Fnacimiento)}</center></td>
+   
+              <td class="minText5"><center>${gender(d.Genero)}</center></td>
+
+              <td class="minText5"><center>${d.IdDistritoDomicilio}</center></td>
+ 
+              <td class="minText5"><center>${statusF(d.Estado)}</center></td>
+
+              <td class="minText5"><center>${isNulledString(d.Fbaja)}</center></td>
+       
+              <td class="minText5"><center>${isNulledString(d.MotivoBaja)}</center></td>
+      
               </tr>
-
-              <tr>
-              <th><center>Tipo de documento</center></th>
-              <td><center>${typeDoc(d.DocumentoTipo)}</center></td>
-              </tr>
-
-              <tr>
-              <th><center>Número de documento</center></th>
-              <td><center>${isNulledString(d.DocumentoNumero)}</center></td>
-              </tr>
-              
-              <tr>
-              <th><center>Código de establecimiento</center></th>
-              <td><center>${isNulled(d.CodigoEstablAdscripcion)}</center></td>
-              </tr>
-
-              <tr>
-              <th><center>Fecha de afiliación</center></th>
-              <td><center>${date(d.AfiliacionFecha)}</center></td>
-              </tr>
-
-              
-              <tr>
-              <th><center>Fecha de nacimiento</center></th>
-              <td><center>${date(d.Fnacimiento)}</center></td>
-              </tr>
-
-              <tr>
-              <th><center>Género</center></th>
-              <td><center>${gender(d.Genero)}</center></td>
-              </tr>
-
-              
-              <tr>
-              <th><center>ID de distrito</center></th>
-              <td><center>${d.IdDistritoDomicilio}</center></td>
-              </tr>
-
-              <tr>
-              <th><center>Estado</center></th>
-              <td><center>${statusF(d.Estado)}</center></td>
-              </tr>
-
-              <tr>
-              <th><center>Fecha de baja</center></th>
-              <td><center>${isNulledString(d.Fbaja)}</center></td>
-              </tr>
-
-              <tr>
-              <th><center>Motivo de baja</center></th>
-              <td><center>${isNulledString(d.MotivoBaja)}</center></td>
-              </tr>
-
-
-              <br><br>
-
               `;
 
           })
@@ -208,7 +166,7 @@ function deleteSymbols(event) {
         x = "<b>Sin registro</b>"
     }
 
-    return x
+    return `<center>${x}</center>`
   }
 
   function typeDoc(val){
@@ -306,7 +264,6 @@ function deleteSymbols(event) {
     var auth = response.getElementsByTagName("GetSessionResult")[0].textContent;
     searchWebServiceData(auth,disa,tipo,num)
     console.log(auth)
-  
   }
 
   function searchWebServiceData(auth,disa,tipo,num) {
@@ -366,6 +323,8 @@ function deleteSymbols(event) {
     var idGrupoPoblacional = response.getElementsByTagName("IdGrupoPoblacional")[0].textContent;
     var msgConfidencial = response.getElementsByTagName("MsgConfidencial")[0].textContent;
   
+    document.getElementById("updateInAccount").value = ""
+
     console.log(nombres)
 
     if(idError == "0"){
@@ -490,9 +449,13 @@ function deleteSymbols(event) {
 
     let addLoader =  document.getElementById("loaderAddGalenos")
     let btnAdd = document.getElementById("btnAddGalenos")
+    let btnUpdate = document.getElementById("btnUpdateAfiliate")
+    let btnUpdateIDToAccount = document.getElementById("btnUpdateToAccount")
     let btnClose = document.getElementById("closeBtnModal")
     addLoader.style = "display:block;"
     btnAdd.disabled = true
+    btnUpdate.disabled = true
+    btnUpdateIDToAccount.disabled  = true
     btnClose.disabled = true
 
     fetch(`${url}/affiliate/${jsonAfiliate.AfiliacionNroFormato}`,{
@@ -510,6 +473,8 @@ function deleteSymbols(event) {
         }else{
           btnAdd.disabled = false
           btnClose.disabled = false
+          btnUpdate.disabled = false
+          btnUpdateIDToAccount.disabled  = false
           addLoader.style = "display:none;"
           Swal.fire(
             'Oops!',
@@ -520,6 +485,8 @@ function deleteSymbols(event) {
     }).catch(err => {
         btnAdd.disabled = false
         btnClose.disabled = false
+        btnUpdate.disabled = false
+        btnUpdateIDToAccount.disabled  = false
         addLoader.style = "display:none;"
         Swal.fire(
           'Oops!',
@@ -535,6 +502,8 @@ function deleteSymbols(event) {
     let addLoader =  document.getElementById("loaderAddGalenos")
     let btnAdd = document.getElementById("btnAddGalenos")
     let btnClose = document.getElementById("closeBtnModal")
+    let btnUpdate = document.getElementById("btnUpdateAfiliate")
+    let btnUpdateIDToAccount = document.getElementById("btnUpdateToAccount")
 
     fetch(`${url}/add-afiliate`,{
       method: 'POST',
@@ -551,6 +520,8 @@ function deleteSymbols(event) {
 
             btnClose.disabled = false
             btnAdd.disabled = false
+            btnUpdate.disabled = false
+            btnUpdateIDToAccount.disabled  = false
             addLoader.style = "display:none;"
 
             Swal.fire(
@@ -564,6 +535,8 @@ function deleteSymbols(event) {
         }else{
           btnAdd.disabled = false
           btnClose.disabled = false
+          btnUpdate.disabled = false
+          btnUpdateIDToAccount.disabled  = false
           addLoader.style = "display:none;"
           Swal.fire(
             'Oops!',
@@ -581,5 +554,190 @@ function deleteSymbols(event) {
           'error'
         )
     }); 
+
+  }
+
+  function updateAfiliateToGalenos(){
+
+    let data = jsonAfiliate
+    console.log(data)
+
+    let addLoader =  document.getElementById("loaderAddGalenos")
+    let btnAdd = document.getElementById("btnAddGalenos")
+    let btnClose = document.getElementById("closeBtnModal")
+    let btnUpdate = document.getElementById("btnUpdateAfiliate")
+    let btnUpdateIDToAccount = document.getElementById("btnUpdateToAccount")
+
+    btnClose.disabled = true
+    btnAdd.disabled = true
+    btnUpdate.disabled = true
+    btnUpdateIDToAccount.disabled  = true
+
+    fetch(`${url}/update-afiliate`,{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },body: JSON.stringify(data)
+  })
+    .then(response => response.json())
+    .then(data => {
+  
+      console.log(data)
+
+        if(data[0].success == "actualizado"){
+
+            btnClose.disabled = false
+            btnAdd.disabled = false
+            btnUpdate.disabled = false
+            btnUpdateIDToAccount.disabled  = false
+            addLoader.style = "display:none;"
+
+            Swal.fire(
+              'Muy bien!',
+              'Afiliado actualizado!',
+              'success'
+            )
+
+            //$('#addModal').modal('hide')
+            
+        }else{
+
+          btnAdd.disabled = false
+          btnClose.disabled = false
+          btnUpdate.disabled = false
+          btnUpdateIDToAccount.disabled  = false
+          addLoader.style = "display:none;"
+          Swal.fire(
+            'Oops!',
+            'La afiliación no existe!',
+            'error'
+          )
+        }
+    }).catch(err => {
+        btnAdd.disabled = false
+        btnClose.disabled = false
+        addLoader.style = "display:none;"
+        Swal.fire(
+          'Oops!',
+          'Ocurrió un error 404',
+          'error'
+        )
+    }); 
+
+  }
+
+  function deleteAfiliate(idSiasis, row) {
+
+    Swal.fire({
+      title: 'Estas seguro de eliminar la afiliación?',
+      showCancelButton: true,
+      confirmButtonText: 'Si',
+      cancelButtonText : 'No'
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+
+        fetch(`${url}/delete-afiliate/${idSiasis}`)
+        .then(response => response.json())
+        .then(data => {
+    
+          if(data[0].success == "eliminado"){
+              document.getElementById("tb-data").deleteRow(row);
+              updateRowNumbers(idSiasis);
+              Swal.fire('Eliminado!', '', 'success')
+          }else{
+            Swal.fire(
+              'Oops!',
+              'Ocurrió un error!',
+              'error'
+            )
+          }
+          
+        }).catch(err =>{
+            console.log(err)
+            Swal.fire(
+              'Oops!',
+              'Ocurrió un error!',
+              'error'
+            )
+        } );
+
+      }})
+
+  }
+
+  function updateRowNumbers(idSiasis) {
+    var tabla = document.getElementById("tb-data");
+    var filas = tabla.getElementsByTagName("tr");
+ 
+    for (var i = 1; i < filas.length; i++) {
+       // Actualizar el número en la segunda celda de cada fila
+       filas[i].cells[1].innerHTML = "<center>" + i + "</center>";
+       filas[i].cells[0].innerHTML = `<center><button onclick="deleteAfiliate('${idSiasis}',${i})" class="btn btn-danger minText5">X</button></center>`;
+    }
+ }
+
+  function isEqualData(type,idSiasis,formato){
+
+    let x = ""
+
+    if(type == "0"){
+
+      if(idSiasis == formato){
+        x = `<b style="color:red;">${idSiasis}</b>`
+      }else{
+        x = idSiasis
+      }
+
+    }else{
+      if(idSiasis == formato){
+        x = `<b style="color:red;">${formato}</b>`
+      }else{
+        x = formato
+      }
+    }
+
+    return x 
+
+  }
+
+  function updateSiasisAte(){
+
+    let idSiasis = document.getElementById("idSiasis").value
+    let idCuentaAtencion = document.getElementById("updateInAccount").value
+
+    if(idCuentaAtencion != "" && idCuentaAtencion.length == 7){
+
+      fetch(`${url}/update-siasis-ate/${idCuentaAtencion}/${idSiasis}`)
+      .then(response => response.json())
+      .then(data => {
+
+        console.log(data)
+        if(data[0].success == "actualizado"){
+            Swal.fire('Actualizado!', '', 'success')
+        }else{
+          Swal.fire(
+            'Oops!',
+            'Ocurrió un error!',
+            'error'
+          )
+        }
+        
+      }).catch(err =>{
+          console.log(err)
+          Swal.fire(
+            'Oops!',
+            'Ocurrió un error!',
+            'error'
+          )
+      } );
+
+    }else{
+      Swal.fire(
+        'Oops!',
+        'Verifique la cuenta!',
+        'info'
+      )
+    }
 
   }

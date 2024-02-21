@@ -4,6 +4,7 @@ const fs = require('fs');
 const axios = require('axios');
 const archiver = require('archiver');
 const { Console } = require("console");
+const { use } = require("./routes");
 archiver.registerFormat('zip-encrypted', require("archiver-zip-encrypted"));
 const passwordProduction = '7017FuaE47121'; 
 const passwordTest = 'PilotoFUAE123'
@@ -81,6 +82,23 @@ console.log("error :" + error);
     try {
       let pool = await sql.connect(config);
       let res = await pool.request().query(`SELECT * FROM SIGH..FuentesFinanciamiento`);
+      return res.recordsets;
+    } catch (error) {
+      console.log("error :" + error);
+    }finally {
+      sql.close();
+    }
+  }
+
+  async function getAllUsers() {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request().query(`
+      SELECT IdEmpleado,
+      UPPER(ApellidoMaterno+' '+ApellidoPaterno+' '+Nombres)+' '+'-'+' '+LOWER(Usuario) AS 'cod'
+      FROM SIGH..Empleados where Usuario IS NOT NULL
+      ORDER BY Usuario
+      `);
       return res.recordsets;
     } catch (error) {
       console.log("error :" + error);
@@ -308,6 +326,21 @@ console.log("error :" + error);
       .input('APELLIDO_MARTERNO',ap2)
       .input('NOMBRE1',n)
       .execute(`BUSCAR_AFILIADOS_POR_NOMBRES`) 
+      return res.recordsets
+    } catch (error) {
+      console.log("error : " + error);
+    }
+  }
+
+  async function searchAffiliateByNameV2(ap1,ap2,n,n2) {
+    try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+      .input('APELLIDO_PARTERNO',ap1)
+      .input('APELLIDO_MARTERNO',ap2)
+      .input('NOMBRE1',n)
+      .input('NOMBRE2',n2)
+      .execute(`BUSCAR_AFILIADOS_POR_NOMBRES_v2`) 
       return res.recordsets
     } catch (error) {
       console.log("error : " + error);
@@ -1094,6 +1127,8 @@ console.log("error :" + error);
       .input('LOTE',data.FuaLote)
       .input('CODIGO',data.Codigo)
       .input('CUENTA',data.idCuentaAtencion)
+      .input('FECHANACIMIENTO',data.FechaNacimiento)
+      .input('IDPACIENTE',parseInt(data.IdPaciente))
       .execute(`UPDATE_AFILIADO_FUA`) 
       return res.recordsets
     } catch (error) {
@@ -1733,7 +1768,7 @@ console.log("error :" + error);
     }
   }
 
-  async function update_dni_fua(type,dni,account){
+  async function update_dni_fua(type,dni,account,idpaciente){
 
     try{
       let pool = await sql.connect(config);
@@ -1741,6 +1776,7 @@ console.log("error :" + error);
       .input('TIPO',type)
       .input('DNI',dni)
       .input('CUENTA',account)
+      .input('IDPACIENTE',idpaciente)
       .execute(`ACTUALIZAR_DOCUMENTO_PACIENTE`) 
       return [[{success:"actualizado"}]]
     }catch(error){
@@ -1880,6 +1916,135 @@ async function updateFullNamePatient(a) {
   }
 }
 
+async function deleteAfiliate(idSiasis) {
+
+  try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+          .input('IDSIASIS', idSiasis)
+          .execute('BORRAR_AFILIACION');
+      return [{ success: "eliminado" }];
+  } catch (error) {
+      console.log(error);
+      return [{ success: "error" + ' ' + error.message }];
+  }
+}
+
+async function updateSiasisAte(idCuentaAtencion,idSiasis) {
+
+  try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+          .input('IDSIASIS', idSiasis)
+          .input('CUENTA', idCuentaAtencion)
+          .execute('ACTUALIZAR_IDSIASIS_ATE');
+      return [{ success: "actualizado" }];
+  } catch (error) {
+      console.log(error);
+      return [{ success: "error" + ' ' + error.message }];
+  }
+}
+
+async function updateAfiliate(a) {
+
+  console.log(a)
+
+  try {
+      let pool = await sql.connect(config);
+      let res = await pool.request()
+          .input('IDSIASIS', parseInt(a.idSiasis))
+          .input('CODIGO', a.Codigo)
+          .input('AFILIACIONDISA', a.AfiliacionDisa)
+          .input('AFILIACIONTIPOFORMATO', a.AfiliacionTipoFormato)
+          .input('AFILIACIONUMEROFORMATO', a.AfiliacionNroFormato)
+          .input('AFILIACIONROINTEGRANTE', a.AfiliacionNroIntegrante)
+          .input('DOCUMENTOTIPO', a.DocumentoTipo)
+          .input('CODIGOESTADSCRIPCION', a.CodigoEstablAdscripcion)
+          .input('AFILIACIONFECHA', a.AfiliacionFecha)
+          .input('PATERNO', a.Paterno)
+          .input('MATERNO', a.Materno)
+          .input('PNOMBRE', a.Pnombre)
+          .input('ONOMBRE', a.Onombres)
+          .input('GENERO', a.Genero)
+          .input('FECHANACIMIENTO', a.Fnacimiento)
+          .input('IDDISTRITODOMICILIO', a.IdDistritoDomicilio)
+          .input('ESTADO', a.Estado)
+          .input('FBAJA', a.Fbaja)
+          .input('DOCUMENTONUMERO', a.DocumentoNumero)
+          .input('MOTIVOBAJA', a.MotivoBaja)
+          .input('FBAJAOK', a.FbajaOK)
+          .execute('ACTUALIZAR_AFILIADO');
+      return [{ success: "actualizado" }];
+  } catch (error) {
+      console.log(error);
+      return [{ success: "error" + ' ' + error.message }];
+  }
+}
+
+async function getFuaDiagnosys(account) {
+  try {
+    let pool = await sql.connect(config);
+    let res = await pool.request()
+    .input('CUENTA',account)
+    .execute(`OBTENER_DIAGNOSTICO_FUA`) 
+    return res.recordsets
+  } catch (error) {
+    console.log("error : " + error);
+  }
+}
+
+async function deleteDiagnosysFua(id,account) {
+  try {
+    let pool = await sql.connect(config);
+    let res = await pool.request()
+    .input('ID',id)
+    .input('CUENTA',account)
+    .execute(`BORRAR_DIAGNOSTICO_FUA`) 
+    return [[{success:"eliminado"}]];
+  } catch (error) {
+    return [[{success:"error"}]]
+  }
+}
+
+async function getAuditByDates(f1,f2) {
+  try {
+    let pool = await sql.connect(config);
+    let res = await pool.request()
+    .input('FechaInicio',f1)
+    .input('FechaFin',f2)
+    .execute(`AUDITORIA_POR_FECHAS`) 
+    return res.recordsets
+  } catch (error) {
+    console.log("error : " + error);
+  }
+}
+
+async function getAuditByDatesAndUser(f1,f2,empleado) {
+  try {
+    let pool = await sql.connect(config);
+    let res = await pool.request()
+    .input('FechaInicio',f1)
+    .input('FechaFin',f2)
+    .input('empleado',empleado)
+    .execute(`AUDITORIA_POR_FECHAS_Y_USUARIO`) 
+    return res.recordsets
+  } catch (error) {
+    console.log("error : " + error);
+  }
+}
+
+async function getDetailAudit(account,user) {
+  try {
+    let pool = await sql.connect(config);
+    let res = await pool.request()
+    .input('idCuentaAtencion',account)
+    .input('usuario',user)
+    .execute(`DETALLE_AUDITORIA`) 
+    return res.recordsets
+  } catch (error) {
+    console.log("error : " + error);
+  }
+}
 
 module.exports = {
   getdata: getdata,
@@ -1988,5 +2153,15 @@ module.exports = {
   getAfiliateWebServiceData:getAfiliateWebServiceData,
   dateNullPregnancy:dateNullPregnancy,
   addAfiliate:addAfiliate,
-  updateFullNamePatient:updateFullNamePatient
+  updateFullNamePatient:updateFullNamePatient,
+  deleteAfiliate:deleteAfiliate,
+  updateSiasisAte:updateSiasisAte,
+  updateAfiliate:updateAfiliate,
+  searchAffiliateByNameV2:searchAffiliateByNameV2,
+  getFuaDiagnosys:getFuaDiagnosys,
+  deleteDiagnosysFua:deleteDiagnosysFua,
+  getAuditByDates:getAuditByDates,
+  getAllUsers:getAllUsers,
+  getAuditByDatesAndUser:getAuditByDatesAndUser,
+  getDetailAudit:getDetailAudit
 };

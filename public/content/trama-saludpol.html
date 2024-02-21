@@ -47,7 +47,13 @@
         <option value="12">Diciembre</option>
       </select>
 
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="inputGroupSelectProductionYear">Año</label>
+      </div>
       
+      <select class="custom-select" id="inputGroupSelectProductionYear">
+      </select>
+
       <button class="btn btn-primary" id="btn-query" onclick="query()" ><i class="bi bi-search"></i>&nbsp;Consultar atenciones</button>
       <button style="background-color: #004073;border-color: #004073;" class="btn btn-primary" id="btn-deleted" onclick="showModalDeleteAccount()" ><i class="bi bi-pencil-square"></i>&nbsp;Editar consulta de atenciones</button>
       &nbsp; 
@@ -263,7 +269,7 @@
           <table class="table table-hover table-bordered display" id="tb-data-diag">
             <thead>
                 <tr>
-                  <th>ID clasificación</th>
+                  <th>Tipo de diagnostico</th>
                   <th>CIE 10</th>
                   <th>Descripción</th>
                   <th></th>
@@ -668,7 +674,7 @@
         <p></p>
 
         <div class="input-group mb-3" id="selectSubClass" style="display: none;">
-          <label class="input-group-text" for="inputGroupSelect01">Sub-clasificación de diagnostico</label>
+          <label class="input-group-text" for="inputGroupSelect01">Tipo de diagnostico</label>
           <select class="form-select" id="inputGroupSelectSubClass">
             
           </select>

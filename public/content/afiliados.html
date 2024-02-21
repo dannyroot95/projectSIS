@@ -62,9 +62,30 @@
 <div id="body">
 
    <center>
-   <div class="table-responsive" style="width: 70%;">
+   <div class="table-responsive" style="width: 90%;">
     <table class="table table-hover table-bordered display" id="tb-data">
-       
+      <thead>
+        <tr>
+          <th class="minText5" scope="col"><center></center></th>
+          <th class="minText5" scope="col"><center>#</center></th>
+          <th class="minText5" scope="col"><center>ID Siasis</center></th>
+          <th class="minText5" scope="col"><center>Disa</center></th>
+          <th class="minText5" scope="col"><center>Tipo</center></th>
+          <th class="minText5" scope="col"><center>Formato</center></th>
+          <th class="minText5" scope="col"><center>Nombres</center></th>
+          <th class="minText5" scope="col"><center>Tipo documento</center></th>
+          <th class="minText5" scope="col"><center>N° DNI</center></th>
+          <th class="minText5" scope="col"><center>Correlativo</center></th>
+          <th class="minText5" scope="col"><center>Establecimiento</center></th>
+          <th class="minText5" scope="col"><center>Fecha de alifiación</center></th>
+          <th class="minText5" scope="col"><center>Fecha de nacimiento</center></th>
+          <th class="minText5" scope="col"><center>Género</center></th>
+          <th class="minText5" scope="col"><center>IDistrito</center></th>
+          <th class="minText5" scope="col"><center>Estado</center></th>
+          <th class="minText5" scope="col"><center>Fecha de baja</center></th>
+          <th class="minText5" scope="col"><center>Motivo de baja</center></th>
+        </tr>
+      </thead>
         <tbody id="tbody">
         </tbody>
       </table>
@@ -105,8 +126,6 @@
             </div>
             <div class="modal-body">
 
-              <p></p>
-
               <div class="input-group mb-3" style="display: flex;justify-content: center;align-items: center;">
                 <label style="font-weight: bold;">ESTADO :</label>&nbsp;<label id="status"></label>&nbsp;&nbsp;&nbsp;
                 <label style="font-weight: bold;" id="typeLocalHealth"></label>&nbsp;
@@ -115,7 +134,6 @@
                 <label style="font-weight: bold;">-</label>&nbsp;
                 <label style="font-weight: bold;" id="descriptionCode"></label>
               </div>
-              <br>
 
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
@@ -235,10 +253,23 @@
                       </div>
                       <input disabled type="tel" onKeypress='if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;' class="form-control" id="nDoc">
                   <div>
+
+                
+                    <br>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">Cuenta</span>
+                      </div>
+                      <input maxlength="7" type="tel" onKeypress='if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;'  class="form-control" id="updateInAccount">
+                      <button onclick="updateSiasisAte()" id="btnUpdateToAccount" class="btn btn-success"><i class="bi bi-person-badge-fill"></i>&nbsp;Actualizar en cuenta</button>
+                    </div>
+                    <label style="color: red;margin-top: -10px;">*La ventana de <b>MODIFICAR</b>,&nbsp;<b>ALTA</b>,&nbsp;<b>IMP.FUA</b>&nbsp;debe estar cerrada en <b>SISGALENPLUS</b></label>
+
                   </div>
 
             </div>
             <div class="modal-footer">
+              <button type="button" onclick="updateAfiliateToGalenos()" id="btnUpdateAfiliate" style="background-color: #005580;border-color: #005580;" class="btn btn-primary"><i class="bi bi-arrow-clockwise"></i>&nbsp;Actualizar afiliación</button>
               <button type="button" id="btnAddGalenos" onclick="addToSisGalenPlus()" class="btn btn-danger"><i class="bi bi-server"></i>&nbsp;Agregar a SisGalenPlus</button>
               <a><div class="loaderSmall" id="loaderAddGalenos"></div></a>
             </div>

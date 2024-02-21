@@ -15,7 +15,7 @@ body{
   left: 0;
   height: 100%;
   width: 305px;
-  background: #11101d;
+  background: #004a87;
   z-index: 100;
   transition: all 0.5s ease;
 }
@@ -65,7 +65,7 @@ body{
   transition: all 0.4s ease;
 }
 .sidebar .nav-links li:hover{
-  background: #1d1b31;
+  background: #005ba5;
 }
 .sidebar .nav-links li .iocn-link{
   display: flex;
@@ -109,7 +109,7 @@ body{
 .sidebar .nav-links li .sub-menu{
   padding: 6px 6px 14px 80px;
   margin-top: -10px;
-  background: #1d1b31;
+  background: #005ba5;
   display: none;
 }
 .sidebar .nav-links li.showMenu .sub-menu{
@@ -170,7 +170,7 @@ body{
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #1d1b31;
+  background: #004a87;
   padding: 12px 0;
   transition: all 0.5s ease;
 }
@@ -190,7 +190,7 @@ body{
   object-fit: cover;
   border-radius: 16px;
   margin: 0 14px 0 12px;
-  background: #1d1b31;
+  background: #004a87; 
   transition: all 0.5s ease;
 }
 .sidebar.close .profile-details img{
@@ -382,6 +382,7 @@ body{
     animation: spin 2s linear infinite;
   }
   
+
   /* Safari */
   @-webkit-keyframes spin {
     0% { -webkit-transform: rotate(0deg); }
@@ -404,7 +405,7 @@ body{
   }
   
   .swal2-popup {
-    background: #11101d;
+    background: #003662;
     color: #f1f1f1;
   }
   
@@ -488,6 +489,14 @@ body{
     font-size: 10px;
   }
 
+  .minText4{
+    font-size: 11px;
+  }
+
+  .minText5{
+    font-size: 12px;
+  }
+
 
   #body {
     overflow-y: scroll;
@@ -512,12 +521,12 @@ body{
 
 
 .btn-login {
-  color: white;
+  color: black;
   font-size: 1.1rem;
 	margin: 0 auto;
   padding: 1.2rem 2rem;
   border-radius: 0.2rem;
-  background-color: #11101d;
+  background-color: white;
   border: white;
   font-weight: bold;
   width: 15%;

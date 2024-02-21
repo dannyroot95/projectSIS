@@ -8,7 +8,7 @@ let allData = []
 let report = []
 let report2 = []
 
-
+generateYear()
 createDatatable()
 createDatatable2()
 createDatatable3()
@@ -18,6 +18,29 @@ createDatatableSearchDiagnosys()
 createDatatableSearchDiagnosysByLab()
 createDatatableSearchDiagnosysByImg()
 createDatatableSearchService()
+
+
+function generateYear(){
+  var selectElement = document.getElementById('inputGroupSelectProductionYear');
+
+  // Obtén el año actual
+  var currentYear = new Date().getFullYear();
+
+  // Añade la opción del año actual
+  var optionCurrentYear = document.createElement('option');
+  optionCurrentYear.value = currentYear;
+  optionCurrentYear.text = currentYear;
+  selectElement.add(optionCurrentYear);
+
+  // Obtén el año anterior
+  var lastYear = currentYear - 1;
+
+  // Añade la opción del año anterior
+  var optionLastYear = document.createElement('option');
+  optionLastYear.value = lastYear;
+  optionLastYear.text = lastYear;
+  selectElement.add(optionLastYear);
+}
 
 function createDatatable(){
 
@@ -618,8 +641,8 @@ async function fetchWithInterval(urls) {
             "Codigo": convertBlank(item.Codigo),
             "Consumo": convertBlank(item.Nombre),
             "Cantidad": convertBlank(item.Cantidad),
-            "Precio_Unitario": convertBlank('S/'+item.PrecioUnitario),
-            "Precio_Total": convertBlank('S/'+item.Precio),
+            "Precio_Unitario": convertBlank(item.PrecioUnitario),
+            "Precio_Total": convertBlank(item.Precio),
             'Verificacion_convenios':""
         }
         
@@ -671,6 +694,7 @@ async function fetchSequentially() {
             "Medico": convertBlank(item.medico),
             "Servicio": convertBlank(item.ServicioIngreso),
             "Dias_hosp": convertBlank(item.dias_hosp),
+            "Tipo de diagnotico" : getClasificationDX(item.tipoDiagnostico),
             "Dx": convertBlank(item.dx),
             "Diagnostico": convertBlank(item.diagnostico),
             "Tipo de atencion": convertBlank(item.atencion),
@@ -678,8 +702,8 @@ async function fetchSequentially() {
             "Codigo": convertBlank(item.Codigo),
             "Consumo": convertBlank(item.Nombre),
             "Cantidad": convertBlank(item.Cantidad),
-            "Precio_Unitario": convertBlank('S/'+item.PrecioUnitario),
-            "Precio_Total": convertBlank('S/'+item.Precio),
+            "Precio_Unitario": convertBlank(item.PrecioUnitario),
+            "Precio_Total": convertBlank(item.Precio),
             'Verificacion_convenios':""
         }
         
@@ -774,17 +798,13 @@ function insertDataTrama4(data){
 }
 
 function getDays(mes) {
-  // Obtener el año y mes actual
-  const fechaActual = new Date();
-  const anioActual = fechaActual.getFullYear();
+  // Obtener el año actual
+  const anioActual = parseInt(document.getElementById("inputGroupSelectProductionYear").value);
 
   // Crear una nueva fecha con el año y mes actual, y el día 1
-  const primeraFechaMes = new Date(anioActual, mes - 1, 1);
+  //const primeraFechaMes = new Date(anioActual, mes - 1, 1);
 
-  // Crear una nueva fecha con el año y mes actual, y el día 0 (último día del mes anterior)
-  const ultimaFechaMesAnterior = new Date(anioActual, mes - 1, 0);
-
-  // Obtener el último día del mes restando un día a la primera fecha del mes siguiente
+  // Obtener el último día del mes actual restando un día a la primera fecha del mes siguiente
   const ultimaFechaMes = new Date(anioActual, mes, 0);
 
   // Formatear las fechas en el formato yyyy-mm-dd
@@ -796,6 +816,7 @@ function getDays(mes) {
     ultimoDiaMes
   };
 }
+
 
 function disableButtons(){
 document.getElementById("btn-query").disabled = true
@@ -1423,7 +1444,7 @@ function dateNull(y){
 function isDataNull(data){
   let x = data
 
-  if(x == null || x == ""){
+  if(x == null || x == "" || x == "null" || x == undefined || x == "undefined"){
     x = `<b style="color:red;">Sin registro</b>`
   }
 
@@ -2210,7 +2231,7 @@ function getDataClientSaludpol(d){
               document.getElementById("d-ate").innerHTML = data[0][0].TipoServicio
               document.getElementById("d-auth").innerHTML = data[0][0].Autorizacion
               document.getElementById("d-account").innerHTML = data[0][0].idCuentaAtencion
-              document.getElementById("d-fua").innerHTML = isDataNull(data[0][0].Autorizacion)
+              document.getElementById("d-fua").innerHTML = isDataNull(d.CAMPO1)
               document.getElementById("d-history").innerHTML = data[0][0].NroHistoriaClinica
               
               document.getElementById("d-dni").innerHTML = data[0][0].NroDocumento
@@ -2247,7 +2268,7 @@ function getDataClientSaludpol(d){
                 
                       return `
                       <tr>
-                      <td>${d.IdClasificacionDx}</td>
+                      <td>${getClasificationDX(d.IdClasificacionDx)}</td>
                       <td>${d.CodigoCIE2004}</td>
                       <td>${d.Descripcion}</td>
                       <td><center><button style="background-color:red;border-color:red;" onclick="showModalDeleteDiagnosys('${d.IdAtencionDiagnostico}')" class="btn btn-dark">X</button></center></td>
@@ -3565,9 +3586,11 @@ function insertDiagnosysByImg(d){
 
 function insertDiagnosys(d){
   d = JSON.parse(decodeURIComponent(d))
+  let clasificacion = (document.getElementById("inputGroupSelectSubClass").value).split("/")[1]
+  let ultimate = clasificacion.charAt(clasificacion.length - 1);
 
   let IdAtencion = document.getElementById("d-id-atention").innerHTML
-  let IdClasificacionDx = (document.getElementById("inputGroupSelectSubClass").value).split("/")[0]
+  let IdClasificacionDx = ultimate
   let IdDiagnostico = d.IdDiagnostico
   let IdSubclasificacionDx = (document.getElementById("inputGroupSelectSubClass").value).split("/")[1]
   let labConfHIS = null
@@ -4284,3 +4307,18 @@ $('#modalEditAtention').on('hidden.bs.modal', function (e) {
   document.getElementById("no-ate-out-hour").value = ""
 
 })
+
+function getClasificationDX(val){
+
+  let dx = ""
+  if(val == "1"){
+    dx = `<b style="color:#803000">PRESUNTIVO<b>`
+  }else if (val == "2"){
+    dx = `<b style="color:#00804C">DEFINITIVO<b>`
+  }else{
+    dx = `<b style="color:#4C0080">REPETITIVO<b>`
+  }
+
+  return dx
+
+}

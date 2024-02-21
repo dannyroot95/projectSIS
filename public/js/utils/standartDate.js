@@ -15,6 +15,24 @@ function date(st){
 
 }
 
+function dateWithHour(st){
+
+    /* Date format you have */
+    const fechaOriginal = st; // fecha en formato aaaa-mm-dd hh:mm:ss
+    const fecha = new Date(fechaOriginal); // creamos un objeto Date a partir de la fecha original
+
+    const dia = fecha.getUTCDate(); // obtenemos el día del mes (1-31)
+    const mes = fecha.getUTCMonth() + 1; // obtenemos el mes (0-11) y sumamos 1 para obtener el número de mes correcto (1-12)
+    const anio = fecha.getUTCFullYear(); // obtenemos el año (4 dígitos)
+    const hour = fecha.getHours()
+    const minutes = fecha.getMinutes()
+
+    const fechaFormateada = `${dia.toString().padStart(2, '0')}/${mes.toString().padStart(2, '0')}/${anio.toString()} ${hour}:${minutes}`; // concatenamos las partes de la fecha en una cadena con el formato dd/mm/aaaa
+
+    return fechaFormateada
+
+}
+
 
 
 function typeService(service){

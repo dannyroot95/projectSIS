@@ -19,6 +19,8 @@ var duplexAccount = []
 var catalog = []
 var notFound = []
 let ctxG = 1
+let errors = []
+var resultadoArray = [];
 
 yearLater()
 createDatatable()
@@ -363,7 +365,11 @@ function query(){
 
     c = 0
     log = ""
+    errors = []
+    duplexAccount = []
     document.getElementById("errors").style = "display:none;"
+    document.getElementById("duplex").style = "display:none;"
+    document.getElementById("accountDuplex").style = "display:none;"
     let mes_ATENCION = document.getElementById("inputGroupSelectProductionMonth").value
     let anio_ATENCION = document.getElementById("inputGroupSelectYearSend").value
     let mes_SEND= document.getElementById("inputGroupSelectProductionMonth2").value
@@ -576,7 +582,7 @@ function insertDataAtencion(data){
 
                 
             } else {
-                return `<td class="minText2">${d[param]}</td>`;
+                return `<td class="minText4">${d[param]}</td>`;
             }
         }).join("");
     return `<tr style="cursor: pointer;">${cells}</tr>`;
@@ -596,10 +602,10 @@ function insertDataAtencion(data){
       document.getElementById("body").style = "display:block;"
       
       if(c>0){
-        document.getElementById("errors").style = "display:block;font-weight:bold;color:red;"
-        document.getElementById("errors").innerHTML = c.toString()+" errores encontrados!"
+        document.getElementById("errors").style = "font-weight:bold;color:red;display: inline-block;margin-right: 20px;"
+        document.getElementById("errors").innerHTML = "Errores encontrados : &nbsp;"+c.toString()
       }else{
-        document.getElementById("errors").style = "display:block;font-weight:bold;color:green;"
+        document.getElementById("errors").style = "display: inline-block;margin-right: 10px;font-weight:bold;color:green;"
         document.getElementById("errors").innerHTML = "Ningún error encontrado!"
       }
 
@@ -619,11 +625,11 @@ function insertDataDiagnostico(data){
 
             if (param == 'x') {
 
-                return `<td class="minText2"><button class="btn btn-success" onclick="alert('0 Errores')"><i class="bi bi-file-check"></i></button></td>`
+                return `<td class="minText4"><button class="btn btn-success" onclick="alert('0 Errores')"><i class="bi bi-file-check"></i></button></td>`
 
                 
             } else {
-                return `<td class="minText2">${d[param]}</td>`;
+                return `<td class="minText4">${d[param]}</td>`;
             }
         }).join("");
     return `<tr style="cursor: pointer;">${cells}</tr>`;
@@ -644,11 +650,11 @@ function insertDataMedicamentos(data){
 
             if (param == 'x') {
 
-                return `<td class="minText2"><button class="btn btn-success" onclick="alert('0 Errores')"><i class="bi bi-file-check"></i></button></td>`
+                return `<td class="minText4"><button class="btn btn-success" onclick="alert('0 Errores')"><i class="bi bi-file-check"></i></button></td>`
 
                 
             } else {
-                return `<td class="minText2">${d[param]}</td>`;
+                return `<td class="minText4">${d[param]}</td>`;
             }
         }).join("");
     return `<tr style="cursor: pointer;">${cells}</tr>`;
@@ -669,11 +675,11 @@ function insertDataInsumos(data){
 
             if (param == 'x') {
 
-                return `<td class="minText2"><button class="btn btn-success" onclick="alert('0 Errores')"><i class="bi bi-file-check"></i></button></td>`
+                return `<td class="minText4"><button class="btn btn-success" onclick="alert('0 Errores')"><i class="bi bi-file-check"></i></button></td>`
 
                 
             } else {
-                return `<td class="minText2">${d[param]}</td>`;
+                return `<td class="minText4">${d[param]}</td>`;
             }
         }).join("");
     return `<tr style="cursor: pointer;">${cells}</tr>`;
@@ -695,14 +701,14 @@ function insertDataProcedimientos(data){
   
               return `
               <tr style="cursor: pointer;">
-              <td class="minText2"><button class="btn btn-success" onclick="alert('0 Errores')"><i class="bi bi-file-check"></i></button></td>
-              <td class="minText2">${it[0]}</td>
-              <td class="minText2">${it[1]}</td>
-              <td class="minText2">${it[2]}</td>
-              <td class="minText2">${it[3]}</td>
-              <td class="minText2">${it[4]}</td>
-              <td class="minText2">${it[5]}</td>
-              <td class="minText2">${it[6]}</td>
+              <td class="minText4"><button class="btn btn-success" onclick="alert('0 Errores')"><i class="bi bi-file-check"></i></button></td>
+              <td class="minText4">${it[0]}</td>
+              <td class="minText4">${it[1]}</td>
+              <td class="minText4">${it[2]}</td>
+              <td class="minText4">${it[3]}</td>
+              <td class="minText4">${it[4]}</td>
+              <td class="minText4">${it[5]}</td>
+              <td class="minText4">${it[6]}</td>
               </tr>`;
           })
           .join("")
@@ -725,10 +731,10 @@ function insertDataSMI(data){
 
               return `
               <tr style="cursor: pointer;">
-              <td class="minText2"><button class="btn btn-success" onclick="alert('0 Errores')"><i class="bi bi-file-check"></i></button></td>
-              <td class="minText2">${it[0]}</td>
-              <td class="minText2">${it[1]}</td>
-              <td class="minText2">${it[2]}</td>
+              <td class="minText4"><button class="btn btn-success" onclick="alert('0 Errores')"><i class="bi bi-file-check"></i></button></td>
+              <td class="minText4">${it[0]}</td>
+              <td class="minText4">${it[1]}</td>
+              <td class="minText4">${it[2]}</td>
               </tr>`;
           })
           .join("")
@@ -751,9 +757,9 @@ function insertDataSER(data){
 
               return `
               <tr style="cursor: pointer;">
-              <td class="minText2"><button class="btn btn-success" onclick="alert('0 Errores')"><i class="bi bi-file-check"></i></button></td>
-              <td class="minText2">${it[0]}</td>
-              <td class="minText2">${it[1]}</td>
+              <td class="minText4"><button class="btn btn-success" onclick="alert('0 Errores')"><i class="bi bi-file-check"></i></button></td>
+              <td class="minText4">${it[0]}</td>
+              <td class="minText4">${it[1]}</td>
               </tr>`;
         
           })
@@ -780,21 +786,21 @@ function insertDataRN(data){
 
               return `
               <tr style="cursor: pointer;">
-              <td class="minText2"><button class="btn btn-success" onclick="alert('0 Errores')"><i class="bi bi-file-check"></i></button></td>
-              <td class="minText2">${it[0]}</td>
-              <td class="minText2">${it[1]}</td>
-              <td class="minText2">${it[2]}</td>
-              <td class="minText2">${it[3]}</td>
-              <td class="minText2">${it[4]}</td>
-              <td class="minText2">${it[5]}</td>
-              <td class="minText2">${it[6]}</td>
-              <td class="minText2">${it[7]}</td>
-              <td class="minText2">${it[8]}</td>
-              <td class="minText2">${it[9]}</td>
-              <td class="minText2">${it[10]}</td>
-              <td class="minText2">${it[11]}</td>
-              <td class="minText2">${it[12]}</td>
-              <td class="minText2">${it[13]}</td>
+              <td class="minText4"><button class="btn btn-success" onclick="alert('0 Errores')"><i class="bi bi-file-check"></i></button></td>
+              <td class="minText4">${it[0]}</td>
+              <td class="minText4">${it[1]}</td>
+              <td class="minText4">${it[2]}</td>
+              <td class="minText4">${it[3]}</td>
+              <td class="minText4">${it[4]}</td>
+              <td class="minText4">${it[5]}</td>
+              <td class="minText4">${it[6]}</td>
+              <td class="minText4">${it[7]}</td>
+              <td class="minText4">${it[8]}</td>
+              <td class="minText4">${it[9]}</td>
+              <td class="minText4">${it[10]}</td>
+              <td class="minText4">${it[11]}</td>
+              <td class="minText4">${it[12]}</td>
+              <td class="minText4">${it[13]}</td>
               </tr>`;
           })
           .join("")
@@ -851,79 +857,183 @@ function validateDataATE(d){
 
   duplexAccount.push(d["A1"])
 
+  var fechaNacimientoString = d["A30"];
+  var partesFechaNacimiento = fechaNacimientoString.split('/');
+  var fechaNacimiento = new Date(partesFechaNacimiento[2], partesFechaNacimiento[1] - 1, partesFechaNacimiento[0]);
+
+  // Fecha y hora de atención en formato DD/MM/YYYY HH:mm
+  var fechaAtencionString = d["A39"];
+  var partesFechaAtencion = fechaAtencionString.split(' ');
+  var partesFecha = partesFechaAtencion[0].split('/');
+  var partesHora = partesFechaAtencion[1].split(':');
+  var fechaAtencion = new Date(partesFecha[2], partesFecha[1] - 1, partesFecha[0], partesHora[0], partesHora[1]);
+
+
     let ctx = 0
   
     if(d["A17"] == "" && d["A42"] == '056'){
         ctx++
         c++
-        let warning = `${c}.- SIN REGISTRO EN LOS CAMPOS DE AFILIACIÓN -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]} `
-        log = log+warning+"\r\n\r\n"
+        let warning = `SIN REGISTRO EN LOS CAMPOS DE AFILIACIÓN`
+        errors.push({
+          '#':c,
+          'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+          ' CUENTA ' : `${d["A1"]}`,
+          ' DIGITADOR ': `${d["A87"]}`,
+          ' SERVICIO ': `${d["A88"]} `
+        })
         //searchAndUpdateAtentionFromAfiliate(d["A26"],d["A27"],d["A28"])
     }
 
     if(d["A20"] == ""){
       ctx++
       c++
-      let warning = `${c}.- EL CAMPO ATE#20 (CONTRATO DEL ASEGURADO) NO DEBE SER VACÍO -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\r\n\r\n"
+      let warning = `EL CAMPO ATE#20 (CONTRATO DEL ASEGURADO) NO DEBE SER VACÍO`
+      errors.push({
+        '#':c,
+        'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+        ' CUENTA ' : `${d["A1"]}`,
+        ' DIGITADOR ': `${d["A87"]}`,
+        ' SERVICIO ': `${d["A88"]} `
+      })
     }
     if (d["A81"].trim() === "1" && (d["A82"].trim() === "" || d["A82"].trim().length !== 8)) {
       ctx++;
       c++;
-      let warning = `${c}.- EL CAMPO ATE#82 (N° DOC DEL DIGITADOR) DEBE TENER 8 DIGITOS DE ACUERDO AL CAMPO ATE#81 (TIPO DE DOCUMENTO DIGITADOR) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`;
-      log = log + warning + "\r\n\r\n";
+      let warning = `EL CAMPO ATE#82 (N° DOC DEL DIGITADOR) DEBE TENER 8 DIGITOS DE ACUERDO AL CAMPO ATE#81 (TIPO DE DOCUMENTO DIGITADOR)`;
+      errors.push({
+        '#':c,
+        'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+        ' CUENTA ' : `${d["A1"]}`,
+        ' DIGITADOR ': `${d["A87"]}`,
+        ' SERVICIO ': `${d["A88"]} `
+      })
   }
     if(d["A24"] == ""){
       ctx++
       c++
-      let warning = `${c}.- EL CAMPO ATE#24 TIPO DE DOCUMENTO DEL ASEGURADO TIENE UN VALOR NO PERMITIDO -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\r\n\r\n"
+      let warning = `EL CAMPO ATE#24 TIPO DE DOCUMENTO DEL ASEGURADO TIENE UN VALOR NO PERMITIDO`
+      errors.push({
+        '#':c,
+        'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+        ' CUENTA ' : `${d["A1"]}`,
+        ' DIGITADOR ': `${d["A87"]}`,
+        ' SERVICIO ': `${d["A88"]} `
+      })
     }
     if(d["A42"].length != 3){
       ctx++
       c++
-      let warning = `${c}.- EL CAMPO ATE#42 DEBE SER UN CAMPO ALFANUMÉRICO DE 3 DIGITOS -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\r\n\r\n"
+      let warning = `EL CAMPO ATE#42 DEBE SER UN CAMPO ALFANUMÉRICO DE 3 DIGITOS`
+      errors.push({
+        '#':c,
+        'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+        ' CUENTA ' : `${d["A1"]}`,
+        ' DIGITADOR ': `${d["A87"]}`,
+        ' SERVICIO ': `${d["A88"]} `
+      })
     }
     if(d["A42"] == '054' && d["A47"] == ''){
       ctx++
       c++
-      let warning = `${c}.- SE REQUIERE UNA FECHA DE ALTA DE HOSPITALIZACIÓN -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\r\n\r\n"
+      let warning = `SE REQUIERE UNA FECHA DE ALTA DE HOSPITALIZACIÓN`
+      errors.push({
+        '#':c,
+        'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+        ' CUENTA ' : `${d["A1"]}`,
+        ' DIGITADOR ': `${d["A87"]}`,
+        ' SERVICIO ': `${d["A88"]} `
+      })
     }
 
     if(d["A34"] == '2' && d["A43"] != '3' && d["A40"] == ''){
       ctx++
       c++
-      let warning = `${c}.- EL CAMPO ATE#40 (IPRESS DE REFERENCIA) ES REQUERIDO -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\r\n\r\n"
+      let warning = `EL CAMPO ATE#40 (IPRESS DE REFERENCIA) ES REQUERIDO`
+      errors.push({
+        '#':c,
+        'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+        ' CUENTA ' : `${d["A1"]}`,
+        ' DIGITADOR ': `${d["A87"]}`,
+        ' SERVICIO ': `${d["A88"]} `
+      })
     }
     if(d["A18"] == ""){
       ctx++
       c++
-      let warning = `${c}.- EL CAMPO ATE#18 (NUMERO DEL CODIGO DE ASEGURADO) DEBE DE SER UN CAMPO ALFANUMERICO DE 8 O 9 DIGITOS -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\r\n\r\n"
+      let warning = `EL CAMPO ATE#18 (NUMERO DEL CODIGO DE ASEGURADO) DEBE DE SER UN CAMPO ALFANUMERICO DE 8 O 9 DIGITOS`
+      errors.push({
+        '#':c,
+        'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+        ' CUENTA ' : `${d["A1"]}`,
+        ' DIGITADOR ': `${d["A87"]}`,
+        ' SERVICIO ': `${d["A88"]} `
+      })
     }
 
     if(d["A21"] == ""){
       ctx++
       c++
-      let warning = `${c}.- EL CAMPO ATE#21 (REGISTRO DEL ASEGURADO) DEBE SER UN CAMPO HASTA 10 DIGITOS -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\r\n\r\n"
+      let warning = `EL CAMPO ATE#21 (REGISTRO DEL ASEGURADO) DEBE SER UN CAMPO HASTA 10 DIGITOS`
+      errors.push({
+        '#':c,
+        'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+        ' CUENTA ' : `${d["A1"]}`,
+        ' DIGITADOR ': `${d["A87"]}`,
+        ' SERVICIO ': `${d["A88"]} `
+      })
     }
 
     if(d["A40"] != "" && d["A34"] == "1" && d["A43"] == "1"){
       ctx++
       c++
-      let warning = `${c}.- EL CAMPO ATE#40 (IPRESS DE REFERENCIA) DEBE SER VACIO SEGUN EL CAMPO ATE#34 (TIPO DE ATENCION) Y AL CAMPO ATE43 (ORIGEN DE PERSONAL) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\r\n\r\n"
+      let warning = `EL CAMPO ATE#40 (IPRESS DE REFERENCIA) DEBE SER VACIO SEGUN EL CAMPO ATE#34 (TIPO DE ATENCION) Y AL CAMPO ATE43 (ORIGEN DE PERSONAL)`
+      errors.push({
+        '#':c,
+        'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+        ' CUENTA ' : `${d["A1"]}`,
+        ' DIGITADOR ': `${d["A87"]}`,
+        ' SERVICIO ': `${d["A88"]} `
+      })
     }
 
     if(d["A24"] == "8" && d["A25"].length < 10){
       ctx++
       c++
-      let warning = `${c}.- EL CAMPO ATE#25 (NRO DE DOCUMENTO DEL ASEGURADO) DEBE SER DE 10 DIGITOS DE ACUERDO AL CAMPO #ATE24 (TIPO DE DOCUMENTO DEL ASEGURADO) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\r\n\r\n"
+      let warning = `EL CAMPO ATE#25 (NRO DE DOCUMENTO DEL ASEGURADO) DEBE SER DE 10 DIGITOS DE ACUERDO AL CAMPO #ATE24 (TIPO DE DOCUMENTO DEL ASEGURADO)`
+      errors.push({
+        '#':c,
+        'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+        ' CUENTA ' : `${d["A1"]}`,
+        ' DIGITADOR ': `${d["A87"]}`,
+        ' SERVICIO ': `${d["A88"]} `
+      })
+    }
+
+    if(d["A24"] == "2" && d["A25"] != ""){
+      ctx++
+      c++
+      let warning = `EL CAMPO #ATE25 DEBE SER VACIO SEGUN EL TIPO DE DOCUMENTO (2)`
+      errors.push({
+        '#':c,
+        'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+        ' CUENTA ' : `${d["A1"]}`,
+        ' DIGITADOR ': `${d["A87"]}`,
+        ' SERVICIO ': `${d["A88"]} `
+      })
+    }
+
+    if(d["A17"] == "E" && d["A25"] != ""){
+      ctx++
+      c++
+      let warning = `NO DEBE EXISTIR UN NUMERO DE DOCUMENTO SEGUN EL TIPO DE AFILIACIÓN (E)`
+      errors.push({
+        '#':c,
+        'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+        ' CUENTA ' : `${d["A1"]}`,
+        ' DIGITADOR ': `${d["A87"]}`,
+        ' SERVICIO ': `${d["A88"]} `
+      })
     }
 
     /*
@@ -937,60 +1047,171 @@ function validateDataATE(d){
       if(d["A72"] == "1" && d["A73"].length > 8){
       ctx++
       c++
-      let warning = `${c}.- EL CAMPO ATE#73 (NUMERO DE DOCUMENTO DEL PERSONAL) DEBE CONSIGNAR 8 DIGITOS DE ACUERDO AL CAMPO ATE#72 (TIPO DE DOCUMENTO DEL PERSONAL) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\r\n\r\n"
+      let warning = `EL CAMPO ATE#73 (NUMERO DE DOCUMENTO DEL PERSONAL) DEBE CONSIGNAR 8 DIGITOS DE ACUERDO AL CAMPO ATE#72 (TIPO DE DOCUMENTO DEL PERSONAL)`
+      errors.push({
+        '#':c,
+        'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+        ' CUENTA ' : `${d["A1"]}`,
+        ' DIGITADOR ': `${d["A87"]}`,
+        ' SERVICIO ': `${d["A88"]} `
+      })
     }
-
-    /*
-    if (d["A35"] == "1" && d["A50"] == "") {
-      ctx++
-      c++
-      let warning = `${c}.- EL CAMPO ATE#50 (FECHA DE PARTO) DEBE DE CUMPLIR EL FORMATO DD/MM/AAAA Y SER UNA FECHA VALIDA -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\r\n\r\n"
-    }*/
 
   if (d["A35"] == "2" && d["A50"] == "") {
       ctx++
       c++
-      let warning = `${c}.- EL CAMPO ATE#50 (FECHA DE PARTO) DEBE DE CUMPLIR EL FORMATO DD/MM/AAAA Y SER UNA FECHA VALIDA -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\r\n\r\n"
+      let warning = `EL CAMPO ATE#50 (FECHA DE PARTO) DEBE DE CUMPLIR EL FORMATO DD/MM/AAAA Y SER UNA FECHA VALIDA`
+      errors.push({
+        '#':c,
+        'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+        ' CUENTA ' : `${d["A1"]}`,
+        ' DIGITADOR ': `${d["A87"]}`,
+        ' SERVICIO ': `${d["A88"]} `
+      })
+    }
+
+    if (d["A35"] == "1" && d["A50"] == "") {
+      ctx++
+      c++
+      let warning = `EL CAMPO ATE#50 (FECHA DE PARTO) DEBE DE CUMPLIR EL FORMATO DD/MM/AAAA Y SER UNA FECHA VALIDA`
+      errors.push({
+        '#':c,
+        'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+        ' CUENTA ' : `${d["A1"]}`,
+        ' DIGITADOR ': `${d["A87"]}`,
+        ' SERVICIO ': `${d["A88"]} `
+      })
     }
 
     if (d["A35"] == "0"  && d["A50"].length > 0) {
       ctx++
       c++
-      let warning = `${c}.- EL CAMPO ATE#50 (FECHA DE PARTO) DEBE SER VACIO SEGÚN AL CAMPO ATE#35 -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\r\n\r\n"
+      let warning = `EL CAMPO ATE#50 (FECHA DE PARTO) DEBE SER VACIO SEGÚN AL CAMPO ATE#35`
+      errors.push({
+        '#':c,
+        'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+        ' CUENTA ' : `${d["A1"]}`,
+        ' DIGITADOR ': `${d["A87"]}`,
+        ' SERVICIO ': `${d["A88"]} `
+      })
     }
 
     if(d["A24"] == "3" && d["A25"].length < 9){
       ctx++
       c++
-      let warning = `${c}.- EL CAMPO ATE#25 (NUMERO DE DOCUMENTO DEL ASEGURADO) DEBE CONSIGNAR 9 DIGITOS DE ACUERDO AL CAMPO ATE#24 (TIPO DE DOCUMENTO DEL ASEGURADO) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\r\n\r\n"
+      let warning = `EL CAMPO ATE#25 (NUMERO DE DOCUMENTO DEL ASEGURADO) DEBE CONSIGNAR 9 DIGITOS DE ACUERDO AL CAMPO ATE#24 (TIPO DE DOCUMENTO DEL ASEGURADO)`
+      errors.push({
+        '#':c,
+        'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+        ' CUENTA ' : `${d["A1"]}`,
+        ' DIGITADOR ': `${d["A87"]}`,
+        ' SERVICIO ': `${d["A88"]} `
+      })
     }
 
     if(d["A24"] == "1" && d["A25"].length > 8){
       ctx++
       c++
-      let warning = `${c}.- EL CAMPO ATE#25 (NUMERO DE DOCUMENTO DEL ASEGURADO) DEBE CONSIGNAR 8 DIGITOS DE ACUERDO AL CAMPO ATE#24 (TIPO DE DOCUMENTO DEL ASEGURADO) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\r\n\r\n"
+      let warning = `EL CAMPO ATE#25 (NUMERO DE DOCUMENTO DEL ASEGURADO) DEBE CONSIGNAR 8 DIGITOS DE ACUERDO AL CAMPO ATE#24 (TIPO DE DOCUMENTO DEL ASEGURADO)`
+      errors.push({
+        '#':c,
+        'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+        ' CUENTA ' : `${d["A1"]}`,
+        ' DIGITADOR ': `${d["A87"]}`,
+        ' SERVICIO ': `${d["A88"]} `
+      })
     }
 
     if(d["A34"] == "2" && d["A41"] == ""){
       ctx++
       c++
-      let warning = `${c}.- EL CAMPO ATE#41 (HOJA DE REFERENCIA) ES REQUERIDO DE ACUERDO AL CAMPO ATE#34 (TIPO DE ATENCION) Y AL CAMPO ATE#43 (TIPO DE PERSONAL) -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\r\n\r\n"
+      let warning = `EL CAMPO ATE#41 (HOJA DE REFERENCIA) ES REQUERIDO DE ACUERDO AL CAMPO ATE#34 (TIPO DE ATENCION) Y AL CAMPO ATE#43 (TIPO DE PERSONAL)`
+      errors.push({
+        '#':c,
+        'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+        ' CUENTA ' : `${d["A1"]}`,
+        ' DIGITADOR ': `${d["A87"]}`,
+        ' SERVICIO ': `${d["A88"]} `
+      })
     }
 
     if(!containNumbersDni(d["A24"])){
       ctx++
       c++
-      let warning = `${c}.- EL CAMPO ATE#25 (NUMERO DE DOCUMENTO DEL ASEGURADO) DEBE TENER SOLO NÚMEROS -> N° DE CUENTA : ${d["A1"]} ; DIGITADOR : ${d["A87"]} ; SERVICIO : ${d["A88"]}`
-      log = log+warning+"\r\n\r\n"
+      let warning = `EL CAMPO ATE#25 (NUMERO DE DOCUMENTO DEL ASEGURADO) DEBE TENER SOLO NÚMEROS`
+      errors.push({
+        '#':c,
+        'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+        ' CUENTA ' : `${d["A1"]}`,
+        ' DIGITADOR ': `${d["A87"]}`,
+        ' SERVICIO ': `${d["A88"]} `
+      })
    }
 
+   if(d["A21"] == d["A25"]){
+    ctx++
+    c++
+    let warning = `ERROR DE AFILIACION (ID_SIASIS = DNI)`
+    errors.push({
+      '#':c,
+      'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+      ' CUENTA ' : `${d["A1"]}`,
+      ' DIGITADOR ': `${d["A87"]}`,
+      ' SERVICIO ': `${d["A88"]} `
+    })
+  }
+
+  if(d["A42"] == "065" && d["A47"] == "" || d["A42"] == "067" && d["A47"] == ""){
+    ctx++
+    c++
+    let warning = `EL CAMPO ATE#47 (FECHA DE ALTA DE HOSPITALIZACION) ES REQUERIDO DE ACUERDO AL CAMPO ATE#42 (SERVICIO DE LA ATENCION)`
+    errors.push({
+      '#':c,
+      'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+      ' CUENTA ' : `${d["A1"]}`,
+      ' DIGITADOR ': `${d["A87"]}`,
+      ' SERVICIO ': `${d["A88"]} `
+    })
+  }
+
+  if(d["A42"] == "056" && d["A46"] != ""){
+    ctx++
+    c++
+    let warning = `EL CAMPO ATE#46 (FECHA DE INGRESO A HOSPITALIZACION) DEBE SER VACIO DE ACUERDO AL CAMPO ATE#42 (SERVICIO DE LA ATENCION)`
+    errors.push({
+      '#':c,
+      'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+      ' CUENTA ' : `${d["A1"]}`,
+      ' DIGITADOR ': `${d["A87"]}`,
+      ' SERVICIO ': `${d["A88"]} `
+    })
+  }
+
+  if(d["A25"].length > 9 && d["A24"] == "3"){
+    ctx++
+    c++
+    let warning = `EL CAMPO ATE#25 (NUMERO DE DOCUMENTO DEL ASEGURADO) DEBE CONSIGNAR 9 DIGITOS DE ACUERDO AL CAMPO ATE#24 (TIPO DE DOCUMENTO DEL ASEGURADO)`
+    errors.push({
+      '#':c,
+      'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+      ' CUENTA ' : `${d["A1"]}`,
+      ' DIGITADOR ': `${d["A87"]}`,
+      ' SERVICIO ': `${d["A88"]} `
+    })
+  }
+
+  if (fechaAtencion < fechaNacimiento) {
+    ctx++
+    c++
+    let warning = `EL CAMPO ATE#39 (FECHA Y HORA DE ATENCION) NO DEBE DE SER ANTERIOR A LA FECHA DE NACIMIENTO DEL ASEGURADO`
+    errors.push({
+      '#':c,
+      'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+      ' CUENTA ' : `${d["A1"]}`,
+      ' DIGITADOR ': `${d["A87"]}`,
+      ' SERVICIO ': `${d["A88"]} `
+    })
+  }
 
    return counter(ctx,d)
 
@@ -1044,10 +1265,18 @@ function containComilla(val){
 function donwloadLog(){
 
 // Crear un enlace de descarga dinámico
-const link = document.createElement('a');
+/*const link = document.createElement('a');
 link.href = URL.createObjectURL(new Blob([log], { type: 'text/plain' }));
 link.download = 'logs.txt';
-link.click();
+link.click();*/
+let selectElement = document.getElementById("inputGroupSelectProductionMonth")
+ // Obtener la opción seleccionada
+ var opcionSeleccionada = selectElement.options[selectElement.selectedIndex];
+ // Obtener el contenido de la opción seleccionada
+ var m = (opcionSeleccionada.textContent).toUpperCase();
+
+let xls = new XlsExport(errors, 'errores');
+xls.exportToXLS(`REPORTE_ERRORES_TRAMA_${m}.xls`)
 
 }
 
@@ -1751,17 +1980,41 @@ function showDataResponse(data) {
     $('#modalTramaResponse').modal('show');
   }else{
 // Verificar si el elemento "respuesta" existe en la respuesta SOAP
-    var resElement = response.getElementsByTagName("respuesta")[0];
-    var res = resElement ? resElement.textContent : "";
+resultadoArray = [];
+var resElement = response.getElementsByTagName("respuesta")[0];
+var res = resElement ? resElement.textContent : "";
+let responseSeparate = res.split("|");
 
-    document.getElementById("cod-resp").innerHTML = cod;
-    document.getElementById("mes-resp").innerHTML = res;
-    document.getElementById("pack-resp").innerHTML = status + '.zip';
+for (let i = 0; i < responseSeparate.length; i++) {
+    // Extraer ateId usando una expresión regular
+    let ateId = responseSeparate[i].match(/\[ateId: (\d+)\]/);
 
-    $('#modalTramaResponse').modal('show');
+    // Extraer el mensaje
+    let mensajeTexto = responseSeparate[i].replace(/\[ateId: \d+\]/, '').trim();
+
+    // Verificar si se encontró el ateId
+    if (ateId && ateId[1]) {
+        resultadoArray.push({ Cuenta: ateId[1], Observación: mensajeTexto });
+    } else {
+        // Manejar el caso en el que la respuesta no sigue el formato esperado
+        resultadoArray.push({ Observación: responseSeparate[i].trim() });
+    }
+}
+
+      document.getElementById("cod-resp").innerHTML = cod;
+      document.getElementById("mes-resp").innerHTML = `<b style="color:white">DATOS DE TRAMA CON OBSERVACIONES</b>&nbsp;<button onclick="downloadObserve()" class="btn btn-danger"><i class="bi bi-search"></i>&nbsp;Descargar</button>`;
+      document.getElementById("pack-resp").innerHTML = status + '.zip';
+
+      $('#modalTramaResponse').modal('show');
   }
 
   
+}
+
+
+function downloadObserve(){
+  let xls = new XlsExport(resultadoArray, 'observaciones');
+  xls.exportToXLS(`TRAMA_OBSERVACIONES.xls`)
 }
 
 function openModalPackage(){
@@ -1805,12 +2058,15 @@ function showDetailModal(d){
   d = JSON.parse(decodeURIComponent(d))
   $('#modalDetail').modal('show')
 
+  document.getElementById("loaderAfi").style = "display:block;"
 
   document.getElementById("afi-disa").value = ''
   document.getElementById("afi-type").value = ''
   document.getElementById("afi-num").value = ''
   document.getElementById("afi-siasis").value = ''
+  document.getElementById("web-service-fullname").innerHTML = ''
 
+  document.getElementById("web-formato").value = d.A25
   document.getElementById("d-ape-p").value = d.A26
   document.getElementById("d-ape-m").value = d.A27
   document.getElementById("d-name-1").value = d.A28
@@ -1830,7 +2086,11 @@ function showDetailModal(d){
   document.getElementById("fua-patient-dni").value = d.A25
   document.getElementById("fua-date-birth").value = (d.A30).split("/")[2]+'-'+(d.A30).split("/")[1]+'-'+(d.A30).split("/")[0]
   
+  document.getElementById("fua-num-ipress").value = ""
   document.getElementById("fua-num-ipress").value = d.A40
+
+  document.getElementById("fua-num-paper-reference").value = ""
+  document.getElementById("fua-num-paper-reference").value = d.A41
 
   if(d.A50 != ""){
     document.getElementById("fua-date-pregnancy").value = (d.A50).split("/")[2]+'-'+(d.A50).split("/")[1]+'-'+(d.A50).split("/")[0]
@@ -1843,46 +2103,117 @@ function showDetailModal(d){
   }
 
 
-  fetch(`${url}/affiliate-by-name/${d.A26}/${d.A27}/${d.A28}`,{
-    method: 'get',
-    headers: {
-      'Accept': 'application/json'
-    }
-})
-  .then(response => response.json())
-  .then(data => {
+  if(d.A29 != "" && d.A29 != "FALLECIDO"){
 
-    let size = (data.length)-1
-
-  if(size >= 0){
-    document.getElementById("afi-disa").value = data[size].AfiliacionDisa
-    document.getElementById("afi-type").value = data[size].AfiliacionTipoFormato
-    document.getElementById("afi-num").value = data[size].AfiliacionNroFormato
-    document.getElementById("afi-siasis").value = data[size].idSiasis
-    document.getElementById("afi-code").value = data[size].Codigo
-  }
-
+    let ctxy = 0
     
-    $("#tbodyD").html(data.map((V) => {
-                
-      return `
-      <tr>
-      <td>${V.AfiliacionDisa}</td>
-      <td>${V.AfiliacionTipoFormato}</td>
-      <td>${V.AfiliacionNroFormato}</td>
-      <td>${V.idSiasis}</td>
-      <td>${V.AfiliacionFecha}</td>
-      <td>${V.nombres}</td>
-      <td>${V.Codigo}</td>
-      </tr>`;
-
+    fetch(`${url}/affiliate-by-name-v2/${d.A26}/${d.A27}/${d.A28}/${d.A29}`,{
+      method: 'get',
+      headers: {
+        'Accept': 'application/json'
+      }
   })
-  .join("")
-);
+    .then(response => response.json())
+    .then(data => {
+  
+      let size = (data.length)-1
+  
+    if(size >= 0){
+      document.getElementById("afi-disa").value = data[size].AfiliacionDisa
+      document.getElementById("afi-type").value = data[size].AfiliacionTipoFormato
+      document.getElementById("afi-num").value = data[size].AfiliacionNroFormato
+      document.getElementById("afi-siasis").value = data[size].idSiasis
+      document.getElementById("afi-code").value = data[size].Codigo
+      document.getElementById("afi-nacimiento").value = date(data[size].Fnacimiento).split("/")[2]+"-"+date(data[size].Fnacimiento).split("/")[1]+"-"+date(data[size].Fnacimiento).split("/")[0]
+      document.getElementById("afi-num-doc").value = data[size].DocumentoNumero
+      document.getElementById("afi-type-doc").value = data[size].DocumentoTipo
+    }
+  
+      
+      $("#tbodyD").html(data.map((V) => {
+        
+        ctxy++
+        
+        return `
+        <tr>
+        <td class="minText5"><center><button onclick="deleteAfiliate('${V.idSiasis}',${ctxy})" class="btn btn-danger minText5">X</button></center></td>
+        <td class="minText5">${V.AfiliacionDisa}</td>
+        <td class="minText5">${V.AfiliacionTipoFormato}</td>
+        <td class="minText5">${V.AfiliacionNroFormato}</td>
+        <td class="minText5">${V.idSiasis}</td>
+        <td class="minText5">${date(V.AfiliacionFecha)}</td>
+        <td class="minText5">${date(V.Fnacimiento)}</td>
+        <td class="minText5">${V.DocumentoNumero}</td>
+        <td class="minText5">${(V.nombres).toUpperCase()}</td>
+        <td class="minText5">${V.Codigo}</td>
+        </tr>`;
+  
+    })
+    .join("")
+  );
 
-  }).catch(err => {
-    console.log(err)
-  }); 
+  document.getElementById("loaderAfi").style = "display:none;"
+  
+    }).catch(err => {
+      document.getElementById("loaderAfi").style = "display:none;"
+      console.log(err)
+    }); 
+
+  }else{
+
+    let ctxy = 0
+
+    fetch(`${url}/affiliate-by-name/${d.A26}/${d.A27}/${d.A28}`,{
+      method: 'get',
+      headers: {
+        'Accept': 'application/json'
+      }
+  })
+    .then(response => response.json())
+    .then(data => {
+  
+      let size = (data.length)-1
+  
+    if(size >= 0){
+      document.getElementById("afi-disa").value = data[size].AfiliacionDisa
+      document.getElementById("afi-type").value = data[size].AfiliacionTipoFormato
+      document.getElementById("afi-num").value = data[size].AfiliacionNroFormato
+      document.getElementById("afi-siasis").value = data[size].idSiasis
+      document.getElementById("afi-code").value = data[size].Codigo
+      document.getElementById("afi-nacimiento").value = date(data[size].Fnacimiento).split("/")[2]+"-"+date(data[size].Fnacimiento).split("/")[1]+"-"+date(data[size].Fnacimiento).split("/")[0]
+      document.getElementById("afi-num-doc").value = data[size].DocumentoNumero
+      document.getElementById("afi-type-doc").value = data[size].DocumentoTipo
+    }
+  
+      $("#tbodyD").html(data.map((V) => {
+      
+        ctxy++
+
+        return `
+        <tr>
+        <td class="minText5"><center><button onclick="deleteAfiliate('${V.idSiasis}',${ctxy})" class="btn btn-danger minText5">X</button></center></td>
+        <td class="minText5">${V.AfiliacionDisa}</td>
+        <td class="minText5">${V.AfiliacionTipoFormato}</td>
+        <td class="minText5">${V.AfiliacionNroFormato}</td>
+        <td class="minText5">${V.idSiasis}</td>
+        <td class="minText5">${date(V.AfiliacionFecha)}</td>
+        <td class="minText5">${date(V.Fnacimiento)}</td>
+        <td class="minText5">${V.DocumentoNumero}</td>
+        <td class="minText5">${(V.nombres).toUpperCase()}</td>
+        <td class="minText5">${V.Codigo}</td>
+        </tr>`;
+  
+    })
+    .join("")
+  );
+
+  document.getElementById("loaderAfi").style = "display:none;"
+  
+    }).catch(err => {
+      document.getElementById("loaderAfi").style = "display:none;"
+      console.log(err)
+    }); 
+  }
 
 
   fetch(`${url}/get-data-medic/${d.A1}`,{
@@ -1919,6 +2250,8 @@ function updateAfiliation(){
   let num =  document.getElementById("afi-num").value
   let siasis =  document.getElementById("afi-siasis").value
   let code =  document.getElementById("afi-code").value
+  let FechaNacimiento =  document.getElementById("afi-nacimiento").value
+  let idPaciente = document.getElementById("d-idpatient").innerHTML
 
   if(disa != "" && type != "" && num != "" && siasis != "" && code != ""){
 
@@ -1929,7 +2262,9 @@ function updateAfiliation(){
       idSiasis:siasis,
       FuaLote:lote,
       idCuentaAtencion:account,
-      Codigo:code
+      Codigo:code,
+      FechaNacimiento:FechaNacimiento,
+      IdPaciente:idPaciente
     }
 
 
@@ -2203,11 +2538,12 @@ function updateDniPatient(){
   let type = document.getElementById("inputGroupSelectTypeDni").value
   let dni = document.getElementById("fua-patient-dni").value
   let account = document.getElementById("d-account").innerHTML
+  let idpaciente = document.getElementById("d-idpatient").innerHTML
 
   if(dni != ""){
 
  
-  fetch(`${url}/update-dni-patient-fua/${type}/${dni}/${account}`,{
+  fetch(`${url}/update-dni-patient-fua/${type}/${dni}/${account}/${idpaciente}`,{
     method: 'get',
     headers: {
       'Accept': 'application/json'
@@ -2260,6 +2596,16 @@ function buscarDuplicados(arr) {
   }
 
   console.log('duplicados :'+duplicados)
+  
+  if(duplicados.length > 0){
+    document.getElementById("duplex").style = "display: inline-block;font-weight:700;color:red;"
+    document.getElementById("duplex").innerHTML = `Fuas duplicados : ${duplicados.length}`
+    document .getElementById("accountDuplex").style = "font-size:12px;;display:block;font-weight:700;color:red;"
+    document .getElementById("accountDuplex").textContent = `Cuentas duplicadas : ${duplicados.join(', ')}`
+  }else{
+    document.getElementById("duplex").style = "display: inline-block;font-weight:700;color:green;"
+  document.getElementById("duplex").innerHTML = `Fuas duplicados : ${duplicados.length}`
+  }
   return duplicados;
 }
 
@@ -2745,7 +3091,23 @@ function jsonATE() {
   
   jsonProcedure(jsonData)
 }
+function jsonDiagnosys(jsonAte){
+  var table = $('#tb-data-2').DataTable(); // Obtén la instancia de la tabla DataTables
+  var jsonDiag = [];
 
+  
+  table.rows().data().each(function (rowData) {
+    var data = {
+      cuenta_1: rowData[1],
+      dx_2: rowData[2],
+      correlativo_3: rowData[3],
+      tipoMov_4: rowData[4],
+      tipoDiag_5: rowData[5],
+    };
+    jsonDiag.push(data);
+  });
+
+}
 
 function jsonProcedure(jsonAte) {
   var table = $('#tb-data-6').DataTable(); // Obtén la instancia de la tabla DataTables
@@ -2790,7 +3152,9 @@ function jsonProcedure(jsonAte) {
   var combinedArray = Object.values(combinedData);
   
   c2 = 0
+
   rc(combinedArray)
+  console.log(combinedArray)
 
 }
 
@@ -2924,5 +3288,306 @@ function donwloadRC(){
         'info'
       )
     }
+
+  }
+
+  function deleteAfiliate(idSiasis,row) {
+
+    Swal.fire({
+      title: 'Estas seguro de eliminar la afiliación?',
+      showCancelButton: true,
+      confirmButtonText: 'Si',
+      cancelButtonText : 'No'
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+
+        fetch(`${url}/delete-afiliate/${idSiasis}`)
+        .then(response => response.json())
+        .then(data => {
+    
+          if(data[0].success == "eliminado"){
+              document.getElementById("tb-data-d").deleteRow(row);
+              Swal.fire('Eliminado!', '', 'success')
+          }else{
+            Swal.fire(
+              'Oops!',
+              'Ocurrió un error!',
+              'error'
+            )
+          }
+          
+        }).catch(err =>{
+            console.log(err)
+            Swal.fire(
+              'Oops!',
+              'Ocurrió un error!',
+              'error'
+            )
+        } );
+
+      }})
+
+  }
+
+
+  function searchWebService() {
+
+    let disa = "250"
+    let tipo = document.getElementById("s-type-formated").value
+    let num = document.getElementById("web-formato").value
+
+    if(disa != "" && tipo != "" && num !=""){
+
+      if(tipo == "2" && num.length == 8){
+        document.getElementById("web-loader").style = "display:flex;"
+        document.getElementById("btn-serach-w-service").disabled = true
+        ft(disa,tipo,num.trim())
+      }else if(tipo == "3" && num.length == 9){
+        document.getElementById("web-loader").style = "display:flex;"
+        document.getElementById("btn-serach-w-service").disabled = true
+        ft(disa,tipo,num.trim())
+      }else{
+        Swal.fire(
+          'Oops',
+          'Error formato de afiliación!',
+          'info'
+        )
+      }
+    }else{
+      Swal.fire(
+        'Oops',
+        'Complete los campos!',
+        'info'
+      )
+    }
+  }
+
+  function ft(disa,tipo,num){
+    fetch(`${url}/get-afiliate-web-service`)
+      .then(response => response.json())
+      .then(data => {
+        showDataAuth(data[0].server_response,disa,tipo,num)
+        // Accede a la información organizada
+        //console.log('Success:', data[0].success); // 'autorizado'
+        //console.log('Session ID:', data[0].server_response); // El ID de sesión obtenido del XML
+      })
+      .catch(error => {
+        document.getElementById("web-loader").style = "display:none;"
+        document.getElementById("btn-serach-w-service").disabled = false
+        console.error('Error:', error);
+      });
+  }
+
+  function showDataAuth(data,disa,tipo,num){
+    var xmlString = data;
+  
+    var parser = new DOMParser();
+    var xmlDoc = parser.parseFromString(xmlString, "text/xml");
+    
+    // Obtener la respuesta SOAP
+    var response = xmlDoc.getElementsByTagName("GetSessionResponse")[0];    
+    // Obtener los elementos de la respuesta
+    var auth = response.getElementsByTagName("GetSessionResult")[0].textContent;
+    searchWebServiceData(auth,disa,tipo,num)
+    console.log(auth)
+  }
+
+  function searchWebServiceData(auth,disa,tipo,num) {
+    console.log(auth+" "+disa+" "+tipo+" "+num)
+    fetch(`${url}/get-afiliate-web-service-data/${auth}/${disa}/${tipo}/${num}`)
+      .then(response => response.json())
+      .then(data => {
+        showDataAfiliate(data[0].server_response)
+        // Accede a la información organizada
+      })
+      .catch(error => {
+        document.getElementById("web-loader").style = "display:none;"
+        document.getElementById("btn-serach-w-service").disabled = false
+        console.error('Error:', error);
+      });
+  }
+
+
+  function showDataAfiliate(data) {
+    var xmlString = data;
+  
+    // Parsear el XML
+    var parser = new DOMParser();
+    var xmlDoc = parser.parseFromString(xmlString, "text/xml");
+  
+    // Obtener la respuesta SOAP
+    var response = xmlDoc.getElementsByTagName("ConsultarAfiliadoFuaEResult")[0];
+    // Obtener los elementos de la respuesta
+    var idError = response.getElementsByTagName("IdError")[0].textContent;
+    var disa = response.getElementsByTagName("Disa")[0].textContent;
+    var tabla = response.getElementsByTagName("Tabla")[0].textContent;
+    var idNumReg = response.getElementsByTagName("IdNumReg")[0].textContent;
+    var fecNacimiento = response.getElementsByTagName("FecNacimiento")[0].textContent;
+    var apePaterno = response.getElementsByTagName("ApePaterno")[0].textContent;
+    var apeMaterno = response.getElementsByTagName("ApeMaterno")[0].textContent;
+    var nombres = response.getElementsByTagName("Nombres")[0].textContent;
+
+    var tipoFormato = response.getElementsByTagName("TipoFormato")[0].textContent;
+    var nroContrato = response.getElementsByTagName("NroContrato")[0].textContent;
+ 
+    if(idError == "0"){
+      document.getElementById("web-loader").style = "display:none;"
+      document.getElementById("btn-serach-w-service").disabled = false
+      
+     
+      toast('success','Afiliación encontrada!',4)
+
+      var yearN = fecNacimiento.substring(0, 4);
+      var monthN = fecNacimiento.substring(4, 6);
+      var dayN = fecNacimiento.substring(6, 8);
+
+      var newdateBirth = yearN + "-" + monthN + "-" + dayN;
+  
+      document.getElementById("web-service-fullname").innerHTML = apePaterno+' '+apeMaterno+' '+nombres
+      document.getElementById("afi-disa").value = disa
+      document.getElementById("afi-siasis").value = idNumReg
+      document.getElementById("afi-code").value = tabla
+      document.getElementById("afi-type").value = tipoFormato
+      document.getElementById("afi-num").value = nroContrato
+      document.getElementById("afi-nacimiento").value = newdateBirth
+  
+    }else{
+      document.getElementById("web-loader").style = "display:none;"
+      document.getElementById("btn-serach-w-service").disabled = false
+      Swal.fire(
+        'Oops',
+        'Sin resultados!',
+        'info'
+      )
+    }
+
+  }
+
+  function toast(type,message,time){
+    time = time*1000
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: time,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
+      }
+    })
+    
+    Toast.fire({
+      icon: type,
+      title: message
+    })
+  }
+
+  function showDiagnosys(){
+    $('#modalDiagnosys').modal('show');
+    document.getElementById("diag-loader").style = "display:flex;"
+    fetchDiagnosys()
+  }
+
+  function showProcedure(){
+    $('#modalProcedure').modal('show');
+  }
+
+  function fetchDiagnosys(){
+
+    document.getElementById("tbodyDiag").innerHTML = ""
+    let account = document.getElementById("d-account").innerHTML
+
+    fetch(`${url}/get-fua-diagnosys/${account}`)
+    .then(response => response.json())
+    .then(data => {
+
+      $("#tbodyDiag").html(data[0].map((d) => {
+       
+        let dx1 = `
+        <div class="form-check" style = "display: flex; justify-content: center;">
+        <input style = "opacity: 1;" class="form-check-input" type="checkbox" disabled>
+        </div>`
+
+        let dx2 = `
+        <div class="form-check" style = "display: flex; justify-content: center;">
+        <input style = "opacity: 1;" class="form-check-input" type="checkbox" checked disabled>
+        </div>`
+
+        if(d.DxTipoIE == "I"){
+                dx1 = `
+                <div class="form-check" style = "display: flex; justify-content: center;">
+                <input style = "opacity: 1;" class="form-check-input" type="checkbox" checked disabled> 
+                </div>`
+                dx2 = `
+                <div class="form-check" style = "display: flex; justify-content: center;">
+                <input style = "opacity: 1;" class="form-check-input" type="checkbox" disabled>
+                </div>`      
+        }
+
+        return `
+        <tr>
+        <td class="minText5" style="font-weight:200;">${d.DxNumero}</td>
+        <td class="minText5" style="font-weight:200;">${dx1}</td> 
+        <td class="minText5" style="font-weight:200;">${dx2}</td> 
+        <td class="minText5" style="font-weight:200;">${d.DxCodigo}</td>
+        <td class="minText5" style="font-weight:100;">${d.Descripcion}</td>
+        <td class="minText5"><center><button style="background-color:red;border-color:red;" onclick="showModalDeleteDiagnosys('${d.id}','${d.idCuentaAtencion}')" class="btn btn-dark">X</button></center></td>
+        </tr>`;
+
+    })
+    .join("")
+);
+
+   document.getElementById("diag-loader").style = "display:none;"
+
+    }).catch(err =>{
+      document.getElementById("diag-loader").style = "display:none;"
+      console.log(err)
+  } );
+  }
+
+  function showModalDeleteDiagnosys(id,account){
+
+  Swal.fire({
+    title: 'Estas seguro de eliminar este diagnostico?',
+    showCancelButton: true,
+    confirmButtonText: 'Si',
+    cancelButtonText : 'Cancelar'
+  }).then((result) => {
+
+    if (result.isConfirmed) {
+
+
+  fetch(`${url}/delete-diagnosys-fua/${id}/${account}`)
+    .then(response => response.json())
+    .then(data => {
+
+      console.log(data)
+
+      if(data[0].success == "eliminado"){
+          fetchDiagnosys()
+          Swal.fire('Eliminado!', '', 'success')
+      }else{
+        Swal.fire(
+          'Oops!',
+          'Ocurrió un error!',
+          'error'
+        )
+      }
+
+      
+    }).catch(err =>{
+        console.log(err)
+        Swal.fire(
+          'Oops!',
+          'Ocurrió un error!',
+          'error'
+        )
+    } );
+
+    } 
+  })
 
   }

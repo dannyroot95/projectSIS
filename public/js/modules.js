@@ -45,6 +45,8 @@ $('document').ready(function () {
           graph()
         }else if (direccion == '#estadisticas-caja') {
           box()
+        }else if (direccion == '#auditoria') {
+          audit()
         }else {
           routeErrE();
         }
@@ -124,6 +126,10 @@ $('document').ready(function () {
   function box() {
     window.location.hash = "#estadisticas-caja"
     contentModulo.innerHTML = urlModule("/content/grafico-caja.html");
+  }
+  function audit() {
+    window.location.hash = "#auditoria"
+    contentModulo.innerHTML = urlModule("/content/auditoria.html");
   }
   function routeErrE() {
     console.log("ruta error")

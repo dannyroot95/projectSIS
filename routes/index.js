@@ -266,6 +266,22 @@ router.get("/affiliate-by-name/:a/:b/:c", function (req, res,next) {
   });
 });
 
+router.get("/affiliate-by-name-v2/:a/:b/:c/:d", function (req, res,next) {
+  let ap1 = req.params.a;
+  let ap2 = req.params.b;
+  let n = req.params.c;
+  let n2 = req.params.d;
+
+  sql.searchAffiliateByNameV2(ap1,ap2,n,n2).then((result) => {
+
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+  });
+});
+
 router.get("/trama-atencion/:a/:b/:c/:d", function (req, res,next) {
   let anio = req.params.a;
   let mes = req.params.b;
@@ -857,6 +873,19 @@ router.get("/get-atention-saludpol/:a", function (req, res,next) {
   });
 });
 
+router.get("/get-fua-diagnosys/:a", function (req, res,next) {
+
+  let account = req.params.a
+
+  sql.getFuaDiagnosys(account).then((result) => {
+    if(result[0].length>0){
+      res.json(result);
+    }else{
+      res.json({error:"sin datos"})
+    }
+  });
+});
+
 router.get("/get-employee-by-user/:a/:b", function (req, res,next) {
   let dni = req.params.a;
   let user = req.params.b;
@@ -937,6 +966,16 @@ function getTypeUser(value){
             <li><a class="link_name" href="#inicio">Inicio</a></li>
           </ul>
         </li>
+
+        <li>
+        <a href="#auditoria">
+                 <i class='bx bx-show'></i>
+          <span class="link_name">Auditoría</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="#auditoria">Auditoría</a></li>
+        </ul>
+      </li>
   
         <li>
           <a href="#usuarios">
@@ -1122,6 +1161,17 @@ function getTypeUser(value){
             <li><a class="link_name" href="#afiliados">Afiliados</a></li>
           </ul>
         </li>
+
+        <li>
+        <a href="#auditoria">
+              <i class='bx bx-show'></i>
+          <span class="link_name">Auditoría</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="#auditoria">Auditoría</a></li>
+        </ul>
+      </li>
+
 
         <li>
           <div class="iocn-link">
@@ -1820,6 +1870,18 @@ router.get("/delete-diagnosys/:a/:b", function (req, res, next) {
   });
 });
 
+router.get("/delete-diagnosys-fua/:a/:b", function (req, res, next) {
+  let id = req.params.a 
+  let account = req.params.b
+  sql.deleteDiagnosysFua(id,account).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
 router.get("/get-graph/:a", function (req, res, next) {
   let year = req.params.a 
   sql.get_graph(year).then((result) => {
@@ -1867,6 +1929,12 @@ router.get("/update-service-out/:a/:b", function (req, res, next) {
 
 router.get("/get-type-finance", function (req, res, next) {
   sql.get_type_finance().then((result) => {
+    res.json(result[0]);
+  });
+});
+
+router.get("/get-all-users", function (req, res, next) {
+  sql.getAllUsers().then((result) => {
     res.json(result[0]);
   });
 });
@@ -1926,11 +1994,12 @@ router.get("/update-type-atention-fua/:a/:b", function (req, res, next) {
   });
 });
 
-router.get("/update-dni-patient-fua/:a/:b/:c", function (req, res, next) {
+router.get("/update-dni-patient-fua/:a/:b/:c/:d", function (req, res, next) {
   let type = req.params.a 
   let dni = req.params.b
   let account = req.params.c
-  sql.update_dni_fua(type,dni,account).then((result) => {
+  let idpaciente = req.params.d
+  sql.update_dni_fua(type,dni,account,idpaciente).then((result) => {
     if(result[0].length>0){
       res.json(result[0]);
     }else{
@@ -2035,6 +2104,18 @@ router.post("/add-afiliate", function (req, res, next) {
   });
 });
 
+router.post("/update-afiliate", function (req, res, next) {
+ 
+  let data = req.body
+  sql.updateAfiliate(data).then((result) => {
+    if(result[0].success == 'actualizado'){
+      res.json([{success:"actualizado"}])
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
 
 router.post("/update-fullname-patient", function (req, res, next) {
  
@@ -2047,6 +2128,80 @@ router.post("/update-fullname-patient", function (req, res, next) {
     }
   });
 });
+
+router.get("/delete-afiliate/:a", function (req, res, next) {
+ 
+  let idSiasis = req.params.a 
+  sql.deleteAfiliate(idSiasis).then((result) => {
+    if(result[0].success == 'eliminado'){
+      res.json([{success:"eliminado"}])
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
+router.get("/update-siasis-ate/:a/:b", function (req, res, next) {
+ 
+  let idCuentaAtencion = req.params.a
+  let idSiasis = req.params.b
+  sql.updateSiasisAte(idCuentaAtencion,idSiasis).then((result) => {
+    if(result[0].success == 'actualizado'){
+      res.json([{success:"actualizado"}])
+    }else{
+      res.json([{success:"error"}])
+    }
+  });
+});
+
+router.post("/get-audit-by-date", function (req, res,next) {
+
+  let data = req.body
+  let f1 = data.date1+' 00:00'
+  let f2 = data.date2+' 23:59'
+  console.log(data)
+
+  sql.getAuditByDates(f1,f2).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+  });
+});
+
+router.post("/get-audit-by-date-and-user", function (req, res,next) {
+
+  let data = req.body
+  let f1 = data.date1+' 00:00'
+  let f2 = data.date2+' 23:59'
+  let empleado = data.empleado
+  console.log(data)
+
+  sql.getAuditByDatesAndUser(f1,f2,empleado).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+  });
+});
+
+router.post("/get-detail-audit", function (req, res,next) {
+
+  let data = req.body
+  let account = data.account
+  let user = data.user
+
+  sql.getDetailAudit(account,user).then((result) => {
+    if(result[0].length>0){
+      res.json(result[0]);
+    }else{
+      res.json({error:"sin datos"})
+    }
+  });
+});
+
 
 module.exports = router;
 

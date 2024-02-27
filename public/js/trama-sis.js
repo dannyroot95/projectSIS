@@ -21,6 +21,8 @@ var notFound = []
 let ctxG = 1
 let errors = []
 var resultadoArray = [];
+var rcData = []
+var insNotRegister = ["10249","10244","10248","27854","20842"]
 
 yearLater()
 createDatatable()
@@ -2986,221 +2988,7 @@ setTimeout(() => {
 
 }
 
-function jsonATE() {
-  var table = $('#tb-data').DataTable(); // Obtén la instancia de la tabla DataTables
 
-  // Define un array para almacenar los objetos JSON
-  var jsonData = [];
-
-  // Itera a través de los datos de la tabla
-  table.rows().data().each(function (rowData) {
-    // Crea un objeto JSON para cada fila
-    var data = {
-      cuenta_1: rowData[1],
-      disa_2: rowData[2],
-      lote_3 : rowData[3],
-      fua_4 : rowData[4],
-      udr_5 : rowData[5],
-      renaesIpress_6 : rowData[6],
-      categoriaIpress_7 : rowData[7],
-      nivelIpress_8 : rowData[8],
-      puntoDigitacion_9 : rowData[9],
-      fuaReconsideracion_10 : rowData[10],
-      codigoDisa_11 : rowData[11],
-      loteFuaReconsideracion_12 : rowData[12],
-      nFuaReconsideracion_13 : rowData[13],
-      idConvenio_14 : rowData[14],
-      componenteAsegurado_15 : rowData[15],
-      codigoAfiliado_16 : rowData[16],
-      loteFormatoAfiliado_17 : rowData[17],
-      numFormatoAfiliado_18 : rowData[18],
-      correlativoAfiliado_19 : rowData[19],
-      tipoTabla_20 : rowData[20],
-      idContratoAfiliado_21 : rowData[21],
-      cobertura_22 : rowData[22],
-      grupoPoblacional_23 : rowData[23],
-      tipoDocumento_24 : rowData[24],
-      numDocumento_25 : rowData[25],
-      apellidoPaterno_26 : rowData[26],
-      apellidoMaterno_27 : rowData[27],
-      primerNombre_28 : rowData[28],
-      otrosNombres_29 : rowData[29],
-      fechaNacimiento_30 : rowData[30],
-      sexo_31 : rowData[31],
-      codigoDistrito_32 : rowData[32],
-      historia_33 : rowData[33],
-      tipoAtencion_34 : rowData[34],
-      condicionMaterna_35 : rowData[35],
-      modalidadAtencion_36 : rowData[36],
-      numAutorizacion_37 : rowData[37],
-      montoAutorizado_38 : rowData[38],
-      fechaAtencion_39 : rowData[39],
-      renaes_40 : rowData[40],
-      numHojaReferencia_41 : rowData[41],
-      servicio_42 : rowData[42],
-      origenPersonal_43 : rowData[43],
-      lugarAtencion_44 : rowData[44],
-      destinoAsegurado_45 : rowData[45],
-      fechaIngresoHospitalizacion_46 : rowData[46],
-      fechaAltaHospitalizacion_47 : rowData[47],
-      susaludRenaes_48 : rowData[48],
-      numHojaReferenciaOContra_49 : rowData[49],
-      fechaParto_50 : rowData[50],
-      grupoRiesgo_51 : rowData[51],
-      catalogoIe_52 : rowData[52],
-      nivelEducativo_53 : rowData[53],
-      gradoEducativo_54 : rowData[54],
-      seccionEducativo_55 : rowData[55],
-      turnoEducativo_56 : rowData[56],
-      educacionEspecial_57 : rowData[57],
-      anexoEducacion_58 : rowData[58],
-      fallecimientoAsegurado_59 : rowData[59],
-      ofertaFlexible_60 : rowData[60],
-      etnia_61 : rowData[61],
-      institucionSeguro_62 : rowData[62],
-      seguroIAFAS_63 : rowData[63],
-      ups_64 : rowData[64],
-      fechaCorteAdministrativo_65 : rowData[65],
-      codigoUdr_66 : rowData[66],
-      loteCodigoAutorizacion_67 : rowData[67],
-      correlativoCodigoAutorizacion_68 : rowData[68],
-      codigoDisaORenaes_69 : rowData[69],
-      loteFuaVinculado_70 : rowData[70],
-      fuaVinculado_71 : rowData[71],
-      tipoDocResponsableAtencion_72 : rowData[72],
-      documentoResponsableAtencion_73 : rowData[73],
-      tipoPersonalSalud_74 : rowData[74],
-      especialidadResponsable_75 : rowData[75],
-      egresado_76 : rowData[76],
-      colegiatura_77 : rowData[77],
-      rne_78 : rowData[78],
-      periodoProduccion_79 : rowData[79],
-      mesProduccion_80 : rowData[80],
-      tipoDocDigitador_81 : rowData[81],
-      documentoDigitador_82 : rowData[82],
-      fechaHoraRegistroAtencion_83 : rowData[83],
-      observacion_84 : rowData[84],
-      versionApp_85 : rowData[85],
-      codigoSiteds_86 : rowData[86],
-      procedimientos : []
-    };
-    // Agrega el objeto JSON al array
-    jsonData.push(data);
-  });
-  // El objeto JSON resultante se encuentra en jsonStr
-  
-  jsonProcedure(jsonData)
-}
-function jsonDiagnosys(jsonAte){
-  var table = $('#tb-data-2').DataTable(); // Obtén la instancia de la tabla DataTables
-  var jsonDiag = [];
-
-  
-  table.rows().data().each(function (rowData) {
-    var data = {
-      cuenta_1: rowData[1],
-      dx_2: rowData[2],
-      correlativo_3: rowData[3],
-      tipoMov_4: rowData[4],
-      tipoDiag_5: rowData[5],
-    };
-    jsonDiag.push(data);
-  });
-
-}
-
-function jsonProcedure(jsonAte) {
-  var table = $('#tb-data-6').DataTable(); // Obtén la instancia de la tabla DataTables
-  var jsonPro = [];
-
-  table.rows().data().each(function (rowData) {
-    var data = {
-      cuenta_1: rowData[1],
-      codigoCpt_2: rowData[2],
-      codigoCpms_3: rowData[3],
-      correlativoDxPertenece_4: rowData[4],
-      cantidadPrescrita_5: rowData[5],
-      cantidadEntregada_6: rowData[6]
-    };
-    jsonPro.push(data);
-  });
-
-  var combinedData = {};
-
-  // Iterar a través del primer JSON (json1)
-  jsonAte.forEach(function (item) {
-    // Clonar el objeto para no modificar el original
-    var combinedItem = { ...item };
-    // Filtrar los elementos del segundo JSON (json2) que coinciden con la "cuenta_1" del primer JSON
-    var matchingItems = jsonPro
-      .filter(function (subItem) {
-        return subItem.cuenta_1 === item.cuenta_1;
-      })
-      .map(function (subItem) {
-        // Clonar el objeto de procedimientos y excluir el campo "cuenta_1"
-        var procedimientos = { ...subItem };
-        delete procedimientos.cuenta_1;
-        return procedimientos;
-      });
-    // Agregar los elementos coincidentes al campo "procedimientos" del objeto combinado
-    combinedItem.procedimientos = matchingItems;
-    // Almacenar el objeto combinado en el objeto de resultados usando "cuenta_1" como clave
-    combinedData[item.cuenta_1] = combinedItem;
-  });
-  
-  // Obtener un arreglo de los objetos combinados
-  var combinedArray = Object.values(combinedData);
-  
-  c2 = 0
-
-  rc(combinedArray)
-  console.log(combinedArray)
-
-}
-
-
-function rc(array){
-  array.forEach(function (item) {
-    if (item.servicio_42 === '063') {
-      var procedimientos = item.procedimientos;
-
-      // Contadores para verificar la existencia y duplicados de '99295'
-      var existCount = 0;
-      var duplicateCount = 0;
-
-      procedimientos.forEach(function (proc) {
-        if (proc.codigoCpt_2 === '99285') {
-          existCount++;
-          if (existCount > 1) {
-            duplicateCount++;
-          }
-        }
-      });
-
-      if (existCount === 0) {
-        c2++
-        let warning = `${c2}.- RC-01 No existe el código "99285" en los procedimientos. CUENTA : ${item.cuenta_1}  `
-        rclog = rclog+warning+"\r\n\r\n"
-      } else if (existCount === 1 && duplicateCount > 0) {
-        c2++
-        let warning = `${c2}.- RC-01 El código "99285" existe una vez, pero hay duplicados. CUENTA : ${item.cuenta_1}  `
-        rclog = rclog+warning+"\r\n\r\n"
-      }
-    }
-  });
-
-  donwloadRC()
-}
-
-function donwloadRC(){
-
-  // Crear un enlace de descarga dinámico
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(new Blob([rclog], { type: 'text/plain' }));
-  link.download = 'rc.txt';
-  link.click();
-  
-  }
 
   function isUndefined(name){
     let secondaName = name.split(" ")[0]
@@ -3591,3 +3379,409 @@ function donwloadRC(){
   })
 
   }
+
+  function jsonATE() {
+    var table = $('#tb-data').DataTable(); // Obtén la instancia de la tabla DataTables
+  
+    // Define un array para almacenar los objetos JSON
+    var jsonData = [];
+  
+    // Itera a través de los datos de la tabla
+    table.rows().data().each(function (rowData) {
+      // Crea un objeto JSON para cada fila
+      var data = {
+        cuenta_1: rowData[1],
+        disa_2: rowData[2],
+        lote_3 : rowData[3],
+        fua_4 : rowData[4],
+        udr_5 : rowData[5],
+        renaesIpress_6 : rowData[6],
+        categoriaIpress_7 : rowData[7],
+        nivelIpress_8 : rowData[8],
+        puntoDigitacion_9 : rowData[9],
+        fuaReconsideracion_10 : rowData[10],
+        codigoDisa_11 : rowData[11],
+        loteFuaReconsideracion_12 : rowData[12],
+        nFuaReconsideracion_13 : rowData[13],
+        idConvenio_14 : rowData[14],
+        componenteAsegurado_15 : rowData[15],
+        codigoAfiliado_16 : rowData[16],
+        loteFormatoAfiliado_17 : rowData[17],
+        numFormatoAfiliado_18 : rowData[18],
+        correlativoAfiliado_19 : rowData[19],
+        tipoTabla_20 : rowData[20],
+        idContratoAfiliado_21 : rowData[21],
+        cobertura_22 : rowData[22],
+        grupoPoblacional_23 : rowData[23],
+        tipoDocumento_24 : rowData[24],
+        numDocumento_25 : rowData[25],
+        apellidoPaterno_26 : rowData[26],
+        apellidoMaterno_27 : rowData[27],
+        primerNombre_28 : rowData[28],
+        otrosNombres_29 : rowData[29],
+        fechaNacimiento_30 : rowData[30],
+        sexo_31 : rowData[31],
+        codigoDistrito_32 : rowData[32],
+        historia_33 : rowData[33],
+        tipoAtencion_34 : rowData[34],
+        condicionMaterna_35 : rowData[35],
+        modalidadAtencion_36 : rowData[36],
+        numAutorizacion_37 : rowData[37],
+        montoAutorizado_38 : rowData[38],
+        fechaAtencion_39 : rowData[39],
+        renaes_40 : rowData[40],
+        numHojaReferencia_41 : rowData[41],
+        servicio_42 : rowData[42],
+        origenPersonal_43 : rowData[43],
+        lugarAtencion_44 : rowData[44],
+        destinoAsegurado_45 : rowData[45],
+        fechaIngresoHospitalizacion_46 : rowData[46],
+        fechaAltaHospitalizacion_47 : rowData[47],
+        susaludRenaes_48 : rowData[48],
+        numHojaReferenciaOContra_49 : rowData[49],
+        fechaParto_50 : rowData[50],
+        grupoRiesgo_51 : rowData[51],
+        catalogoIe_52 : rowData[52],
+        nivelEducativo_53 : rowData[53],
+        gradoEducativo_54 : rowData[54],
+        seccionEducativo_55 : rowData[55],
+        turnoEducativo_56 : rowData[56],
+        educacionEspecial_57 : rowData[57],
+        anexoEducacion_58 : rowData[58],
+        fallecimientoAsegurado_59 : rowData[59],
+        ofertaFlexible_60 : rowData[60],
+        etnia_61 : rowData[61],
+        institucionSeguro_62 : rowData[62],
+        seguroIAFAS_63 : rowData[63],
+        ups_64 : rowData[64],
+        fechaCorteAdministrativo_65 : rowData[65],
+        codigoUdr_66 : rowData[66],
+        loteCodigoAutorizacion_67 : rowData[67],
+        correlativoCodigoAutorizacion_68 : rowData[68],
+        codigoDisaORenaes_69 : rowData[69],
+        loteFuaVinculado_70 : rowData[70],
+        fuaVinculado_71 : rowData[71],
+        tipoDocResponsableAtencion_72 : rowData[72],
+        documentoResponsableAtencion_73 : rowData[73],
+        tipoPersonalSalud_74 : rowData[74],
+        especialidadResponsable_75 : rowData[75],
+        egresado_76 : rowData[76],
+        colegiatura_77 : rowData[77],
+        rne_78 : rowData[78],
+        periodoProduccion_79 : rowData[79],
+        mesProduccion_80 : rowData[80],
+        tipoDocDigitador_81 : rowData[81],
+        documentoDigitador_82 : rowData[82],
+        fechaHoraRegistroAtencion_83 : rowData[83],
+        observacion_84 : rowData[84],
+        versionApp_85 : rowData[85],
+        codigoSiteds_86 : rowData[86],
+        procedimientos : []
+      };
+      // Agrega el objeto JSON al array
+      jsonData.push(data);
+    });
+    // El objeto JSON resultante se encuentra en jsonStr
+    
+    jsonMatch(jsonData)
+  }
+
+  function jsonMatch(jsonAte) {
+
+    var tableProcedures = $('#tb-data-6').DataTable(); // Obtén la instancia de la tabla DataTables para los procedimientos
+    var jsonProcedures = [];
+  
+    tableProcedures.rows().data().each(function (rowData) {
+        var data = {
+            cuenta_1: rowData[1],
+            codigoCpt_2: rowData[2],
+            codigoCpms_3: rowData[3],
+            correlativoDxPertenece_4: rowData[4],
+            cantidadPrescrita_5: rowData[5],
+            cantidadEntregada_6: rowData[6]
+        };
+        jsonProcedures.push(data);
+    });
+
+    var tableDiagnoses = $('#tb-data-2').DataTable(); // Obtén la instancia de la tabla DataTables para los diagnósticos
+    var jsonDiagnoses = [];
+
+    tableDiagnoses.rows().data().each(function (rowData) {
+        var data = {
+            cuenta_1: rowData[1],
+            codigoDiagnostico_2: rowData[2],
+            correlativo_3: rowData[3],
+            tipoMovimiento_4: rowData[4],
+            tipoDiagnostico_5: rowData[5]
+        };
+        jsonDiagnoses.push(data);
+    });
+
+    var tableSupplies = $('#tb-data-3').DataTable(); // Obtén la instancia de la tabla DataTables para los insumos
+    var jsonSupplies = [];
+
+    tableSupplies.rows().data().each(function (rowData) {
+        var data = {
+            cuenta_1: rowData[1],
+            codigoInsumo_2: rowData[2],
+            correlativo_3: rowData[3],
+            cantidadPrescrita_4: rowData[4],
+            cantidadEntregada_5: rowData[5]
+        };
+        jsonSupplies.push(data);
+    });
+
+    var tableMedications = $('#tb-data-5').DataTable(); // Obtén la instancia de la tabla DataTables para los medicamentos
+    var jsonMedications = [];
+
+    tableMedications.rows().data().each(function (rowData) {
+        var data = {
+            cuenta_1: rowData[1],
+            codigoMedicamento_2: rowData[2],
+            correlativo_3: rowData[3],
+            cantidadPrescrita_4: rowData[4],
+            cantidadEntregada_5: rowData[5]
+        };
+        jsonMedications.push(data);
+    });
+
+    var tableSmi = $('#tb-data-4').DataTable(); // Obtén la instancia de la tabla DataTables para los datos smi
+    var jsonSmi = [];
+
+    tableSmi.rows().data().each(function (rowData) {
+        var data = {
+            cuenta_1: rowData[1],
+            cantidadActividadPreventiva_2: rowData[2],
+            resultadoSmi_3: rowData[3]
+        };
+        jsonSmi.push(data);
+    });
+
+    var tableNewborn = $('#tb-data-8').DataTable(); // Obtén la instancia de la tabla DataTables para los datos de recién nacido
+    var jsonNewborn = [];
+
+    tableNewborn.rows().data().each(function (rowData) {
+        var data = {
+            cuenta_1: rowData[1],
+            correlativoRn_2: rowData[2],
+            tipoIdentifiacion_3: rowData[3],
+            numeroDocumentoRn_4: rowData[4],
+            paternoRn_5: rowData[9],
+            maternoRn_6: rowData[10],
+            primerNombreRn_7: rowData[11],
+            segundoNombreRn_8: rowData[12]
+        };
+        jsonNewborn.push(data);
+    });
+
+    var combinedData = {};
+
+    // Iterar a través del primer JSON (jsonAte)
+    jsonAte.forEach(function (item) {
+        // Clonar el objeto para no modificar el original
+        var combinedItem = { ...item };
+
+        // Filtrar los elementos del segundo JSON (jsonProcedures) que coinciden con la "cuenta_1" del primer JSON
+        var matchingProcedures = jsonProcedures.filter(function (subItem) {
+            return subItem.cuenta_1 === item.cuenta_1;
+        }).map(function (subItem) {
+            // Clonar el objeto de procedimientos y excluir el campo "cuenta_1"
+            var procedures = { ...subItem };
+            delete procedures.cuenta_1;
+            return procedures;
+        });
+
+        // Filtrar los elementos del tercer JSON (jsonDiagnoses) que coinciden con la "cuenta_1" del primer JSON
+        var matchingDiagnoses = jsonDiagnoses.filter(function (subItem) {
+            return subItem.cuenta_1 === item.cuenta_1;
+        }).map(function (subItem) {
+            // Clonar el objeto de diagnósticos y excluir el campo "cuenta_1"
+            var diagnoses = { ...subItem };
+            delete diagnoses.cuenta_1;
+            return diagnoses;
+        });
+
+        // Filtrar los elementos del cuarto JSON (jsonSupplies) que coinciden con la "cuenta_1" del primer JSON
+        var matchingSupplies = jsonSupplies.filter(function (subItem) {
+            return subItem.cuenta_1 === item.cuenta_1;
+        }).map(function (subItem) {
+            // Clonar el objeto de insumos y excluir el campo "cuenta_1"
+            var supplies = { ...subItem };
+            delete supplies.cuenta_1;
+            return supplies;
+        });
+
+        // Filtrar los elementos del quinto JSON (jsonMedications) que coinciden con la "cuenta_1" del primer JSON
+        var matchingMedications = jsonMedications.filter(function (subItem) {
+            return subItem.cuenta_1 === item.cuenta_1;
+        }).map(function (subItem) {
+            // Clonar el objeto de medicamentos y excluir el campo "cuenta_1"
+            var medications = { ...subItem };
+            delete medications.cuenta_1;
+            return medications;
+        });
+
+        // Filtrar los elementos del sexto JSON (jsonSmi) que coinciden con la "cuenta_1" del primer JSON
+        var matchingSmi = jsonSmi.filter(function (subItem) {
+            return subItem.cuenta_1 === item.cuenta_1;
+        }).map(function (subItem) {
+            // Clonar el objeto de smi y excluir el campo "cuenta_1"
+            var smi = { ...subItem };
+            delete smi.cuenta_1;
+            return smi;
+        });
+
+        // Filtrar los elementos del séptimo JSON (jsonNewborn) que coinciden con la "cuenta_1" del primer JSON
+        var matchingNewborn = jsonNewborn.filter(function (subItem) {
+            return subItem.cuenta_1 === item.cuenta_1;
+        }).map(function (subItem) {
+            // Clonar el objeto de recién nacido y excluir el campo "cuenta_1"
+            var newborn = { ...subItem };
+            delete newborn.cuenta_1;
+            return newborn;
+        });
+
+        // Agregar los elementos coincidentes al campo "procedimientos" del objeto combinado
+        combinedItem.procedimientos = matchingProcedures;
+
+        // Agregar los elementos coincidentes al campo "diagnosticos" del objeto combinado
+        combinedItem.diagnosticos = matchingDiagnoses;
+
+        // Agregar los elementos coincidentes al campo "insumos" del objeto combinado
+        combinedItem.insumos = matchingSupplies;
+
+        // Agregar los elementos coincidentes al campo "medicamentos" del objeto combinado
+        combinedItem.medicamentos = matchingMedications;
+
+        // Agregar los elementos coincidentes al campo "smi" del objeto combinado
+        combinedItem.smi = matchingSmi;
+
+        // Agregar los elementos coincidentes al campo "recienNacido" del objeto combinado
+        combinedItem.recienNacido = matchingNewborn;
+
+        // Almacenar el objeto combinado en el objeto de resultados usando "cuenta_1" como clave
+        combinedData[item.cuenta_1] = combinedItem;
+    });
+
+    // Obtener un arreglo de los objetos combinados
+    var combinedArray = Object.values(combinedData);
+    
+    c2 = 0
+    rcData = []
+    recorded(combinedArray)
+  }
+
+  function downloadRC(){
+  
+    let xls = new XlsExport(rcData, 'Detalle');
+    xls.exportToXLS(`REGLAS DE CONSISTENCIA.xls`)
+    }
+    
+  function recorded(arrayDeDatos) {
+      arrayDeDatos.forEach((datos) => {
+          const cuenta = datos.cuenta_1;
+          const fua = datos.disa_2+"-"+datos.lote_3+'-'+datos.fua_4
+          // Verificar regla 12
+          if (!verificarRegla12(datos)) {
+              rcData.push({
+                  'Cuenta': cuenta,
+                  'Tipo':'RC',
+                  'Número':'12',
+                  'Descripcion': `RC-12 El FUA ${fua} no cumple con la regla 12 PROC/MED/INS.`
+              });
+          }
+  
+          // Verificar regla 80
+          verificarRegla80(datos)
+          verificarValidacion19(datos)
+      });
+  
+      downloadRC()
+  }
+  
+  function verificarRegla12(data) {
+      // Verificar si hay al menos un diagnóstico
+      if (!data.diagnosticos || data.diagnosticos.length < 1) {
+          return false;
+      }
+      // Verificar si hay al menos un procedimiento, medicamento o insumo
+      if ((!data.procedimientos || data.procedimientos.length < 1) &&
+          (!data.medicamentos || data.medicamentos.length < 1) &&
+          (!data.insumos || data.insumos.length < 1)) {
+          return false;
+      }
+      return true;
+  }
+  
+  function verificarRegla80(data) {
+        const cuenta = data.cuenta_1;
+        const fua = data.disa_2+"-"+data.lote_3+'-'+data.fua_4
+        const insumos = data.insumos;
+
+        if (!insumos || insumos.length === 0) {
+            //console.log(`Cuenta ${cuenta}: No hay insumos registrados.`);
+        } else {
+            const codigosInsumos = insumos.map(ins => ins.codigoInsumo_2);
+            const insumosNoPermitidos = codigosInsumos.filter(ins => insNotRegister.includes(ins));
+            
+            if (insumosNoPermitidos.length > 0) {
+              rcData.push({
+                'Cuenta': cuenta,
+                'Tipo':'RC',
+                'Número':'80',
+                'Descripcion': `RC-80 El FUA ${fua} no cumple con la regla 80. Los siguientes insumos no están permitidos: ${insumosNoPermitidos.join(', ')}`
+            });
+               
+            } 
+        }
+}
+
+function verificarValidacion19(data) {
+  const cuenta = data.cuenta_1;
+  const servicio = data.servicio_42;
+  const procedimientos = data.procedimientos;
+  const medicamentos = data.medicamentos;
+  const fua = data.disa_2 + "-" + data.lote_3 + "-" + data.fua_4;
+  let rv19 = 0;
+  let descripcion = `RV-19 El FUA ${fua} no cumple con la regla de validacion 19. `;
+
+  if (servicio == "050") {
+      const proc86901= procedimientos.find(proc => proc.codigoCpt_2 === "86901");
+      const proc86900 = procedimientos.find(proc => proc.codigoCpt_2 === "86900");
+      const proc99403 = procedimientos.find(proc => proc.codigoCpt_2 === "99403");
+      const med03576 = medicamentos.find(med => med.codigoMedicamento_2 === "03576");
+
+      if (proc86901) {
+        rv19++
+      } else {
+        descripcion += "Procedimiento 86901 no encontrado. ";
+      }
+
+      if (proc86900) {
+        rv19++
+      } else {
+        descripcion += "Procedimiento 86900 no encontrado. ";
+      }
+
+      if (proc99403) {
+          rv19++;
+      } else {
+          descripcion += "Procedimiento 99403 no encontrado. ";
+      }
+      if (med03576) {
+          rv19++;
+      } else {
+          descripcion += "Medicamento 03576 no encontrado. ";
+      }
+
+      // Verifica si alguna condición no se cumple
+      if (rv19 < 4) {
+          rcData.push({
+              'Cuenta': cuenta,
+              'Tipo': 'RV',
+              'Número': '19',
+              'Descripcion': descripcion
+          });
+      }
+  }
+}

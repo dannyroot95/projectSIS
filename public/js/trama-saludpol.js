@@ -3735,7 +3735,7 @@ function printAtention(){
 
 
   var doc = new jspdf.jsPDF()
-  doc.addImage('/image/logoHSR.png', 'JPEG', 5, 7, 22, 12)
+  doc.addImage('/image/logoHSR.jpg', 'JPEG', 5, 7, 22, 12)
   doc.setFontSize(9)
   doc.text(62, 10, 'HOSPITAL SANTA ROSA    www.hospitalsantarosa.gob.pe')
   doc.text(190, 10, fechaActual)
@@ -3758,7 +3758,7 @@ function printAtention(){
 
   doc.text(93, 68, 'DIAGNOSTICOS')
    doc.autoTable({
-    head: [['Clasificación','Código','Descripción']],
+    head: [['Tipo de diagnostico','Código','Descripción']],
     body: arrayDiag(),
     theme: 'grid',
     styles : { halign : 'center',fontSize: 8},

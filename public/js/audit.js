@@ -332,11 +332,14 @@ function showDetailsModal(account,usuario){
 
     console.log(account)
     if(account == "SIN CUENTA"){
+        document.getElementById("detail-account").innerHTML = ""
         document.getElementById("img").style = "display:block;"
         document.getElementById("div-table-detail").style = "display:none;"
     }else{
+        document.getElementById("detail-account").innerHTML = "- "+account
         load.style = "display:block;"
         document.getElementById("img").style = "display:none;"
+        document.getElementById("tbody2").innerHTML = ""
         document.getElementById("div-table-detail").style = "display:block;"
         fetchDetailAudit(account,usuario)
     }

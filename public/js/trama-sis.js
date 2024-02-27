@@ -3694,6 +3694,7 @@ setTimeout(() => {
           // Verificar regla 80
           verificarRegla80(datos)
           verificarValidacion19(datos)
+          verificarRegla59(datos) 
       });
   
       downloadRC()
@@ -3781,6 +3782,41 @@ function verificarValidacion19(data) {
               'Tipo': 'RV',
               'Número': '19',
               'Descripcion': descripcion
+          });
+      }
+  }
+}
+
+function verificarRegla59(data) {
+  const cuenta = data.cuenta_1;
+  const procedimientos = data.procedimientos;
+
+  const fechaIngresoParts = (data.fechaIngresoHospitalizacion_46).split("/");
+  const fechaAltaParts = (data.fechaAltaHospitalizacion_47).split("/");
+
+  // El constructor Date espera los argumentos en el orden Year, Month, Day
+  // Restamos 1 del mes porque en JavaScript los meses van de 0 a 11
+  const fechaIngreso = new Date(fechaIngresoParts[2], fechaIngresoParts[1] - 1, fechaIngresoParts[0]);
+  const fechaAlta = new Date(fechaAltaParts[2], fechaAltaParts[1] - 1, fechaAltaParts[0]);
+
+// Ajustar la fecha de alta para incluir el día completo
+  fechaAlta.setDate(fechaAlta.getDate() + 1);
+
+  // Calcular el número de días de hospitalización
+  const tiempoHospitalizacion = Math.ceil((fechaAlta - fechaIngreso) / (1000 * 60 * 60 * 24));
+
+  // Buscar el procedimiento con el código 99206
+  const proc99206 = procedimientos.find(proc => proc.codigoCpt_2 === "99206");
+
+  if (proc99206) {
+      const cantidadEntregada = parseInt(proc99206.cantidadEntregada_6);
+      console.log(`cuenta ${cuenta} , hosp ${tiempoHospitalizacion} , ent ${proc99206.cantidadEntregada_6} `)
+      if (cantidadEntregada > tiempoHospitalizacion) {
+          rcData.push({
+              'Cuenta': cuenta,
+              'Tipo': 'RC',
+              'Número': '59',
+              'Descripcion': `RC-59 El FUA ${data.disa_2}-${data.lote_3}-${data.fua_4} no cumple con la regla de consistencia 59. La cantidad entregada (${cantidadEntregada}) es mayor que el número de días de hospitalización (${tiempoHospitalizacion}).`
           });
       }
   }

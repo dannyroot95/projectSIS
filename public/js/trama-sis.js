@@ -23,6 +23,7 @@ let errors = []
 var resultadoArray = [];
 var rcData = []
 var insNotRegister = ["10249","10244","10248","27854","20842"]
+var typeMedicUser = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","25","26"]
 
 yearLater()
 createDatatable()
@@ -3364,8 +3365,6 @@ setTimeout(() => {
           'error'
         )
       }
-
-      
     }).catch(err =>{
         console.log(err)
         Swal.fire(
@@ -3373,12 +3372,10 @@ setTimeout(() => {
           'Ocurrió un error!',
           'error'
         )
-    } );
-
+    });
     } 
   })
-
-  }
+}
 
   function jsonATE() {
     var table = $('#tb-data').DataTable(); // Obtén la instancia de la tabla DataTables
@@ -3476,7 +3473,7 @@ setTimeout(() => {
         observacion_84 : rowData[84],
         versionApp_85 : rowData[85],
         codigoSiteds_86 : rowData[86],
-        procedimientos : []
+        tipoServicio_88 : rowData[88],
       };
       // Agrega el objeto JSON al array
       jsonData.push(data);
@@ -3674,20 +3671,23 @@ setTimeout(() => {
   function downloadRC(){
   
     let xls = new XlsExport(rcData, 'Detalle');
-    xls.exportToXLS(`REGLAS DE CONSISTENCIA.xls`)
+    xls.exportToXLS(`REGLAS DE CONSISTENCIA Y VALIDACION.xls`)
     }
     
   function recorded(arrayDeDatos) {
       arrayDeDatos.forEach((datos) => {
           const cuenta = datos.cuenta_1;
           const fua = datos.disa_2+"-"+datos.lote_3+'-'+datos.fua_4
+          const servicio = datos.tipoServicio_88
           // Verificar regla 12
           if (!verificarRegla12(datos)) {
               rcData.push({
                   'Cuenta': cuenta,
+                  'Servicio':servicio,
                   'Tipo':'RC',
                   'Número':'12',
-                  'Descripcion': `RC-12 El FUA ${fua} no cumple con la regla 12 PROC/MED/INS.`
+                  'FUA':fua,
+                  'Descripcion': `No cumple con la regla de consistencia 12 , debe contener al menos un procedimiento ó medicamento/insumo`
               });
           }
   
@@ -3695,6 +3695,8 @@ setTimeout(() => {
           verificarRegla80(datos)
           verificarValidacion19(datos)
           verificarRegla59(datos) 
+          verificarRegla79(datos)
+          verificarRegla47(datos)
       });
   
       downloadRC()
@@ -3718,6 +3720,7 @@ setTimeout(() => {
         const cuenta = data.cuenta_1;
         const fua = data.disa_2+"-"+data.lote_3+'-'+data.fua_4
         const insumos = data.insumos;
+        const servicio = data.tipoServicio_88
 
         if (!insumos || insumos.length === 0) {
             //console.log(`Cuenta ${cuenta}: No hay insumos registrados.`);
@@ -3728,9 +3731,11 @@ setTimeout(() => {
             if (insumosNoPermitidos.length > 0) {
               rcData.push({
                 'Cuenta': cuenta,
+                'Servicio':servicio,
                 'Tipo':'RC',
                 'Número':'80',
-                'Descripcion': `RC-80 El FUA ${fua} no cumple con la regla 80. Los siguientes insumos no están permitidos: ${insumosNoPermitidos.join(', ')}`
+                'FUA':fua,
+                'Descripcion': `No cumple con la regla de consistencia 80. Los siguientes insumos no están permitidos: ${insumosNoPermitidos.join(', ')}`
             });
                
             } 
@@ -3743,8 +3748,9 @@ function verificarValidacion19(data) {
   const procedimientos = data.procedimientos;
   const medicamentos = data.medicamentos;
   const fua = data.disa_2 + "-" + data.lote_3 + "-" + data.fua_4;
+  const tipoSservicio = data.tipoServicio_88
   let rv19 = 0;
-  let descripcion = `RV-19 El FUA ${fua} no cumple con la regla de validacion 19. `;
+  let descripcion = `No cumple con la regla de validación 19. `;
 
   if (servicio == "050") {
       const proc86901= procedimientos.find(proc => proc.codigoCpt_2 === "86901");
@@ -3779,8 +3785,10 @@ function verificarValidacion19(data) {
       if (rv19 < 4) {
           rcData.push({
               'Cuenta': cuenta,
+              'Servicio':tipoSservicio,
               'Tipo': 'RV',
               'Número': '19',
+              'FUA':fua,
               'Descripcion': descripcion
           });
       }
@@ -3790,6 +3798,8 @@ function verificarValidacion19(data) {
 function verificarRegla59(data) {
   const cuenta = data.cuenta_1;
   const procedimientos = data.procedimientos;
+  const fua = data.disa_2+"-"+data.lote_3+"-"+data.fua_4
+  const tipoSservicio = data.tipoServicio_88
 
   const fechaIngresoParts = (data.fechaIngresoHospitalizacion_46).split("/");
   const fechaAltaParts = (data.fechaAltaHospitalizacion_47).split("/");
@@ -3807,17 +3817,161 @@ function verificarRegla59(data) {
 
   // Buscar el procedimiento con el código 99206
   const proc99206 = procedimientos.find(proc => proc.codigoCpt_2 === "99206");
+  const proc99231 = procedimientos.find(proc => proc.codigoCpt_2 === "99231");
+  const proc94640  = procedimientos.find(proc => proc.codigoCpt_2 === "94640");
+  const proc94760  = procedimientos.find(proc => proc.codigoCpt_2 === "94760");
 
   if (proc99206) {
-      const cantidadEntregada = parseInt(proc99206.cantidadEntregada_6);
-      console.log(`cuenta ${cuenta} , hosp ${tiempoHospitalizacion} , ent ${proc99206.cantidadEntregada_6} `)
-      if (cantidadEntregada > tiempoHospitalizacion) {
+    const cantidadEntregada99206 = parseInt(proc99206.cantidadEntregada_6);
+      if (cantidadEntregada99206 > tiempoHospitalizacion) {
           rcData.push({
               'Cuenta': cuenta,
+              'Servicio':tipoSservicio,
               'Tipo': 'RC',
               'Número': '59',
-              'Descripcion': `RC-59 El FUA ${data.disa_2}-${data.lote_3}-${data.fua_4} no cumple con la regla de consistencia 59. La cantidad entregada (${cantidadEntregada}) es mayor que el número de días de hospitalización (${tiempoHospitalizacion}).`
+              'FUA':fua,
+              'Descripcion': `No cumple con la regla de consistencia 59. La cantidad entregada (${cantidadEntregada99206}) es mayor que el número de días de hospitalización (${tiempoHospitalizacion}). CPT 99206`
           });
       }
+  }if(proc99231){
+    const cantidadEntregada99231 = parseInt(proc99231.cantidadEntregada_6);
+    if (cantidadEntregada99231 > tiempoHospitalizacion) {
+      rcData.push({
+          'Cuenta': cuenta,
+          'Servicio':tipoSservicio,
+          'Tipo': 'RC',
+          'Número': '59',
+          'FUA':fua,
+          'Descripcion': `No cumple con la regla de consistencia 59. La cantidad entregada (${cantidadEntregada99231}) es mayor que el número de días de hospitalización (${tiempoHospitalizacion}). CPT 99231`
+      });
+  }
+  }if(proc94640){
+    const cantidadEntregada94640 = parseInt(proc94640.cantidadEntregada_6);
+    let tiempoHospitalizacionDividida = Math.ceil(parseInt(tiempoHospitalizacion) / 3);
+    if (cantidadEntregada94640 > tiempoHospitalizacionDividida) {
+      rcData.push({
+          'Cuenta': cuenta,
+          'Servicio':tipoSservicio,
+          'Tipo': 'RC',
+          'Número': '59',
+          'FUA':fua,
+          'Descripcion': `No cumple con la regla de consistencia 59. La cantidad entregada (${cantidadEntregada94640}) es mayor que el número de días de hospitalización (${tiempoHospitalizacionDividida}). CPT 94640`
+      });
+  }
+  }if(proc94760){
+    const cantidadEntregada94760 = parseInt(proc94760.cantidadEntregada_6);
+    let tiempoHospitalizacionDividida = Math.ceil(parseInt(tiempoHospitalizacion) / 2);
+    if (cantidadEntregada94760 > tiempoHospitalizacionDividida) {
+      rcData.push({
+          'Cuenta': cuenta,
+          'Servicio':tipoSservicio,
+          'Tipo': 'RC',
+          'Número': '59',
+          'FUA':fua,
+          'Descripcion': `No cumple con la regla de consistencia 59. La cantidad entregada (${cantidadEntregada94760}) es mayor que el número de días de hospitalización (${tiempoHospitalizacionDividida}). CPT 94760`
+      });
+  }
+  }
+}
+
+function verificarRegla79(data) {
+  const cuenta = data.cuenta_1;
+  const servicio = data.servicio_42;
+  const tipoPersonalSalud = data.tipoPersonalSalud_74;
+  const fua = data.disa_2+"-"+data.lote_3+"-"+data.fua_4
+  const tipoSservicio = data.tipoServicio_88
+
+  // Verificar el servicio y el tipo de personal de salud según las condiciones de la regla
+  switch (servicio) {
+      case "056":
+          if (tipoPersonalSalud !== "01" && tipoPersonalSalud !== "03") {
+              rcData.push({
+                  'Cuenta': cuenta,
+                  'Servicio':tipoSservicio,
+                  'Tipo': 'RC',
+                  'Número': '79',
+                  'FUA':fua,
+                  'Descripcion': `No cumple con la regla de consistencia 79. El codigo del tipo de personal es ${tipoPersonalSalud}`
+              });
+          }
+          break;
+      case "061":
+          if (tipoPersonalSalud !== "01" && tipoPersonalSalud !== "03" && tipoPersonalSalud !== "05" && tipoPersonalSalud !== "06") {
+              rcData.push({
+                  'Cuenta': cuenta,
+                  'Servicio':tipoSservicio,
+                  'Tipo': 'RC',
+                  'Número': '79',
+                  'FUA':fua,
+                  'Descripcion': `No cumple con la regla de consistencia 79. El codigo del tipo de personal es ${tipoPersonalSalud}`
+              });
+          }
+          break;
+      case "062":
+      case "063":
+      case "064":
+      case "065":
+      case "066":
+      case "067":
+          if (tipoPersonalSalud !== "01" && tipoPersonalSalud !== "03") {
+              rcData.push({
+                  'Cuenta': cuenta,
+                  'Servicio':tipoSservicio,
+                  'Tipo': 'RC',
+                  'Número': '79',
+                  'FUA':fua,
+                  'Descripcion': `No cumple con la regla de consistencia 79. El codigo del tipo de personal es ${tipoPersonalSalud}`
+              });
+          }
+          break;
+      case "068":
+          if (tipoPersonalSalud !== "01") {
+              rcData.push({
+                  'Cuenta': cuenta,
+                  'Servicio':tipoSservicio,
+                  'Tipo': 'RC',
+                  'Número': '79',
+                  'FUA':fua,
+                  'Descripcion': `No cumple con la regla de consistencia 79. El codigo del tipo de personal es ${tipoPersonalSalud}`
+              });
+          }
+          break;
+      default:
+          break;
+  }
+}
+
+function verificarRegla47(data) {
+  const cuenta = data.cuenta_1;
+  const servicio = data.servicio_42;
+  const procedimientos = data.procedimientos;
+  const fua = data.disa_2 + "-" + data.lote_3 + "-" + data.fua_4;
+  const tipoSservicio = data.tipoServicio_88
+
+  if (servicio === "055") {
+    const tiene5914 = procedimientos.some(proc => proc.codigoCpt_2 === "5914");
+    const tiene58600 = procedimientos.some(proc => proc.codigoCpt_2 === "58600");
+
+    if (!tiene5914) {
+      rcData.push({
+        'Cuenta': cuenta,
+        'Servicio':tipoSservicio,
+        'Tipo': 'RC',
+        'Número': '47',
+        'FUA':fua,
+        'Descripcion': `No cumple con la regla de consistencia 47. El codigo del procedimiento 5914 no está presente.`
+      });
+    }
+
+    if (tiene58600) {
+      rcData.push({
+        'Cuenta': cuenta,
+        'Servicio':tipoSservicio,
+        'Tipo': 'RC',
+        'Número': '47',
+        'FUA':fua,
+        'Descripcion': `No cumple con la regla de consistencia 47. El codigo procedimiento 58600 no debe ser registrado.`
+      });
+    }
   }
 }

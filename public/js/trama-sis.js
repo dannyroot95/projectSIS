@@ -3473,6 +3473,7 @@ setTimeout(() => {
         observacion_84 : rowData[84],
         versionApp_85 : rowData[85],
         codigoSiteds_86 : rowData[86],
+        usuarioDigitador_87 : rowData[87],
         tipoServicio_88 : rowData[88],
       };
       // Agrega el objeto JSON al array
@@ -3679,6 +3680,7 @@ setTimeout(() => {
           const cuenta = datos.cuenta_1;
           const fua = datos.disa_2+"-"+datos.lote_3+'-'+datos.fua_4
           const servicio = datos.tipoServicio_88
+          const digitador = datos.usuarioDigitador_87
           // Verificar regla 12
           if (!verificarRegla12(datos)) {
               rcData.push({
@@ -3687,6 +3689,7 @@ setTimeout(() => {
                   'Tipo':'RC',
                   'Número':'12',
                   'FUA':fua,
+                  'Digitador':digitador,
                   'Descripcion': `No cumple con la regla de consistencia 12 , debe contener al menos un procedimiento ó medicamento/insumo`
               });
           }
@@ -3697,6 +3700,8 @@ setTimeout(() => {
           verificarRegla59(datos) 
           verificarRegla79(datos)
           verificarRegla47(datos)
+          verificarRegla14(datos)
+          verificarRegla53(datos)
       });
   
       downloadRC()
@@ -3721,6 +3726,7 @@ setTimeout(() => {
         const fua = data.disa_2+"-"+data.lote_3+'-'+data.fua_4
         const insumos = data.insumos;
         const servicio = data.tipoServicio_88
+        const digitador = data.usuarioDigitador_87
 
         if (!insumos || insumos.length === 0) {
             //console.log(`Cuenta ${cuenta}: No hay insumos registrados.`);
@@ -3735,6 +3741,7 @@ setTimeout(() => {
                 'Tipo':'RC',
                 'Número':'80',
                 'FUA':fua,
+                'Digitador':digitador,
                 'Descripcion': `No cumple con la regla de consistencia 80. Los siguientes insumos no están permitidos: ${insumosNoPermitidos.join(', ')}`
             });
                
@@ -3749,6 +3756,7 @@ function verificarValidacion19(data) {
   const medicamentos = data.medicamentos;
   const fua = data.disa_2 + "-" + data.lote_3 + "-" + data.fua_4;
   const tipoSservicio = data.tipoServicio_88
+  const digitador = data.usuarioDigitador_87
   let rv19 = 0;
   let descripcion = `No cumple con la regla de validación 19. `;
 
@@ -3789,6 +3797,7 @@ function verificarValidacion19(data) {
               'Tipo': 'RV',
               'Número': '19',
               'FUA':fua,
+              'Digitador':digitador,
               'Descripcion': descripcion
           });
       }
@@ -3800,6 +3809,7 @@ function verificarRegla59(data) {
   const procedimientos = data.procedimientos;
   const fua = data.disa_2+"-"+data.lote_3+"-"+data.fua_4
   const tipoSservicio = data.tipoServicio_88
+  const digitador = data.usuarioDigitador_87
 
   const fechaIngresoParts = (data.fechaIngresoHospitalizacion_46).split("/");
   const fechaAltaParts = (data.fechaAltaHospitalizacion_47).split("/");
@@ -3830,6 +3840,7 @@ function verificarRegla59(data) {
               'Tipo': 'RC',
               'Número': '59',
               'FUA':fua,
+              'Digitador':digitador,
               'Descripcion': `No cumple con la regla de consistencia 59. La cantidad entregada (${cantidadEntregada99206}) es mayor que el número de días de hospitalización (${tiempoHospitalizacion}). CPT 99206`
           });
       }
@@ -3842,6 +3853,7 @@ function verificarRegla59(data) {
           'Tipo': 'RC',
           'Número': '59',
           'FUA':fua,
+          'Digitador':digitador,
           'Descripcion': `No cumple con la regla de consistencia 59. La cantidad entregada (${cantidadEntregada99231}) es mayor que el número de días de hospitalización (${tiempoHospitalizacion}). CPT 99231`
       });
   }
@@ -3855,6 +3867,7 @@ function verificarRegla59(data) {
           'Tipo': 'RC',
           'Número': '59',
           'FUA':fua,
+          'Digitador':digitador,
           'Descripcion': `No cumple con la regla de consistencia 59. La cantidad entregada (${cantidadEntregada94640}) es mayor que el número de días de hospitalización (${tiempoHospitalizacionDividida}). CPT 94640`
       });
   }
@@ -3868,6 +3881,7 @@ function verificarRegla59(data) {
           'Tipo': 'RC',
           'Número': '59',
           'FUA':fua,
+          'Digitador':digitador,
           'Descripcion': `No cumple con la regla de consistencia 59. La cantidad entregada (${cantidadEntregada94760}) es mayor que el número de días de hospitalización (${tiempoHospitalizacionDividida}). CPT 94760`
       });
   }
@@ -3880,6 +3894,7 @@ function verificarRegla79(data) {
   const tipoPersonalSalud = data.tipoPersonalSalud_74;
   const fua = data.disa_2+"-"+data.lote_3+"-"+data.fua_4
   const tipoSservicio = data.tipoServicio_88
+  const digitador = data.usuarioDigitador_87
 
   // Verificar el servicio y el tipo de personal de salud según las condiciones de la regla
   switch (servicio) {
@@ -3891,6 +3906,7 @@ function verificarRegla79(data) {
                   'Tipo': 'RC',
                   'Número': '79',
                   'FUA':fua,
+                  'Digitador':digitador,
                   'Descripcion': `No cumple con la regla de consistencia 79. El codigo del tipo de personal es ${tipoPersonalSalud}`
               });
           }
@@ -3903,6 +3919,7 @@ function verificarRegla79(data) {
                   'Tipo': 'RC',
                   'Número': '79',
                   'FUA':fua,
+                  'Digitador':digitador,
                   'Descripcion': `No cumple con la regla de consistencia 79. El codigo del tipo de personal es ${tipoPersonalSalud}`
               });
           }
@@ -3920,6 +3937,7 @@ function verificarRegla79(data) {
                   'Tipo': 'RC',
                   'Número': '79',
                   'FUA':fua,
+                  'Digitador':digitador,
                   'Descripcion': `No cumple con la regla de consistencia 79. El codigo del tipo de personal es ${tipoPersonalSalud}`
               });
           }
@@ -3932,6 +3950,7 @@ function verificarRegla79(data) {
                   'Tipo': 'RC',
                   'Número': '79',
                   'FUA':fua,
+                  'Digitador':digitador,
                   'Descripcion': `No cumple con la regla de consistencia 79. El codigo del tipo de personal es ${tipoPersonalSalud}`
               });
           }
@@ -3947,9 +3966,10 @@ function verificarRegla47(data) {
   const procedimientos = data.procedimientos;
   const fua = data.disa_2 + "-" + data.lote_3 + "-" + data.fua_4;
   const tipoSservicio = data.tipoServicio_88
+  const digitador = data.usuarioDigitador_87
 
   if (servicio === "055") {
-    const tiene5914 = procedimientos.some(proc => proc.codigoCpt_2 === "5914");
+    const tiene5914 = procedimientos.some(proc => proc.codigoCpt_2 === "59514");
     const tiene58600 = procedimientos.some(proc => proc.codigoCpt_2 === "58600");
 
     if (!tiene5914) {
@@ -3959,7 +3979,8 @@ function verificarRegla47(data) {
         'Tipo': 'RC',
         'Número': '47',
         'FUA':fua,
-        'Descripcion': `No cumple con la regla de consistencia 47. El codigo del procedimiento 5914 no está presente.`
+        'Digitador':digitador,
+        'Descripcion': `No cumple con la regla de consistencia 47. El codigo del procedimiento 59514 no está presente.`
       });
     }
 
@@ -3970,8 +3991,67 @@ function verificarRegla47(data) {
         'Tipo': 'RC',
         'Número': '47',
         'FUA':fua,
+        'Digitador':digitador,
         'Descripcion': `No cumple con la regla de consistencia 47. El codigo procedimiento 58600 no debe ser registrado.`
       });
     }
+  }
+}
+
+function verificarRegla14(data) {
+  const cuenta = data.cuenta_1;
+  const servicio = data.servicio_42;
+  const smi = data.smi;
+  const tipoSservicio = data.tipoServicio_88
+  const fua = data.disa_2 + "-" + data.lote_3 + "-" + data.fua_4;
+  const digitador = data.usuarioDigitador_87
+
+
+  if (servicio === "050" && smi.length === 0) {
+      rcData.push({
+        'Cuenta': cuenta,
+        'Servicio':tipoSservicio,
+        'Tipo': 'RC',
+        'Número': '14',
+        'FUA':fua,
+        'Digitador':digitador,
+        'Descripcion': `No cumple con la regla de consistencia 14. Falta Consignar algun SMI obligatorio, para 050 : 003,004,102,304,305,306,315"`
+      });
+  }
+}
+
+function verificarRegla53(data) {
+  const cuenta = data.cuenta_1;
+  const diagnosticos = data.diagnosticos;
+  const fechaNacimientoParts = data.fechaNacimiento_30.split("/");
+  const tipoSservicio = data.tipoServicio_88
+  const fua = data.disa_2 + "-" + data.lote_3 + "-" + data.fua_4;
+  const digitador = data.usuarioDigitador_87;
+  const servicio = data.servicio_42;
+
+  // Crear objeto Date con la fecha de nacimiento
+  const fechaNacimiento = new Date(fechaNacimientoParts[2], fechaNacimientoParts[1] - 1, fechaNacimientoParts[0]);
+
+  // Calcular la edad en meses
+  const fechaActual = new Date();
+  const edadEnMeses = (fechaActual.getFullYear() - fechaNacimiento.getFullYear()) * 12 +
+      (fechaActual.getMonth() - fechaNacimiento.getMonth());
+
+  if (servicio === "050") {
+      // Verificar si hay diagnósticos con código Z380
+      const diagnosticoZ380 = diagnosticos.find(diag => diag.codigoDiagnostico_2 === "Z380");
+
+      // Verificar si la edad es mayor o igual a 5 meses si existe al menos un diagnóstico con código Z380
+      if (diagnosticoZ380 && edadEnMeses >= 5) {
+          rcData.push({
+              'Cuenta': cuenta,
+              'Servicio':tipoSservicio,
+              'Tipo': 'RC',
+              'Número': '14',
+              'FUA':fua,
+              'Digitador':digitador,
+              'Descripcion': `No cumple con la regla de consistencia 53. El diagnostico Z380 no se aplica para el rango de edad del Asegurado`
+          });
+      }
   }
 }

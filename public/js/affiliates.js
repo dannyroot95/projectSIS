@@ -12,6 +12,17 @@
 
 //const { json } = require("express");
 //
+
+const fechaNacimientoParts = ("15/08/1966").split("/");
+const fechaAtencionParts = ("04/01/2024 11:35").split(" ")[0].split("/"); // Obtener solo la parte de la fecha y dividirla
+// Crear objetos Date con las fechas de nacimiento y atención
+const fechaNacimiento = new Date(fechaNacimientoParts[2], fechaNacimientoParts[1] - 1, fechaNacimientoParts[0]);
+const fechaAtencion = new Date(fechaAtencionParts[2], fechaAtencionParts[1] - 1, fechaAtencionParts[0]);
+
+// Calcular los días de vida
+const diasDeVida = Math.floor((fechaNacimiento - fechaAtencion) / (1000 * 60 * 60 * 24));
+alert(diasDeVida);
+
 var jsonAfiliate = {}
 
 function search(){

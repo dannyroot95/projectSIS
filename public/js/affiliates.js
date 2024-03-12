@@ -13,16 +13,6 @@
 //const { json } = require("express");
 //
 
-const fechaNacimientoParts = ("15/08/1966").split("/");
-const fechaAtencionParts = ("04/01/2024 11:35").split(" ")[0].split("/"); // Obtener solo la parte de la fecha y dividirla
-// Crear objetos Date con las fechas de nacimiento y atención
-const fechaNacimiento = new Date(fechaNacimientoParts[2], fechaNacimientoParts[1] - 1, fechaNacimientoParts[0]);
-const fechaAtencion = new Date(fechaAtencionParts[2], fechaAtencionParts[1] - 1, fechaAtencionParts[0]);
-
-// Calcular los días de vida
-const diasDeVida = Math.floor((fechaNacimiento - fechaAtencion) / (1000 * 60 * 60 * 24));
-alert(diasDeVida);
-
 var jsonAfiliate = {}
 
 function search(){
@@ -111,7 +101,7 @@ function insertData(data){
  
               <td class="minText5"><center>${statusF(d.Estado)}</center></td>
 
-              <td class="minText5"><center>${isNulledString(d.Fbaja)}</center></td>
+              <td class="minText5"><center>${isNulledStringFBaja(d.Fbaja)}</center></td>
        
               <td class="minText5"><center>${isNulledString(d.MotivoBaja)}</center></td>
       
@@ -137,12 +127,14 @@ function deleteSymbols(event) {
   function enable(){
     document.getElementById("btn-search").disabled = false
     document.getElementById("btn-search-web").disabled = false
+    document.getElementById("btn-search-arfsis").disabled = false
     loader.style = "display:none;"
   }
 
   function disabled(){
     document.getElementById("btn-search").disabled = true
     document.getElementById("btn-search-web").disabled = true
+    document.getElementById("btn-search-arfsis").disabled = true
     loader.style = "display:block;"
   }
 
@@ -164,6 +156,24 @@ function deleteSymbols(event) {
 
     if(x == null || x == "" || x == "__________"){
         x = "<b>Sin registro</b>"
+    }
+
+    return x
+
+  }
+
+  function isNulledStringFBaja(val){
+
+    let x = val
+
+    if(x == null || x == "" || x == "__________"){
+        x = "<b>Sin registro</b>"
+    }else{
+      const fechaObj = new Date(x);
+      const año = fechaObj.getFullYear();
+      const mes = String(fechaObj.getMonth() + 1).padStart(2, '0'); // Se agrega 1 al mes porque los meses van de 0 a 11
+      const dia = String(fechaObj.getDate()).padStart(2, '0');
+      x = `${dia}/${mes}/${año}`;
     }
 
     return x
@@ -214,6 +224,34 @@ function deleteSymbols(event) {
     else if(val == '0'){doc = `<b style="color:green;">Activo</b>`}
 
     return doc.toUpperCase()
+
+  }
+
+  function searchArfsis(){
+    let tipo = document.getElementById("s-type-formated").value
+    let num = document.getElementById("nro-formato").value
+    if(tipo != "" && num !=""){
+
+      if(tipo == "2" && num.length == 8){
+        fetchSearchArfsis(tipo,num.trim())
+      }else if(tipo == "3" && num.length == 9){
+        fetchSearchArfsis(tipo,num.trim())
+      }else if(tipo == "E" && num.length == 8){
+        fetchSearchArfsis(tipo,num.trim())
+      }else{
+        Swal.fire(
+          'Oops',
+          'Error formato de afiliación!',
+          'info'
+        )
+      }
+    }else{
+      Swal.fire(
+        'Oops',
+        'Complete los campos!',
+        'info'
+      )
+    }
 
   }
 
@@ -368,23 +406,8 @@ function deleteSymbols(event) {
       var newdateAfiliate = year + "-" + month + "-" + day;
       var newdateBirth = yearN + "-" + monthN + "-" + dayN;
 
-      document.getElementById("idSiasis").value = idNumReg
-      document.getElementById("idTypeTable").value = tabla
-      document.getElementById("idDisa").value = disa
-      document.getElementById("idTypeFormatAffiliate").value = tipoFormato
-      document.getElementById("nroFormatAffi").value = nroContrato
-      document.getElementById("correlative").value = isEmptyCorrelative(correlativo)
-      document.getElementById("inputGroupSelectTypeDoc").value = tipoDocumento
-      document.getElementById("inputGroupSelectSex").value = genero
-      document.getElementById("estCode").value = eess
-      document.getElementById("dateAffiliation").value = newdateAfiliate
-      document.getElementById("aPaterno").value = apePaterno
-      document.getElementById("aMaterno").value = apeMaterno
-      document.getElementById("aPNombre").value = nombres.split(" ")[0]
-      document.getElementById("aSNombre").value = isUndefined(nombres)
-      document.getElementById("dateBirth").value = newdateBirth
-      document.getElementById("idDistrito").value = idUbigeo
-      document.getElementById("nDoc").value = nroDocumento
+      setDataAfiliate(idNumReg,tabla,disa,tipoFormato,nroContrato,correlativo,tipoDocumento,genero,eess,
+        newdateAfiliate,apePaterno,apeMaterno,nombres,newdateBirth,idUbigeo,nroDocumento)
       
       jsonAfiliate = {
          idSiasis : parseInt(idNumReg)
@@ -422,6 +445,119 @@ function deleteSymbols(event) {
 
   }
 
+  function setDataAfiliate(idNumReg,tabla,disa,tipoFormato,nroContrato,correlativo,tipoDocumento,genero,eess,
+    newdateAfiliate,apePaterno,apeMaterno,nombres,newdateBirth,idUbigeo,nroDocumento){
+      document.getElementById("idSiasis").value = idNumReg
+      document.getElementById("idTypeTable").value = tabla
+      document.getElementById("idDisa").value = disa
+      document.getElementById("idTypeFormatAffiliate").value = tipoFormato
+      document.getElementById("nroFormatAffi").value = nroContrato
+      document.getElementById("correlative").value = isEmptyCorrelative(correlativo)
+      document.getElementById("inputGroupSelectTypeDoc").value = tipoDocumento
+      document.getElementById("inputGroupSelectSex").value = genero
+      document.getElementById("estCode").value = eess
+      document.getElementById("dateAffiliation").value = newdateAfiliate
+      document.getElementById("aPaterno").value = apePaterno
+      document.getElementById("aMaterno").value = apeMaterno
+      document.getElementById("aPNombre").value = nombres.split(" ")[0]
+      document.getElementById("aSNombre").value = isUndefined(nombres)
+      document.getElementById("dateBirth").value = newdateBirth
+      document.getElementById("idDistrito").value = idUbigeo
+      document.getElementById("nDoc").value = nroDocumento
+  }
+
+  function fetchSearchArfsis(type,nro) {
+    disabled()
+    fetch(`${url}/get-afiliate-arfsis/${type}/${nro}`)
+      .then(response => response.json())
+      .then(data => {
+        enable()
+        if(data.length > 0){
+          jsonAfiliate = {}
+          let d = data[0]
+
+          const fechaObjFormato = new Date(d.afi_FecFormato);
+          const fechaObjNac = new Date(d.afi_FecNac);
+          let fechaDeBaja = null
+
+          if(d.afi_FecBaja != "" || d.afi_FecBaja != null){
+            const fechaObjBaja = new Date(d.afi_FecBaja)
+            const añoB = fechaObjBaja.getFullYear();
+            const mesB = String(fechaObjBaja.getMonth() + 1).padStart(2, '0'); 
+            const diaB = String(fechaObjBaja.getDate()).padStart(2, '0');  
+            fechaDeBaja = `${añoB}-${mesB}-${diaB}`;
+          }
+
+          const añoF = fechaObjFormato.getFullYear();
+          const mesF = String(fechaObjFormato.getMonth() + 1).padStart(2, '0'); 
+          const diaF = String(fechaObjFormato.getDate()).padStart(2, '0');
+
+          const añoN = fechaObjNac.getFullYear();
+          const mesN = String(fechaObjNac.getMonth() + 1).padStart(2, '0'); 
+          const diaN = String(fechaObjNac.getDate()).padStart(2, '0');
+
+
+          const fechaFormato = `${añoF}-${mesF}-${diaF}`;
+          const fechaNacimiento = `${añoN}-${mesN}-${diaN}`;
+
+          jsonAfiliate = {
+            idSiasis : d.afi_IdSiasis
+           ,Codigo : d.afi_TipoTabla
+           ,AfiliacionDisa : d.afi_IdDisa
+           ,AfiliacionTipoFormato : d.afi_TipoFormato
+           ,AfiliacionNroFormato : d.afi_NroFormato
+           ,AfiliacionNroIntegrante : isEmptyCorrelative(d.afi_CorrelativoIns)
+           ,DocumentoTipo : d.afi_IdTipoDocumento
+           ,CodigoEstablAdscripcion : d.afi_IdEESSAte
+           ,AfiliacionFecha : fechaFormato
+           ,Paterno : d.afi_ApePaterno
+           ,Materno : emptyMomLastName(d.afi_ApeMaterno)
+           ,Pnombre : d.afi_Nombres.split(" ")[0]
+           ,Onombres : isUndefined(d.afi_Nombres)
+           ,Genero : d.afi_IdSexo
+           ,Fnacimiento : fechaNacimiento
+           ,IdDistritoDomicilio : d.afi_IdDistrito
+           ,Estado : d.afi_IdEstado
+           ,Fbaja : fechaDeBaja
+           ,DocumentoNumero : d.afi_Dni
+           ,MotivoBaja : d.afi_MotivoBaja   
+           ,FbajaOK : null
+         }
+
+          document.getElementById("typeLocalHealth").innerHTML = ""
+          document.getElementById("eessCode").innerHTML = ""
+          document.getElementById("descriptionCode").innerHTML = ""
+
+         if(d.afi_IdEstado == "0"){
+          document.getElementById("status").innerHTML = "ACTIVO"
+          document.getElementById("status").style = "color:green;font-weight: bold;"
+        }else{
+          document.getElementById("status").innerHTML = "INACTIVO"
+          document.getElementById("status").style = "color:red;font-weight: bold;"
+        }
+
+         setDataAfiliate(d.afi_IdSiasis,d.afi_TipoTabla,d.afi_IdDisa,d.afi_TipoFormato,d.afi_NroFormato,
+          d.afi_CorrelativoIns,d.afi_IdTipoDocumento,d.afi_IdSexo,d.afi_IdEESSAte,fechaFormato,d.afi_ApeMaterno,
+          d.afi_ApeMaterno,d.afi_Nombres,fechaNacimiento,d.afi_IdDistrito,d.afi_Dni)
+         
+          $('#addModal').modal('show')
+
+          console.log(jsonAfiliate)
+
+        }else{
+          Swal.fire(
+            'Oops',
+            'Sin resultados!',
+            'info'
+          )
+        }
+      })
+      .catch(error => {
+        enable()
+        console.error('Error:', error);
+      });
+  }
+
   function isUndefined(name){
     let secondName = name.split(" ")[1]
     let thirdName = name.split(" ")[2]
@@ -447,7 +583,7 @@ function deleteSymbols(event) {
   }
 
   function isEmptyCorrelative(c){
-    if(c == ""){
+    if(c == "" || c == null){
       c = "0"
     }
     return c.substring(0, 1)

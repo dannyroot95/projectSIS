@@ -2268,7 +2268,7 @@ function getDataClientSaludpol(d){
                 
                       return `
                       <tr>
-                      <td>${getClasificationDX(d.IdClasificacionDx)}</td>
+                      <td>${getClasificationDX(d.IdSubclasificacionDx)}</td>
                       <td>${d.CodigoCIE2004}</td>
                       <td>${d.Descripcion}</td>
                       <td><center><button style="background-color:red;border-color:red;" onclick="showModalDeleteDiagnosys('${d.IdAtencionDiagnostico}')" class="btn btn-dark">X</button></center></td>

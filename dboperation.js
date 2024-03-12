@@ -1,4 +1,5 @@
 var config = require("./dbconfig")
+var configArfsis = require("./dbconfigArfsis")
 const sql = require("mssql")
 const fs = require('fs');
 const axios = require('axios');
@@ -8,7 +9,13 @@ const { use } = require("./routes");
 archiver.registerFormat('zip-encrypted', require("archiver-zip-encrypted"));
 const passwordProduction = '7017FuaE47121'; 
 const passwordTest = 'PilotoFUAE123'
+const mysql = require('mysql2/promise');
+const connection = mysql.createConnection(configArfsis);
 //const passwordTest = 'PilotoFUAE123'
+
+
+
+//connection.end();
 
 const urlTesting = 'http://pruebaws01.sis.gob.pe/cxf/esb/negocio/registroFuaBatch/v2'; // URL del servicio web SOAP
 const urlProduction = 'http://ws01.sis.gob.pe/cxf/esb/negocio/registroFuaBatch/v2'; // URL del servicio web SOAP
@@ -791,6 +798,17 @@ console.log("error :" + error);
     const fileData = fs.readFileSync(filePath);
     return Buffer.from(fileData).toString('base64');
   }
+
+  async function getAfiliateArfsisWeb(type, nro) {
+    try {
+        const connection = await mysql.createConnection(configArfsis);
+
+        const [results, fields] = await connection.execute(`SELECT * FROM bdsis_asegurados.m_afiliados where afi_NroFormato = '${nro}' and afi_TipoFormato = '${type}'`, [nro, type]);
+        return results;
+    } catch (error) {
+        throw error;
+    }
+}
 
 
   async function getAfiliateWebService(){
@@ -2163,5 +2181,6 @@ module.exports = {
   getAuditByDates:getAuditByDates,
   getAllUsers:getAllUsers,
   getAuditByDatesAndUser:getAuditByDatesAndUser,
-  getDetailAudit:getDetailAudit
+  getDetailAudit:getDetailAudit,
+  getAfiliateArfsisWeb:getAfiliateArfsisWeb
 };

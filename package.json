@@ -23,6 +23,7 @@
     "md5": "^2.3.0",
     "morgan": "~1.9.1",
     "mssql": "^9.1.1",
+    "mysql2": "^3.9.2",
     "stream-to-blob": "^2.0.1",
     "sweetalert2": "^11.7.3",
     "xlsexport": "^1.5.2",

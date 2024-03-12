@@ -10,8 +10,8 @@ $('document').ready(function () {
   
         if (direccion == '#inicio') {
           inicio()
-        }else if (direccion == '#usuarios') {
-          users()
+        }else if (direccion == '#arfsis') {
+          arfsis()
         }
         else if (direccion == '#estado_comprobante') {
           estado_comprobante()
@@ -111,9 +111,9 @@ $('document').ready(function () {
     window.location.hash = "#trama_saludpol"
     contentModulo.innerHTML = urlModule("/content/trama-saludpol.html");
   }
-  function users() {
-    window.location.hash = "#usuarios"
-    contentModulo.innerHTML = urlModule("/content/usuarios.html");
+  function arfsis() {
+    window.location.hash = "#arfsis"
+    contentModulo.innerHTML = urlModule("/content/arfsis.html");
   }
   function catalog() {
     window.location.hash = "#catalogo"

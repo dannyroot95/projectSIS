@@ -1,4 +1,3 @@
-
 getAllUsers()
 let allData = []
 let allData2 = []
@@ -6,7 +5,6 @@ let loader = document.getElementById("loader")
 let load = document.getElementById("loader2")
 createDatatable()
 createDatatable2()
-
 
 let checkbox = document.getElementById("chk-user");
 checkbox.addEventListener("change", function() {

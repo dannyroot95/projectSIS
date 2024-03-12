@@ -45,6 +45,7 @@
             <select class="custom-select" id="s-type-formated">
               <option value="2">DNI (2)</option>
               <option value="3">Carnet de extrajería (3)</option>
+              <option value="E">Temporal (E)</option>
             </select>
             
             <div class="input-group-prepend">
@@ -53,6 +54,7 @@
             <input type="tel" onKeypress='if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;' class="form-control" id="nro-formato">
             <button class="btn btn-success" id="btn-search" onclick="search()"><i class='bx bx-search-alt-2' ></i>&nbsp;Buscar en galenos</button>
             <button class="btn btn-primary" id="btn-search-web" onclick="searchWebService()"><i class="bi bi-globe"></i>&nbsp;Buscar en SIS</button>
+            <button style="border-color: #005580;color: #005580;" class="btn btn-light" id="btn-search-arfsis" onclick="searchArfsis()"><i class="bi bi-bezier2"></i>&nbsp;Buscar en Arfsis</button>
             <a><div class="loaderSmall" id="loader"></div></a>
         </div>
 

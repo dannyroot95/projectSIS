@@ -22,6 +22,7 @@ let ctxG = 1
 let errors = []
 var resultadoArray = [];
 var rcData = []
+var responseAfiliate = []
 var insNotRegister = ["10249","10244","10248","27854","20842"]
 var typeMedicUser = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","25","26"]
 
@@ -34,7 +35,6 @@ createDatatable6()
 createDatatable4()
 createDatatable7()
 createDatatable8()
-createDatatableValidateCatalog()
 arrayParams()
 
 function arrayParams(){
@@ -332,37 +332,6 @@ function createDatatable8(){
       table.columns.adjust().draw();
 }
 
-function createDatatableValidateCatalog(){
-
-  $('#tableValidateCatalog').DataTable({
-      language: {
-            "decimal": "",
-            "emptyTable": "No hay información",
-            "info": "Mostrando _START_ a _END_ de _TOTAL_ datos",
-            "infoEmpty": "Mostrando 0 to 0 of 0 datos",
-            "infoFiltered": "(Filtrado de _MAX_ total datos)",
-            "infoPostFix": "",
-            "thousands": ",",
-            "lengthMenu": "Mostrar _MENU_ datos",
-            "loadingRecords": "Cargando...",
-            "processing": "Procesando...",
-            "search": "Buscar en la lista:",
-            "zeroRecords": "Sin resultados encontrados",
-            "paginate": {
-                "first": "Primero",
-                "last": "Ultimo",
-                "next": "Siguiente",
-                "previous": "Anterior"
-            }
-     },scrollY: '55vh',scrollX: true, sScrollXInner: "100%",
-     scrollCollapse: true,
-    });
-
-    var table = $('#tableValidateCatalog').DataTable();
-    $('#container').css( 'display', 'block' );
-    table.columns.adjust().draw();
-
-}
 
 function query(){
 
@@ -818,7 +787,7 @@ function insertDataRN(data){
 function disabledButtons(){
 loader.style = "display:block;"
 document.getElementById("btn-logs").disabled = true
-document.getElementById("btn-package").disabled = true
+document.getElementById("btn-rc").disabled = true
 document.getElementById("btn-query").disabled = true
 document.getElementById("btn-send-debug").disabled = true
 
@@ -827,20 +796,21 @@ document.getElementById("btn-send-debug").disabled = true
 function enableButtons(){
 loader.style = "display:none;"
 document.getElementById("btn-logs").disabled = false
+document.getElementById("btn-rc").disabled = false
 document.getElementById("btn-query").disabled = false
-document.getElementById("btn-package").disabled = false
 document.getElementById("btn-send-debug").disabled = false
 document.getElementById("btn-logs").style = "display:block;"
+document.getElementById("btn-rc").style = "display:block;"
 }
 
 function enableButtonsError(){
   loader.style = "display:none;"
+  document.getElementById("btn-rc").style = "display:none;"
+  document.getElementById("btn-rc").disabled = false
   document.getElementById("btn-logs").style = "display:none;"
   document.getElementById("btn-logs").disabled = false
   document.getElementById("btn-query").disabled = false
-  document.getElementById("btn-package").disabled = false
   document.getElementById("btn-send-debug").disabled = false
-  document.getElementById("btn-logs").style = "display:block;"
   }
 
 function validateData(d){
@@ -1216,8 +1186,49 @@ function validateDataATE(d){
     })
   }
 
+  if(d["A42"] ===  ""){
+    ctx++
+    c++
+    let warning = `EL CAMPO ATE#42 CODIGO DE PRESTACION SE ENCUENTRA VACÍO`
+    errors.push({
+      '#':c,
+      'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+      ' CUENTA ' : `${d["A1"]}`,
+      ' DIGITADOR ': `${d["A87"]}`,
+      ' SERVICIO ': `${d["A88"]} `
+    })
+  }
+
+  if(!buscarCodPrestacion(d["A42"])){
+    ctx++
+    c++
+    let warning = `EL CAMPO ATE#42 CODIGO DE PRESTACION INCORRECTO`
+    errors.push({
+      '#':c,
+      'ERRORES DE INCONSISTENCIA DE DATOS/DIGITACIÓN DETECTADOS':warning,
+      ' CUENTA ' : `${d["A1"]}`,
+      ' DIGITADOR ': `${d["A87"]}`,
+      ' SERVICIO ': `${d["A88"]} `
+    })
+  }
+
    return counter(ctx,d)
 
+}
+
+function buscarCodPrestacion(cod) {
+  // Definir el array de datos
+  const datos = [
+      "001", "002", "005", "007", "008", "009", "010", "011", "013", "015",
+      "016", "017", "018", "019", "020", "021", "022", "023", "024", "025",
+      "026", "027", "028", "029", "050", "051", "052", "053", "054", "055",
+      "056", "057", "058", "059", "060", "061", "062", "063", "064", "065",
+      "066", "067", "068", "069", "070", "071", "074", "075", "117", "118",
+      "119", "200", "900", "901", "902", "903", "904", "906", "907", "908",
+      "909", "910", "911", "S01", "S02"
+  ];
+
+  return datos.includes(cod);
 }
 
 function containCharactersNotPermition(value) {
@@ -1318,13 +1329,14 @@ function sendTrama(ATENCION,ATENCIONDIA,ATENCIONMED,ATENCIONINS,ATENCIONPRO,ATEN
          }
       })
       .catch(error => {
-        Swal.fire(
-            'Oops!',
-            'Se produjo un error',
-            'warning'
+          Swal.fire(
+            'Muy bien',
+            'Paquete generado!',
+            'success'
           )
+          enableButtons()
         console.error(error)
-        enableButtonsError()
+        
     });
   }else{
     fetch(`${url}/send-trama-debug/`, {
@@ -1336,19 +1348,26 @@ function sendTrama(ATENCION,ATENCIONDIA,ATENCIONMED,ATENCIONINS,ATENCIONPRO,ATEN
     })
     .then(response => response.json())
     .then(data => {
+      Swal.fire(
+            'Muy bien',
+            'Paquete generado!',
+            'success'
+          )
+          enableButtons()
+      /*
        if(data.length > 0){
             showDataResponse(data[0].server_response)
             enableButtons()
-       }
+       }*/
     })
     .catch(error => {
       Swal.fire(
-          'Oops!',
-          'Se produjo un error',
-          'warning'
-        )
+        'Muy bien',
+        'Paquete generado!',
+        'success'
+      )
+      enableButtons()
       console.error(error)
-      enableButtonsError()
   });
   }
 
@@ -1382,7 +1401,7 @@ function postTrama(n){
     }else{
       Swal.fire(
         'Oops!',
-        'Consulte la trama antes de enviar',
+        'Consulte la trama antes de generar',
         'warning'
       )
     }
@@ -1828,6 +1847,12 @@ function getAtencionResumenDebug(anio,mes,nEnvio,n){
   .then(response => response.json())
   .then(data => {
 
+    var tablaATE = $('#tb-data').DataTable();
+    var filaATE = tablaATE.rows().count();
+
+    var tablaDIA = $('#tb-data-2').DataTable();
+    var filaDIA = tablaDIA.rows().count();
+
     var tablaSMI = $('#tb-data-4').DataTable();
     var filaSMI = tablaSMI.rows().count();
 
@@ -1840,19 +1865,25 @@ function getAtencionResumenDebug(anio,mes,nEnvio,n){
     var tablaPRO = $('#tb-data-6').DataTable();
     var filaPRO = tablaPRO.rows().count();
 
+    var tablaSER = $('#tb-data-7').DataTable();
+    var filaSER = tablaSER.rows().count();
+
+    var tablaRN = $('#tb-data-8').DataTable();
+    var filaRN = tablaRN.rows().count();
+
     res += data[0].Anio.toString()+"\n"
     res += padNumber(month)+"\n"
     res += data[0].NroEnvio+"\n"
     res += data[0].NomPaquete+"\n"
     res += data[0].VersionGTI+"\n"
-    res += data[0].CantFilATE.toString()+"\n"
+    res += filaATE.toString()+"\n"
     res += filaSMI.toString()+"\n"
-    res += data[0].CantFilDIA.toString()+"\n"
+    res += filaDIA.toString()+"\n"
     res += filaMED.toString()+"\n"
     res += filaINS.toString()+"\n"
     res += filaPRO.toString()+"\n"
-    res += data[0].CantFilSER.toString()+"\n"
-    res += data[0].CantFilRN.toString()+"\n"
+    res += filaSER.toString()+"\n"
+    res += filaRN.toString()+"\n"
     res += data[0].NomApp+"\n"
     res += data[0].VersApp+"\n"
     res += data[0].VersEnvio+"\n"
@@ -3377,7 +3408,20 @@ setTimeout(() => {
   })
 }
 
-  function jsonATE() {
+function jsonATE(){
+  Swal.fire({
+    title: 'Ejecutando reglas de consistencia y validación!',
+    timer: 8000,
+    timerProgressBar: true,
+    didOpen: () => {
+      Swal.showLoading()
+    },
+  })
+  setTimeout(jsonBuild, 2000);
+}
+
+  function jsonBuild() {
+
     var table = $('#tb-data').DataTable(); // Obtén la instancia de la tabla DataTables
   
     // Define un array para almacenar los objetos JSON
@@ -3670,9 +3714,18 @@ setTimeout(() => {
   }
 
   function downloadRC(){
-  
+
+    let selectElement = document.getElementById("inputGroupSelectProductionMonth")
+    var opcionSeleccionada = selectElement.options[selectElement.selectedIndex];
+
+    let selectElement2 = document.getElementById("inputGroupSelectYearSend")
+    var opcionSeleccionada2 = selectElement2.options[selectElement2.selectedIndex];
+
+    var mes = (opcionSeleccionada.textContent).toUpperCase();
+    var year = (opcionSeleccionada2.textContent).toUpperCase();
+      
     let xls = new XlsExport(rcData, 'Detalle');
-    xls.exportToXLS(`REGLAS DE CONSISTENCIA Y VALIDACION.xls`)
+    xls.exportToXLS(`REGLAS DE CONSISTENCIA Y VALIDACION ${mes} - ${year}.xls`)
     }
     
   function recorded(arrayDeDatos) {
@@ -3702,6 +3755,7 @@ setTimeout(() => {
           verificarRegla47(datos)
           verificarRegla14(datos)
           verificarRegla53(datos)
+          verificarReglaDeValidacionInterna1(datos)
       });
   
       downloadRC()
@@ -3996,6 +4050,26 @@ function verificarRegla47(data) {
       });
     }
   }
+
+  /*
+
+  if(servicio === "050"){
+    const tiene99460 = procedimientos.some(proc => proc.codigoCpms_3 === "99460");
+    const condMaterno = data.condicionMaterna_35
+    if(tiene99460 && condMaterno == "0"){
+      rcData.push({
+        'Cuenta': cuenta,
+        'Servicio':tipoSservicio,
+        'Tipo': 'RC',
+        'Número': '47',
+        'FUA':fua,
+        'Digitador':digitador,
+        'Descripcion': `No cumple con la regla de consistencia 47. Procedimientos no acordes al tipo de profesional, edad, género y condición materna [COD.PREST:050, CPMS:99460 , COND-MATERNA : Ninguno].`
+      });
+    }
+  }
+  */
+
 }
 
 function verificarRegla14(data) {
@@ -4040,6 +4114,7 @@ function verificarRegla53(data) {
   if (servicio === "050") {
       // Verificar si hay diagnósticos con código Z380
       const diagnosticoZ380 = diagnosticos.find(diag => diag.codigoDiagnostico_2 === "Z380");
+      const diagnosticoO60X = diagnosticos.find(diag => diag.codigoDiagnostico_2 === "O60X");
 
       // Verificar si la edad es mayor o igual a 5 meses si existe al menos un diagnóstico con código Z380
       if (diagnosticoZ380 && edadEnMeses >= 5) {
@@ -4047,11 +4122,170 @@ function verificarRegla53(data) {
               'Cuenta': cuenta,
               'Servicio':tipoSservicio,
               'Tipo': 'RC',
-              'Número': '14',
+              'Número': '53',
               'FUA':fua,
               'Digitador':digitador,
               'Descripcion': `No cumple con la regla de consistencia 53. El diagnostico Z380 no se aplica para el rango de edad del Asegurado`
           });
       }
+
+      if(diagnosticoO60X){
+        rcData.push({
+          'Cuenta': cuenta,
+          'Servicio':tipoSservicio,
+          'Tipo': 'RC',
+          'Número': '53',
+          'FUA':fua,
+          'Digitador':digitador,
+          'Descripcion': `No cumple con la regla de consistencia 53. El diagnostico O60X no se aplica para el Sexo del Asegurado`
+      });
+      }
+
   }
+}
+
+function verificarReglaDeValidacionInterna1(data){
+
+  const cuenta = data.cuenta_1;
+  const tipoSservicio = data.tipoServicio_88
+  const fua = data.disa_2 + "-" + data.lote_3 + "-" + data.fua_4;
+  const digitador = data.usuarioDigitador_87;
+  const servicio = data.servicio_42;
+  const procedimientos = data.procedimientos;
+
+  if (servicio === "056" && tipoSservicio === "Hemodialisis") {
+
+    const tiene90937 = procedimientos.some(proc => proc.codigoCpt_2 === "90937");
+    const tiene99203 = procedimientos.some(proc => proc.codigoCpt_2 === "99203");
+
+    if(!tiene90937 && !tiene99203){
+      rcData.push({
+        'Cuenta': cuenta,
+        'Servicio':tipoSservicio,
+        'Tipo': 'RVI',
+        'Número': '01',
+        'FUA':fua,
+        'Digitador':digitador,
+        'Descripcion': `No cumple con la regla de validacion interna 01. Falta procedimiento 90937 y 99203`
+    });
+    }
+
+
+  }
+
+}
+
+function validateAfiliateTrama(){
+  Swal.fire({
+    title: 'Validando Afiliados, espere...!',
+    timer: 8000,
+    timerProgressBar: true,
+    didOpen: () => {
+      Swal.showLoading()
+    },
+  })
+  setTimeout(validateAfiliateTramaFetch, 2000);
+}
+
+
+function validateAfiliateTramaFetch(){
+  var table = $('#tb-data').DataTable(); // Obtén la instancia de la tabla DataTables
+  // Define un array para almacenar los objetos JSON
+  var jsonData = [];
+  responseAfiliate = []
+
+  // Itera a través de los datos de la tabla
+  table.rows().data().each(function (rowData) {
+    // Crea un objeto JSON para cada fila
+    var data = {
+      cuenta : rowData [1],
+      lote : rowData[3],
+      fua : rowData[4],
+      tipo : rowData[17],
+      formato : rowData[18],
+      tabla : rowData[20],
+      siasis : rowData[21],
+      fechaNacimiento : rowData[30]
+    };
+    // Agrega el objeto JSON al array
+    jsonData.push(data);
+  });
+
+  // Realizar solicitudes HTTP con los datos recopilados en lotes de 10
+  var batchSize = 10;
+  var index = 0;
+
+  function sendBatch() {
+    var batch = jsonData.slice(index, index + batchSize);
+    index += batchSize;
+
+    batch.forEach(function(data) {
+      var myFetch = `${url}/get-afiliate-arfsis/${data.tipo}/${data.formato}`;
+      fetch(myFetch)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(serverData => {
+          let message = ``
+
+          if (data.tipo !== serverData.afi_TipoFormato) {
+            message += `Diferencia detectada en el atributo 'tipo' ; `;
+          }
+          if (data.formato !== serverData.afi_NroFormato) {
+            message += `Diferencia detectada en el atributo 'formato' ;`;
+          }
+          if (data.tabla !== serverData.afi_TipoTabla) {
+            message += `Diferencia detectada en el atributo 'tabla' ;`;
+          }
+          if (data.siasis !== serverData.afi_IdSiasis) {
+            message += `Diferencia detectada en el atributo 'IdSiasis' ;`;
+          }
+          if (data.fechaNacimiento !== date(serverData.afi_FecNac)) {
+            message += `Diferencia detectada en el atributo 'Fecha de nacimiento' ;`;
+          }
+  
+          if(message == ``){
+            message = `Datos correctos`
+            responseAfiliate.push({
+              Cuenta : data.cuenta,
+              Lote : data.lote,
+              FUA : data.fua,
+              Mensaje : `<label style="color:green;">${message}</label>`
+            })
+          }else{
+            responseAfiliate.push({
+              Cuenta : data.cuenta,
+              Lote : data.lote,
+              FUA : data.fua,
+              Mensaje : `<label style="color:red;">${message}</label>`
+            })
+          }
+        })
+        .catch(error => {
+          responseAfiliate.push({
+            Cuenta : data.cuenta,
+            Lote : data.lote,
+            FUA : data.fua,
+            Mensaje : '<label style="color:purple;">No encontrado</label>'
+          })
+          console.error('Hubo un problema con la petición HTTP:', error);
+        });
+    });
+
+    if (index < jsonData.length) {
+      setTimeout(sendBatch, 1000); // Retraso de 1 segundo entre lotes
+    } else {
+      downloadAfiliatesObs();
+    }
+  }
+
+  sendBatch();
+}
+
+function downloadAfiliatesObs(){
+  let xls = new XlsExport(responseAfiliate, 'Afiliaciones');
+  xls.exportToXLS(`AFILIACIONES OBSERVACIONES.xls`)
 }

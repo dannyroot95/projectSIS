@@ -667,6 +667,21 @@ router.get("/get-afiliate-web-service", async function (req, res, next) {
   }
 });
 
+
+router.get("/get-afiliate-arfsis/:a/:b", async function (req, res, next) {
+  const type = req.params.a;
+  const nro = req.params.b;
+
+  try {
+      const result = await sql.getAfiliateArfsisWeb(type, nro);
+      res.json(result);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error al obtener los afiliados de ARFSIS.' });
+  }
+});
+
+
 router.get("/get-afiliate-web-service-data/:a/:b/:c/:d", async function (req, res, next) {
   //const data = req.body;
   let auth = req.params.a;
@@ -894,7 +909,7 @@ router.get("/get-employee-by-user/:a/:b", function (req, res,next) {
 
     if(result[0].length>0){
       let type = {
-        content : getTypeUser(result[0][0].IdTipoEmpleado)
+        content : getTypeUser(result[0][0].IdTipoEmpleado,user)
       }
 
       for (let i = result.length - 1; i >= 1; i--) {
@@ -942,7 +957,7 @@ router.post("/create-user", function (req, res,next) {
   });
 });
 
-function getTypeUser(value){
+function getTypeUser(value,user){
 
   let x = ''
 
@@ -978,12 +993,12 @@ function getTypeUser(value){
       </li>
   
         <li>
-          <a href="#usuarios">
-            <i class='bx bx-user'></i>
-            <span class="link_name">Usuarios</span>
+          <a href="#arfsis">
+          <i class='bx bxs-analyse'></i>
+            <span class="link_name">Arfsis</span>
           </a>
           <ul class="sub-menu blank">
-            <li><a class="link_name" href="#usuarios">Usuarios</a></li>
+            <li><a class="link_name" href="#arfsis">Arfsis web</a></li>
           </ul>
         </li>
   
@@ -1172,6 +1187,15 @@ function getTypeUser(value){
         </ul>
       </li>
 
+        <li>
+        <a href="#arfsis">
+        <i class='bx bxs-analyse'></i>
+          <span class="link_name">Arfsis</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="#arfsis">Arfsis web</a></li>
+        </ul>
+      </li>
 
         <li>
           <div class="iocn-link">
@@ -1292,7 +1316,7 @@ function getTypeUser(value){
     </section>
 
     `
-  }else if(value == 44){
+  }else if(user == "lazparrin"){
     x = `
     
     <div class="sidebar">
@@ -1313,6 +1337,16 @@ function getTypeUser(value){
           </ul>
         </li>
   
+
+        <li>
+          <a href="#afiliados">
+            <i class='bx bxs-vector'></i>
+            <span class="link_name">Afiliados</span>
+          </a>
+          <ul class="sub-menu blank">
+            <li><a class="link_name" href="#afiliados">Afiliados</a></li>
+          </ul>
+        </li>
   
   
         <li>
@@ -1352,7 +1386,8 @@ function getTypeUser(value){
     </section>
 
     `
-  }else if(value == 41){
+  }
+  else if(value == 41){
     x = `
     
     <div class="sidebar">

@@ -86,14 +86,11 @@
 
       <button class="btn btn-primary" id="btn-query" onclick="query()" ><i class="bi bi-search"></i>&nbsp;Consultar trama</button>&nbsp;
       <a  id="btn-logs" style="display: none;" ><button class="btn btn-dark" onclick="donwloadLog()"><i class="bi bi-file-medical"></i>&nbsp;Logs</button>&nbsp;</a>
-      <button class="btn" onclick="openModalPackage()" 
-       style="background-color: rgb(73, 1, 141);color: white;" id="btn-package" >
-       <i class="bi bi-file-earmark-zip-fill"></i>
-        &nbsp;Consultar paquete de trama</button>&nbsp;
-       <button class="btn btn-success" onclick="postTrama(0)" id="btn-send-debug" ><i class="bi bi-send-check-fill"></i>&nbsp;Enviar trama</button>&nbsp;
-       <button class="btn btn-light" style="background-color: #607300;color: white;" onclick="validateCatalog()" id="btn-validate" ><i class="bi bi-file-earmark-post-fill"></i>&nbsp;Validación de catálogo</button>&nbsp;
+       <button class="btn btn-success" onclick="postTrama(0)" id="btn-send-debug" ><i class="bi bi-box-fill"></i>&nbsp;Crear paquete trama</button>&nbsp;
        <button class="btn btn-light" style="background-color: #003f73;color: white;" onclick="openModalValidation()" id="btn-validate" ><i class="bi bi-arrow-down-up"></i>&nbsp;Comparativo SIGEPS</button>&nbsp;
-       <button class="btn btn-danger" onclick="jsonATE()"><i class="bi bi-bezier2"></i>&nbsp;RC</button>
+       <a id="btn-rc" style="display: none;" ><button class="btn btn-danger" onclick="jsonATE()"><i class="bi bi-bezier2"></i>&nbsp;RC</button></a>
+       &nbsp;
+       <button onclick="validateAfiliateTrama()" class="btn btn-outline-secondary"><i class="bi bi-person-check-fill"></i>&nbsp;Validar afiliados</button>
        <a><div class="loaderSmall" id="loader"></div></a>
 
     </div>
@@ -307,47 +304,7 @@
   </div>
 </div>
 
-<div class="modal fade" data-bs-backdrop="static" id="validateCatalogModal" tabindex="-1" aria-labelledby="modalTramaResponse" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <center style="margin-top: 20px;"><h2><b>
-          Validación de catálogo &nbsp;&nbsp;
-          <p></p>
-          <div class="loaderSmall" id="loadCatalog"></div>
-          <button id="btn-catalog" style="display: none;" class="btn btn-success" onclick="exportToExcelCatalog()">Descargar</button>
-        </b></h2></center>
-        
-        <input type="file" id="excelFile" accept=".xlsx, .xls">
-        <br><br>
-        
-        <table id="tableValidateCatalog" class="table table-responsive table-hover table-bordered display">
-          <thead>
-            <tr>
-              <th>Usuario</th>
-              <th>Fecha</th>
-              <th>Descripción</th>
-              <th>Cuenta</th>
-              <th>FUA</th>
-              <th>Fecha de atencion</th>
-              <th>Digitador</th>
-              <th>Servicio</th>
-              <!-- Añade aquí más columnas si es necesario -->
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-    
 
-      </div>
-      <div class="modal-footer">
-      </div>
-    </div>
-  </div>
-</div>
 
 <!---------------->
 

@@ -22,9 +22,10 @@ let ctxG = 1
 let errors = []
 var resultadoArray = [];
 var rcData = []
-var responseAfiliate = []
 var insNotRegister = ["10249","10244","10248","27854","20842"]
 var typeMedicUser = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","25","26"]
+let onlySMI = ['050','054','055','017', '019', '020', '911', '021', '022', '024', '053', '056', '057', '058', '059', '060', '061', '062', '063', '064', '069', '070', '071', '074', '075', '200', '900', '901', 'S01', '904', '906', '065', '066', '067', '068', '111', '065', '067', '068'];
+
 
 yearLater()
 createDatatable()
@@ -787,6 +788,7 @@ function insertDataRN(data){
 function disabledButtons(){
 loader.style = "display:block;"
 document.getElementById("btn-logs").disabled = true
+document.getElementById("btn-validate-afiliate").disabled = true
 document.getElementById("btn-rc").disabled = true
 document.getElementById("btn-query").disabled = true
 document.getElementById("btn-send-debug").disabled = true
@@ -796,10 +798,12 @@ document.getElementById("btn-send-debug").disabled = true
 function enableButtons(){
 loader.style = "display:none;"
 document.getElementById("btn-logs").disabled = false
+document.getElementById("btn-validate-afiliate").disabled = false
 document.getElementById("btn-rc").disabled = false
 document.getElementById("btn-query").disabled = false
 document.getElementById("btn-send-debug").disabled = false
 document.getElementById("btn-logs").style = "display:block;"
+document.getElementById("btn-validate-afiliate").style = "display:block;"
 document.getElementById("btn-rc").style = "display:block;"
 }
 
@@ -809,6 +813,8 @@ function enableButtonsError(){
   document.getElementById("btn-rc").disabled = false
   document.getElementById("btn-logs").style = "display:none;"
   document.getElementById("btn-logs").disabled = false
+  document.getElementById("btn-validate-afiliate").style = "display:none;"
+  document.getElementById("btn-validate-afiliate").disabled = false
   document.getElementById("btn-query").disabled = false
   document.getElementById("btn-send-debug").disabled = false
   }
@@ -2086,6 +2092,7 @@ function closeModalPackage(){
   document.getElementById("ateCon").innerHTML = "Ninguno"
   document.getElementById("ateObs").innerHTML = "Ninguno"
   document.getElementById("ateProd").innerHTML = "Ninguno"
+
 }
 
 function showDetailModal(d){
@@ -2093,6 +2100,17 @@ function showDetailModal(d){
   $('#modalDetail').modal('show')
 
   document.getElementById("loaderAfi").style = "display:block;"
+  document.getElementById("checkbox1").checked = false
+  document.getElementById("checkbox2").checked = false
+  document.getElementById("fua-date-pregnancy").value = ""
+
+  document.getElementById("d-smi-age").style = "display:none;"
+  document.getElementById("d-smi-weight").style = "display:none;"
+  document.getElementById("d-smi-tail").style = "display:none;"
+  document.getElementById("d-smi-apgar").style = "display:none;"
+  document.getElementById("d-smi-bcg").style = "display:none;"
+  document.getElementById("d-smi-hb").style = "display:none;"
+  document.getElementById("d-smi-pa").style = "display:none;"
 
   document.getElementById("afi-disa").value = ''
   document.getElementById("afi-type").value = ''
@@ -2126,6 +2144,22 @@ function showDetailModal(d){
   document.getElementById("fua-num-paper-reference").value = ""
   document.getElementById("fua-num-paper-reference").value = d.A41
 
+  if(d.A42 == "050"){
+    document.getElementById("d-smi-age").style = "display:flex;"
+    document.getElementById("d-smi-weight").style = "display:flex;"
+    document.getElementById("d-smi-tail").style = "display:flex;"
+    document.getElementById("d-smi-apgar").style = "display:flex;"
+    document.getElementById("d-smi-bcg").style = "display:flex;"
+    document.getElementById("d-smi-hb").style = "display:flex;"
+  }else if(d.A42 == "054" || d.A42 == "054"){
+    document.getElementById("d-smi-age").style = "display:flex;"
+    document.getElementById("d-smi-weight").style = "display:flex;"
+    document.getElementById("d-smi-tail").style = "display:flex;"
+    document.getElementById("d-smi-pa").style = "display:flex;"
+  }else{
+    document.getElementById("d-smi-age").style = "display:flex;"  
+  }
+
   if(d.A50 != ""){
     document.getElementById("fua-date-pregnancy").value = (d.A50).split("/")[2]+'-'+(d.A50).split("/")[1]+'-'+(d.A50).split("/")[0]
   }
@@ -2134,6 +2168,12 @@ function showDetailModal(d){
     document.getElementById("inputGroupSelectSex").value = 1
   }else{
     document.getElementById("inputGroupSelectSex").value = 2
+  }
+
+  if(d.A35 == "1"){
+    document.getElementById("checkbox1").checked = true
+  }else if(d.A35 == "2"){
+    document.getElementById("checkbox2").checked = true
   }
 
 
@@ -2755,16 +2795,37 @@ function updateDateBirthday(){
 
 }
 
+function uncheckOther(checkbox) {
+  // Obtener el otro checkbox
+  var otherCheckboxId = checkbox.id === 'checkbox1' ? 'checkbox2' : 'checkbox1';
+  var otherCheckbox = document.getElementById(otherCheckboxId);
+
+  // Desmarcar el otro checkbox si el checkbox actual está marcado
+  if (checkbox.checked) {
+      otherCheckbox.checked = false;
+  }
+}
+
 function updateDatePregnancy(){
 
   let preg = document.getElementById("fua-date-pregnancy").value
   let id = document.getElementById("d-account").innerHTML
+  let chk1 = document.getElementById("checkbox1")
+  let chk2 = document.getElementById("checkbox2")
+  let sMaterna  = ""
 
-  if(preg != ""){
+  if(chk1.checked){
+    sMaterna = "1"
+  }else if(chk2.checked){
+    sMaterna = "2"
+  }
+
+  if(preg != "" && sMaterna != ""){
 
     let data = {
       date : date(preg),
-      idCuentaAtencion: id
+      idCuentaAtencion: id,
+      sm : sMaterna
     }
    
     fetch(`${url}/update-date-pregnancy`, {
@@ -2795,7 +2856,7 @@ function updateDatePregnancy(){
   }else{
     Swal.fire(
       'Oops!',
-      'Ingrese una fecha',
+      'Ingrese una fecha y seleccione una opción',
       'warning'
     )
   }
@@ -4188,104 +4249,144 @@ function validateAfiliateTrama(){
 }
 
 
-function validateAfiliateTramaFetch(){
-  var table = $('#tb-data').DataTable(); // Obtén la instancia de la tabla DataTables
-  // Define un array para almacenar los objetos JSON
-  var jsonData = [];
-  responseAfiliate = []
 
-  // Itera a través de los datos de la tabla
-  table.rows().data().each(function (rowData) {
-    // Crea un objeto JSON para cada fila
+function validateAfiliateTramaFetch() {
+  var table = $('#tb-data').DataTable();
+  var jsonData = [];
+  var responseAfiliate = [];
+
+  table.rows().data().each(function(rowData) {
     var data = {
-      cuenta : rowData [1],
-      lote : rowData[3],
-      fua : rowData[4],
-      tipo : rowData[17],
-      formato : rowData[18],
-      tabla : rowData[20],
-      siasis : rowData[21],
-      fechaNacimiento : rowData[30]
+      cuenta: rowData[1],
+      lote: rowData[3],
+      fua: rowData[4],
+      tipo: rowData[17],
+      formato: rowData[18],
+      tabla: rowData[20],
+      siasis: rowData[21],
+      fechaNacimiento: rowData[30]
     };
-    // Agrega el objeto JSON al array
     jsonData.push(data);
   });
 
-  // Realizar solicitudes HTTP con los datos recopilados en lotes de 10
-  var batchSize = 10;
-  var index = 0;
+  var maxConcurrentRequests = 1;
+  var currentRequests = 0;
+  var queue = [];
 
-  function sendBatch() {
-    var batch = jsonData.slice(index, index + batchSize);
-    index += batchSize;
-
-    batch.forEach(function(data) {
-      var myFetch = `${url}/get-afiliate-arfsis/${data.tipo}/${data.formato}`;
-      fetch(myFetch)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
-        })
-        .then(serverData => {
-          let message = ``
-
-          if (data.tipo !== serverData.afi_TipoFormato) {
-            message += `Diferencia detectada en el atributo 'tipo' ; `;
-          }
-          if (data.formato !== serverData.afi_NroFormato) {
-            message += `Diferencia detectada en el atributo 'formato' ;`;
-          }
-          if (data.tabla !== serverData.afi_TipoTabla) {
-            message += `Diferencia detectada en el atributo 'tabla' ;`;
-          }
-          if (data.siasis !== serverData.afi_IdSiasis) {
-            message += `Diferencia detectada en el atributo 'IdSiasis' ;`;
-          }
-          if (data.fechaNacimiento !== date(serverData.afi_FecNac)) {
-            message += `Diferencia detectada en el atributo 'Fecha de nacimiento' ;`;
-          }
-  
-          if(message == ``){
-            message = `Datos correctos`
-            responseAfiliate.push({
-              Cuenta : data.cuenta,
-              Lote : data.lote,
-              FUA : data.fua,
-              Mensaje : `<label style="color:green;">${message}</label>`
-            })
-          }else{
-            responseAfiliate.push({
-              Cuenta : data.cuenta,
-              Lote : data.lote,
-              FUA : data.fua,
-              Mensaje : `<label style="color:red;">${message}</label>`
-            })
-          }
-        })
-        .catch(error => {
-          responseAfiliate.push({
-            Cuenta : data.cuenta,
-            Lote : data.lote,
-            FUA : data.fua,
-            Mensaje : '<label style="color:purple;">No encontrado</label>'
-          })
-          console.error('Hubo un problema con la petición HTTP:', error);
-        });
-    });
-
-    if (index < jsonData.length) {
-      setTimeout(sendBatch, 1000); // Retraso de 1 segundo entre lotes
-    } else {
-      downloadAfiliatesObs();
+  function processNextRequest() {
+    if (queue.length === 0 || currentRequests >= maxConcurrentRequests) {
+      return;
     }
+
+    currentRequests++;
+
+    var requestData = queue.shift();
+    var data = requestData.data;
+    var index = requestData.index;
+
+    var myFetch = `${url}/get-afiliate-arfsis/${data.tipo}/${data.formato}`;
+    fetch(myFetch)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(serverData => {
+        let message = '';
+        let d = serverData[0]
+
+        if(d == []){
+          message = 'No encontrado';
+          responseAfiliate.push({
+            'Cuenta': data.cuenta,
+            'Lote': data.lote,
+            'FUA': data.fua,
+            'Mensaje': message
+          });
+        }
+        
+        else{
+
+        if ((data.tipo) != (d.afi_TipoFormato)) {
+          message += 'Diferencia detectada en el atributo tipo |';
+        }if ((data.formato) != (d.afi_NroFormato)) {
+          message += `Diferencia detectada en el atributo formato ${data.formato} - ${d.afi_NroFormato} |`;
+        }if ((data.tabla) != (d.afi_TipoTabla)) {
+          message += 'Diferencia detectada en el atributo tabla |';
+        }if ((data.siasis) != (d.afi_IdSiasis)) {
+          message += 'Diferencia detectada en el atributo IdSiasis |';
+        }if ((data.fecNacimiento) != (d.afi_FecNac)) {
+          message += 'Diferencia detectada en el atributo Fecha de nacimiento |';
+        }
+        // Continuar con las comparaciones...
+
+        if (message === '') {
+          message = 'Datos correctos';
+          responseAfiliate.push({
+            'Cuenta': data.cuenta,
+            'Lote': data.lote,
+            'FUA': data.fua,
+            'Mensaje': message
+          });
+          console.log("no Obs");
+        } else {
+          responseAfiliate.push({
+            'Cuenta': data.cuenta,
+            'Lote': data.lote,
+            'FUA': data.fua,
+            'Mensaje': message
+          });
+          console.log("Obs");
+        }
+
+        currentRequests--;
+        setTimeout(processNextRequest, 4000); // Retrasar el procesamiento de la siguiente solicitud en 2 segundos
+        }
+      })
+      .catch(error => {
+        responseAfiliate.push({
+          'Cuenta': data.cuenta,
+          'Lote': data.lote,
+          'FUA': data.fua,
+          'Mensaje': 'Error en la solicitud HTTP'
+        });
+        console.error('Hubo un problema con la petición HTTP:', error);
+
+        currentRequests--;
+        setTimeout(processNextRequest, 4000); // Retrasar el procesamiento de la siguiente solicitud en 2 segundos
+      });
   }
 
-  sendBatch();
+  jsonData.forEach(function(data, index) {
+    queue.push({ data: data, index: index });
+  });
+
+  for (var i = 0; i < maxConcurrentRequests; i++) {
+    processNextRequest();
+  }
+
+  console.log(responseAfiliate);
+  if (responseAfiliate.length > 0) {
+    downloadAfiliatesObs(responseAfiliate);
+  }
 }
 
-function downloadAfiliatesObs(){
+function downloadAfiliatesObs(responseAfiliate){
   let xls = new XlsExport(responseAfiliate, 'Afiliaciones');
   xls.exportToXLS(`AFILIACIONES OBSERVACIONES.xls`)
 }
+
+
+function verificarCodEnArraySMI(str) {
+  if (onlySMI.includes(str)) {
+      return true;
+  } else {
+      return false;
+  }
+}
+
+function showModalSMI(){
+  $('#modalSMI').modal('show')
+}
+

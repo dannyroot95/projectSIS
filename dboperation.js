@@ -1276,12 +1276,13 @@ console.log("error :" + error);
     }
   }
 
-  async function update_date_pregnancy(account,date) {
+  async function update_date_pregnancy(account,date,sm) {
     try {
       let pool = await sql.connect(config);
       let res = await pool.request()
       .input('CUENTA',account)
       .input('FECHA',date)
+      .input('SALUDMATERNA',sm)
       .execute(`ACTUALIZAR_FECHA_FUA_PARTO`) 
       return [[{success:"actualizado"}]]
     } catch (error) {
@@ -1869,7 +1870,9 @@ console.log("error :" + error);
   async function dateNullPregnancy(account) {
     try {
       let pool = await sql.connect(config);
-      let res = await pool.request().query(`UPDATE SIGH_EXTERNA..SisFuaAtencion SET FuaFechaParto = NULL WHERE idCuentaAtencion = ${account}`);
+      let res = await pool.request().query(`UPDATE SIGH_EXTERNA..SisFuaAtencion SET FuaFechaParto = NULL,
+       FuaCondicionMaterna = 0
+       WHERE idCuentaAtencion = ${account}`);
       return [[{success:"actualizado"}]]
     } catch (error) {
       console.log("error :" + error);

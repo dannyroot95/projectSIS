@@ -84,13 +84,14 @@
 
     <div style="display: flex;width: max-content;">
 
-      <button class="btn btn-primary" id="btn-query" onclick="query()" ><i class="bi bi-search"></i>&nbsp;Consultar trama</button>&nbsp;
-      <a  id="btn-logs" style="display: none;" ><button class="btn btn-dark" onclick="donwloadLog()"><i class="bi bi-file-medical"></i>&nbsp;Logs</button>&nbsp;</a>
-       <button class="btn btn-success" onclick="postTrama(0)" id="btn-send-debug" ><i class="bi bi-box-fill"></i>&nbsp;Crear paquete trama</button>&nbsp;
-       <button class="btn btn-light" style="background-color: #003f73;color: white;" onclick="openModalValidation()" id="btn-validate" ><i class="bi bi-arrow-down-up"></i>&nbsp;Comparativo SIGEPS</button>&nbsp;
-       <a id="btn-rc" style="display: none;" ><button class="btn btn-danger" onclick="jsonATE()"><i class="bi bi-bezier2"></i>&nbsp;RC</button></a>
-       &nbsp;
-       <button onclick="validateAfiliateTrama()" class="btn btn-outline-secondary"><i class="bi bi-person-check-fill"></i>&nbsp;Validar afiliados</button>
+      <button class="btn btn-outline-primary" id="btn-query" onclick="query()" ><i class="bi bi-search"></i>&nbsp;Consultar trama</button>&nbsp;
+      <a  id="btn-logs" style="display: none;" ><button class="btn btn-outline-dark" onclick="donwloadLog()"><i class="bi bi-file-medical"></i>&nbsp;Logs</button>&nbsp;</a>
+       <button class="btn btn-outline-success" onclick="postTrama(0)" id="btn-send-debug" ><i class="bi bi-box-fill"></i>&nbsp;Crear paquete trama</button>&nbsp;
+       <!-- 
+        <button class="btn btn-outline-light" style="background-color: #003f73;color: white;" onclick="openModalValidation()" id="btn-validate" ><i class="bi bi-arrow-down-up"></i>&nbsp;Comparativo SIGEPS</button>&nbsp; 
+       -->
+       <a id="btn-rc" style="display: none;" ><button class="btn btn-outline-danger" onclick="jsonATE()"><i class="bi bi-bezier2"></i>&nbsp;RC</button>&nbsp;</a>
+       <button style="display: none;" id="btn-validate-afiliate" onclick="validateAfiliateTrama()" class="btn btn-outline-secondary"><i class="bi bi-person-check-fill"></i>&nbsp;Validar afiliados</button>
        <a><div class="loaderSmall" id="loader"></div></a>
 
     </div>
@@ -386,7 +387,9 @@
             <button class="btn btn-outline-danger minText5"><i class="bi bi-capsule"></i>&nbsp;Medicamentos</button>
             &nbsp;&nbsp;&nbsp;
             <button class="btn btn-outline-success minText5"><i class="bi bi-bandaid-fill"></i>&nbsp;Insumos</button>
-          </center>
+            &nbsp;&nbsp;&nbsp;
+            <button id="btn-smi" onclick="showModalSMI()()" class="btn btn-outline-warning minText5"><i class="bi bi-bandaid-fill" style="color: #1c1842;"></i>&nbsp;<label style="color: #1c1842;">SMI</label></button>
+          </center> 
 
         </div>
 
@@ -584,7 +587,15 @@
       <h6>Fecha de parto</h6>
       <p></p>
 
-      <div class="input-group mb-3" style="width: 50%;">
+      <div class="input-group mb-3" style="width: 80%;">
+        <div class="input-group-text">
+          <input onclick="uncheckOther(this)" id="checkbox1" class="form-check-input mt-0" type="checkbox" value="1">
+        </div>
+        <input type="text" class="form-control minText5" disabled style="color: black;" value="Gestante">
+        <div class="input-group-text">
+          <input onclick="uncheckOther(this)" id="checkbox2" class="form-check-input mt-0" type="checkbox" value="2">
+        </div>
+        <input type="text" class="form-control minText5" disabled style="color: black;" value="Puerpera">
         <span class="input-group-text minText5" id="basic-addon1">Fecha</span>
         <input type="date" class="form-control minText5" id="fua-date-pregnancy">
         <button style="float: right;" type="button" onclick="updateDatePregnancy()" class="btn btn-primary minText5">Actualizar</button>
@@ -676,36 +687,56 @@
 
 <!---->
 
-<div class="modal fade" style="background-color: #ffffff8f;" data-bs-backdrop="static" data-bs-keyboard="false" id="modalDiagnosys" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+<div class="modal fade" style="background-color: #ffffff8f;" data-bs-backdrop="static" data-bs-keyboard="false" id="modalSMI" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content border border-dark rounded">
       <div class="modal-header">
-        <h1 class="modal-title fs-5">Detalle de diagnostico</h1>
+        <h1 class="modal-title fs-5">Servicio materno infantil</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
       
         <!---->
 
-        <center><div class="loaderSmall" id="diag-loader"></div>
-        </center>
+        <div class="input-group mb-3" id="d-smi-age">
+          <span class="input-group-text" id="basic-addon1">Edad gestacional del RN</span>
+          <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+        </div>
 
-        <div class="table-responsive">
-          <table class="table table-hover table-bordered display" id="tb-data-diag">
-            <thead>
-                <tr>
-                  <th class="minText5">Clasificación</th>
-                  <th class="minText5">Dx.In</th>
-                  <th class="minText5">Dx.Eg</th>
-                  <th class="minText5">Código</th>
-                  <th class="minText5">Descripción</th>
-                  <th class="minText5"></th>
-                </tr>
-              </thead>
-              <tbody id="tbodyDiag">
-              </tbody>
-            </table>
-          </div>
+        <div class="input-group mb-3" id="d-smi-weight">
+          <span class="input-group-text" id="basic-addon1">Peso</span>
+          <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+        </div>
+
+        <div class="input-group mb-3" id="d-smi-tail">
+          <span class="input-group-text" id="basic-addon1">Talla</span>
+          <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+        </div>
+        
+        <div class="input-group mb-3" id="d-smi-apgar">
+          <span class="input-group-text" id="basic-addon1">APGAR(305)</span>
+          <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+          <span class="input-group-text" id="basic-addon1">APGAR(306)</span>
+          <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+        </div>
+
+        <div class="input-group mb-3" id="d-smi-bcg">
+          <span class="input-group-text" id="basic-addon1">Vacuna BCG</span>
+          <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+        </div>
+
+        <div class="input-group mb-3" id="d-smi-hb">
+          <span class="input-group-text" id="basic-addon1">Vacuna anti hepatitis B</span>
+          <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+        </div>
+
+        <div class="input-group mb-3" id="d-smi-pa">
+          <span class="input-group-text" id="basic-addon1">Presión arterial</span>
+          <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+          <span class="input-group-text" id="basic-addon1">/</span>
+          <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+        </div>
+
 
         <!---->
 

@@ -2089,10 +2089,11 @@ router.post("/update-date-pregnancy", function (req, res, next) {
  
   let v = req.body
   let preg = v.date
+  let sm = v.sm
   let id = parseInt(v.idCuentaAtencion)
   console.log(v)
 
-  sql.update_date_pregnancy(id,preg).then((result) => {
+  sql.update_date_pregnancy(id,preg,sm).then((result) => {
     if(result[0].length>0){
       res.json(result[0]);
     }else{

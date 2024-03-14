@@ -1,3 +1,7 @@
+
+var jsonRC = []
+var rc = []
+let btnX = document.getElementById("download-button")
 createDatatable()
 
 function createDatatable(){
@@ -23,7 +27,7 @@ function createDatatable(){
                   "previous": "Anterior"
               }
        },scrollY: '50vh',scrollX: true, sScrollXInner: "100%",
-       scrollCollapse: true,
+       scrollCollapse: true, charset: 'utf-8',
       });
   
       var table = $('#tb-data').DataTable();
@@ -31,51 +35,84 @@ function createDatatable(){
       table.columns.adjust().draw();
 }
 
-$(document).ready(function() {
-    $('#upload-button').on('click', function() {
-        var file = $('#file-input')[0].files[0];
-        if (!file) {
-            alert('Please select a file.');
-            return;
-        }
+function readFile() {
+    const fileInput = document.getElementById('file-input');
+    const file = fileInput.files[0];
 
-        // Usamos la API Fetch para cargar el archivo
-        fetch(file)
-            .then(response => response.text())
-            .then(data => {
-                var lines = data.split('\n');
-                var entries = [];
+    if (file) {
+        const reader = new FileReader();
+        btnX.style = "display:none;"
+        reader.onload = function(event) {
+            const content = event.target.result;
+            jsonRC = [];
+            rc = []
+            let ctxV = content.split("\n");
+            let ctx = ctxV.length - 2;
 
-                lines.forEach(function(line) {
-                    var fields = line.split('|');
-                    var fua = fields[2];
-                    var entry = parseJSON(fields[3]); // Función para analizar JSON con manejo de errores
-                    var rules = entry.reglas || [];
-                    var concatenatedRules = rules.join(', ');
-                    entries.push({ fua: fua, rules: concatenatedRules });
-                });
+            for (let x = 0; x <= ctx; x++) {
+                let dataRC = content.split("\n")[x];
+                let fua = dataRC.split("|")[0] + '-' + dataRC.split("|")[1] + '-' + dataRC.split("|")[2];
+                let jsonData = JSON.parse(dataRC.split("|")[3]);
 
-                // Construir la tabla HTML
-                var table = $('#tb-data').DataTable();
-                table.clear(); // Limpiar la tabla antes de agregar nuevos datos
-                entries.forEach(function(entry) {
-                    table.row.add([entry.fua, entry.rules]);
-                });
-                table.draw();
-            })
-            .catch(error => {
-                console.error('Error reading file:', error);
-                alert('Error reading file. Please try again.');
-            });
-    });
-});
+                if (jsonData.reglas) {
+                    jsonData.reglas.forEach(function(rule) {
+                        let numRule = (rule.match(/RC\d+/) || [])[0];
+                        jsonRC.push({
+                            'FUA': fua,
+                            'RC': numRule,
+                            'DESCRIPCION': rule
+                        });
+                    });
+                }
+            }
 
-// Función para analizar JSON con manejo de errores
-function parseJSON(jsonString) {
-    try {
-        return JSON.parse(jsonString);
-    } catch (error) {
-        console.error('Error parsing JSON:', error);
-        return {};
+            let uniqueJsonRC = Array.from(new Set(jsonRC.map(JSON.stringify))).map(JSON.parse);
+            rc = uniqueJsonRC
+            insertDataIntoTable(uniqueJsonRC);
+        };
+        reader.readAsText(file, 'UTF-8');
+    } else {
+        console.error('No file selected');
     }
 }
+function insertDataIntoTable(uniqueJsonRC) {
+    const tbody = document.getElementById('tbody');
+    $('#tb-data').DataTable().destroy()
+    
+    // Limpiar el contenido existente de la tabla
+    tbody.innerHTML = '';
+
+    // Iterar sobre cada objeto en el array uniqueJsonRC
+    uniqueJsonRC.forEach(function(item) {
+        // Crear una nueva fila de tabla <tr>
+        const newRow = document.createElement('tr');
+
+        // Crear celdas de tabla <td> para cada propiedad del objeto
+        const fuaCell = document.createElement('td');
+        fuaCell.textContent = item.FUA;
+
+        const rcCell = document.createElement('td');
+        rcCell.textContent = item.RC;
+
+        const descripcionCell = document.createElement('td');
+        descripcionCell.textContent = item.DESCRIPCION;
+
+        // Agregar las celdas a la fila
+        newRow.appendChild(fuaCell);
+        newRow.appendChild(rcCell);
+        newRow.appendChild(descripcionCell);
+
+        // Agregar la fila a la tabla
+        tbody.appendChild(newRow);
+    });
+    createDatatable()
+    btnX.style = "display:block;"
+}
+
+function downloadFile(){
+    const fileInput = document.getElementById('file-input');
+    const file = fileInput.files[0].name.split(".zip")[0];
+    let xls = new XlsExport(rc, 'Arfsis');
+    xls.exportToXLS(`RC ARFSIS - ${file}.xls`)
+  }
+  
